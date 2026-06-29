@@ -4,7 +4,7 @@
   },
   "editable": true,
   "graphTooltip": 0,
-  "title": "FICT Advisor API \u2014 prod",
+  "title": "FICT Advisor API — prod",
   "uid": "fictadvisor-api-prod",
   "tags": [
     "fictadvisor",
@@ -515,6 +515,176 @@
             "renameByName": {
               "Value": "total (ms)",
               "route": "endpoint"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prisma query latency (p50 / p90 / p99)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 38
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.50, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[5m])) by (le))",
+          "legendFormat": "p50"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.90, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[5m])) by (le))",
+          "legendFormat": "p90"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[5m])) by (le))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prisma query rate by model (q/s)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 38
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api\"}[5m])) by (model)",
+          "legendFormat": "{{model}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Prisma query error rate by model (q/s)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 46
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api\",status=\"error\"}[5m])) by (model)",
+          "legendFormat": "{{model}}"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Prisma p95 per model + action (ms)",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 46
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "filterable": true
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "footer": {
+          "show": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sort_desc(histogram_quantile(0.95, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[5m]))) * 1000)",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "job": true,
+              "instance": true,
+              "app": true
+            },
+            "renameByName": {
+              "Value": "p95 (ms)",
+              "model": "model",
+              "action": "action"
             }
           }
         }
