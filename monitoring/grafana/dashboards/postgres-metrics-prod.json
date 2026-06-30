@@ -441,7 +441,7 @@
         },
         "sortBy": [
           {
-            "displayName": "total_ms",
+            "displayName": "mean_ms",
             "desc": true
           }
         ]
@@ -455,7 +455,7 @@
           },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT query, calls,\n  round(total_exec_time::numeric, 1) AS total_ms,\n  round(mean_exec_time::numeric, 2) AS mean_ms,\n  rows\nFROM pg_stat_statements\nWHERE dbid IN (SELECT oid FROM pg_database WHERE datname = current_database())\nORDER BY total_exec_time DESC\nLIMIT 25"
+          "rawSql": "SELECT query,\n  round(mean_exec_time::numeric, 2) AS mean_ms,\n  calls,\n  rows,\n  round(total_exec_time::numeric, 1) AS total_ms\nFROM pg_stat_statements\nWHERE dbid IN (SELECT oid FROM pg_database WHERE datname = current_database())\nORDER BY mean_exec_time DESC\nLIMIT 25"
         }
       ]
     }
