@@ -70,14 +70,22 @@ export const infoSectionParagraph: SxProps<Theme> = {
     mobile: '0 17px 0 0',
     tablet: 0,
   },
-  margin: {
-    mobile: '0 0 36px',
-    mobileMedium: '0 0 44px',
-    desktop: '50px 0 45px 0',
+  marginTop: {
+    mobile: 0,
+    desktop: '50px',
   },
-  typography: {
-    mobile: 'body1',
-    tablet: 'body2',
+  marginBottom: {
+    mobile: '36px',
+    mobileMedium: '44px',
+    desktop: '45px',
+  },
+  fontSize: {
+    mobile: '14px',
+    tablet: '16px',
+  },
+  lineHeight: {
+    mobile: 1.4,
+    tablet: 1.5,
   },
   width: {
     tablet: '100%',
