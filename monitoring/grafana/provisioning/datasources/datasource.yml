@@ -8,3 +8,35 @@ datasources:
     url: http://prometheus:9090
     isDefault: true
     editable: true
+
+  # PostgreSQL datasources for reading pg_stat_statements (real SQL query
+  # execution times). Passwords are injected from the Grafana container env
+  # (~/deployment/env/grafana.env: POSTGRES_PASSWORD_PROD / POSTGRES_PASSWORD_DEV)
+  # and are NOT stored in the repo.
+  - name: PostgreSQL prod
+    uid: pg-prod
+    type: grafana-postgresql-datasource
+    access: proxy
+    url: postgres-db:5432
+    user: postgres
+    database: postgres
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1500
+    secureJsonData:
+      password: $POSTGRES_PASSWORD_PROD
+    editable: true
+
+  - name: PostgreSQL dev
+    uid: pg-dev
+    type: grafana-postgresql-datasource
+    access: proxy
+    url: postgres-db-dev:5432
+    user: postgres
+    database: postgres
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1500
+    secureJsonData:
+      password: $POSTGRES_PASSWORD_DEV
+    editable: true

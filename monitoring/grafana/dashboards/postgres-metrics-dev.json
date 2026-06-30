@@ -377,26 +377,62 @@
     },
     {
       "type": "table",
-      "title": "Query execution time per model + operation (ms)",
-      "description": "Prisma client query execution time (includes engine overhead; pg_stat_statements is not enabled for true server-side timing). Aggregated over the selected time range.",
+      "title": "Top queries by execution time (pg_stat_statements)",
+      "description": "Real SQL statements from pg_stat_statements, ordered by total execution time. Cumulative since the last stats reset — pg_stat_statements has no per-time data, so this table is not filtered by the dashboard time range. total_ms / mean_ms are milliseconds.",
       "gridPos": {
-        "h": 10,
+        "h": 12,
         "w": 24,
         "x": 0,
         "y": 30
       },
       "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+        "type": "grafana-postgresql-datasource",
+        "uid": "pg-dev"
       },
       "fieldConfig": {
         "defaults": {
           "custom": {
             "filterable": true
-          },
-          "unit": "ms"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_ms"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mean_ms"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "query"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 620
+              }
+            ]
+          }
+        ]
       },
       "options": {
         "showHeader": true,
@@ -405,7 +441,7 @@
         },
         "sortBy": [
           {
-            "displayName": "p50 (ms)",
+            "displayName": "total_ms",
             "desc": true
           }
         ]
@@ -414,56 +450,12 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "type": "grafana-postgresql-datasource",
+            "uid": "pg-dev"
           },
-          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
-          "instant": true
-        },
-        {
-          "refId": "B",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
-          "format": "table",
-          "instant": true
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
-          "format": "table",
-          "instant": true
-        }
-      ],
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "job": true,
-              "instance": true,
-              "app": true
-            },
-            "renameByName": {
-              "model": "model",
-              "action": "operation",
-              "Value #A": "p50 (ms)",
-              "Value #B": "p90 (ms)",
-              "Value #C": "p99 (ms)"
-            }
-          }
+          "rawQuery": true,
+          "rawSql": "SELECT query, calls,\n  round(total_exec_time::numeric, 1) AS total_ms,\n  round(mean_exec_time::numeric, 2) AS mean_ms,\n  rows\nFROM pg_stat_statements\nWHERE dbid IN (SELECT oid FROM pg_database WHERE datname = current_database())\nORDER BY total_exec_time DESC\nLIMIT 25"
         }
       ]
     }
