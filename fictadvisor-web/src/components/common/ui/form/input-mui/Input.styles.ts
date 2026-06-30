@@ -154,6 +154,15 @@ export const input = (state: InputState, size: InputSize): SxProps<Theme> => ({
         cursor: 'not-allowed',
       },
     },
+    // Chrome autofill overrides the text color with its own dark fill (grey on
+    // our dark inputs) and a yellow background — pin both to our theme.
+    '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus, &:-webkit-autofill:active':
+      {
+        WebkitTextFillColor: theme.palette.grey[800],
+        WebkitBoxShadow: `0 0 0 1000px ${theme.palette.backgroundDark[100]} inset`,
+        caretColor: theme.palette.grey[800],
+        transition: 'background-color 9999s ease-in-out 0s',
+      },
     padding: 0,
     '::placeholder': {
       color: theme.palette.grey[500],
