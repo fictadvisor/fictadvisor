@@ -7,13 +7,14 @@ import { useAuthentication } from '@/hooks/use-authentication/useAuthentication'
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import * as styles from './CheckBoxSection.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 export const CheckBoxSection = () => {
-  const [groupId, checkboxes, updateCheckboxes] = useSchedule(state => [
+  const [groupId, checkboxes, updateCheckboxes] = useSchedule(useShallow(state => [
     state.groupId,
     state.checkboxes,
     state.updateCheckboxes,
-  ]);
+  ]));
 
   const { user } = useAuthentication();
 

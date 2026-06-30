@@ -8,13 +8,14 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import 'moment/locale/uk';
 
 import * as styles from './DatePicker.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 export const DatePicker = () => {
-  const { chosenDay, setChosenDay, semester } = useSchedule(state => ({
+  const { chosenDay, setChosenDay, semester } = useSchedule(useShallow(state => ({
     chosenDay: state.chosenDay,
     setChosenDay: state.setChosenDay,
     semester: state.semester,
-  }));
+  })));
 
   if (!chosenDay) return <></>;
 

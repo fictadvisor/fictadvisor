@@ -16,15 +16,16 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
 
 import { ScheduleEventForm } from './schedule-form/ScheduleEventForm';
+import { useShallow } from 'zustand/react/shallow';
 
 //TODO:ADD ERROR HANDLING
 export const ScheduleEventEdit = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { openedEvent, semester, handleWeekChange } = useSchedule(state => ({
+  const { openedEvent, semester, handleWeekChange } = useSchedule(useShallow(state => ({
     openedEvent: state.openedEvent,
     semester: state.semester,
     handleWeekChange: state.handleWeekChange,
-  }));
+  })));
   const { displayError } = useToastError();
 
   const week = useMemo(

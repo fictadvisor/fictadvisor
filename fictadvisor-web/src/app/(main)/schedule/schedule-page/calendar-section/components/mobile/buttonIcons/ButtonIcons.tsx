@@ -8,11 +8,12 @@ import { useAuthentication } from '@/hooks/use-authentication/useAuthentication'
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import * as styles from './buttonIcons.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 export const ButtonIcons = () => {
   const [displayScrollBtn, setDisplayScrollBtn] = useState(false);
   const { user } = useAuthentication();
-  const { groupId } = useSchedule(state => ({ groupId: state.groupId }));
+  const { groupId } = useSchedule(useShallow(state => ({ groupId: state.groupId })));
 
   const validPrivilege =
     user &&

@@ -19,6 +19,7 @@ import { Answer, Question } from '@/types/poll';
 import AnswersSaved from './AnswersSaved';
 
 import styles from './AnswersSheet.module.scss';
+import { useShallow } from 'zustand/react/shallow';
 
 interface AnswersSheetProps {
   setProgress: React.Dispatch<React.SetStateAction<number[]>>;
@@ -70,7 +71,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     setIsSendingStatus,
     currentQuestions,
     setQuestionsListOpened,
-  } = usePollStore(state => ({
+  } = usePollStore(useShallow(state => ({
     setCurrentCategory: state.setCurrentCategory,
     currentCategory: state.currentCategory,
     answers: state.answers,
@@ -80,7 +81,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     setIsSendingStatus: state.setIsSendingStatus,
     currentQuestions: state.currentQuestions,
     setQuestionsListOpened: state.setQuestionsListOpened,
-  }));
+  })));
   const toast = useToast();
 
   const initialValues: Record<string, string> = useMemo(() => {

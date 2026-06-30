@@ -16,13 +16,14 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
 import { DatePicker } from './components/date-picker/DatePicker';
 import * as styles from './CalendarSection.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 export interface CalendarSectionProps {
   groups: MappedGroupResponse[];
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
-  const { groupId } = useSchedule(state => ({ groupId: state.groupId }));
+  const { groupId } = useSchedule(useShallow(state => ({ groupId: state.groupId })));
 
   const validPrivilege =
     user &&
