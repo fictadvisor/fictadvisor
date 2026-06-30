@@ -19,6 +19,10 @@ import { TestType, TestCoverage } from './common/utils/test-coverage';
 
 async function bootstrap () {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // Express 5 (via NestJS 11) defaults the query parser to "simple", which no
+  // longer parses bracket-array notation (?keys[]=a&keys[]=b) into arrays.
+  // Restore the qs-based "extended" parser so array query params keep working.
+  app.set('query parser', 'extended');
   app.enableShutdownHooks();
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
