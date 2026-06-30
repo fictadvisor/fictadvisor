@@ -13,6 +13,6 @@ export const dialogTitle: SxProps<Theme> = {
   m: 0,
   padding: 0,
   '.MuiTypography-root': {
-    typography: typography.h6Bold,
+    ...typography.h6Bold,
   },
 };

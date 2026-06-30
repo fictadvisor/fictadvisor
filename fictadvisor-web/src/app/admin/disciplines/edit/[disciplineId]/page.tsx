@@ -107,7 +107,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
                 Дисципліна {discipline.subject.name}
               </Typography>
             </Box>
-            <Stack flexDirection="row" gap="8px">
+            <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
               <Button
                 sx={styles.button}
                 size={ButtonSize.MEDIUM}
@@ -139,7 +139,7 @@ const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
               />
             </Stack>
           </Box>
-          <Stack flexDirection="column" gap="10px">
+          <Stack sx={{ flexDirection: 'column', gap: '10px' }}>
             <DisciplinesInfoSection discipline={discipline} setBody={setBody} />
           </Stack>
         </Box>

@@ -36,7 +36,7 @@ const HeaderEdit: FC<HeaderEditProps> = ({
         <Typography variant="h5">Редагування</Typography>
         <Typography sx={stylesAdmin.name}>Група {group.code}</Typography>
       </Box>
-      <Stack flexDirection="row" gap="8px">
+      <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
         <Button
           sx={styles.button}
           size={ButtonSize.MEDIUM}

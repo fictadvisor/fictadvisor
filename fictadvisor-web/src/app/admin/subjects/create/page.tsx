@@ -35,7 +35,7 @@ const AdminSubjectCreate = () => {
     <>
       <Box sx={stylesAdmin.header}>
         <CardHeader title="Створення предмету" sx={stylesAdmin.title} />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             text="Скасувати"

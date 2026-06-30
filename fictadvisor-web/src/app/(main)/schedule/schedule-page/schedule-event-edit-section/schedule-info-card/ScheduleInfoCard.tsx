@@ -99,7 +99,7 @@ const ScheduleInfoCard = ({
         {loading ? (
           <Skeleton {...skeletonProps} width={350} height={50} />
         ) : (
-          <Typography variant="h5" paragraph>
+          <Typography variant="h5" sx={{ mb: 2 }}>
             {event?.name}
           </Typography>
         )}

@@ -52,7 +52,7 @@ const AdminGrantsCreatePage: FC<AdminGrantsCreatePageProps> = ({ params }) => {
     <>
       <Box sx={stylesAdmin.header}>
         <CardHeader title="Створення права" sx={stylesAdmin.title} />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             text="Скасувати"
@@ -89,7 +89,7 @@ const AdminGrantsCreatePage: FC<AdminGrantsCreatePageProps> = ({ params }) => {
             placeholder="Вага"
           />
           <Box sx={styles.switchWrapper}>
-            <Typography variant="body1" color="grey.800">
+            <Typography variant="body1" sx={{ color: 'grey.800' }}>
               Дійсність права
             </Typography>
             <Switch

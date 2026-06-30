@@ -84,18 +84,21 @@ const Dropdown: FC<DropdownProps> = memo(function Dropdown({
               sx={inputSx ?? styles.input(dropdownState, size)}
               placeholder={placeholder}
               disabled={isDisabled}
-              InputProps={{
-                ...params.InputProps,
-                startAdornment: (
-                  <InputAdornment position="start">{icon}</InputAdornment>
-                ),
+              slotProps={{
+                ...params.slotProps,
+                input: {
+                  ...params.slotProps.input,
+                  startAdornment: (
+                    <InputAdornment position="start">{icon}</InputAdornment>
+                  ),
+                },
               }}
             />
           )}
           getOptionLabel={value => {
             return 'text' in value ? value.text : value.label;
           }}
-          componentsProps={{
+          slotProps={{
             popper: popperProps,
           }}
           popupIcon={
@@ -111,7 +114,6 @@ const Dropdown: FC<DropdownProps> = memo(function Dropdown({
         {showRemark && (
           <Typography
             sx={remarkSx ?? styles.remark(dropdownState, isFocused)}
-            paragraph
           >
             {touched && error ? error : defaultRemark}
           </Typography>

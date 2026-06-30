@@ -157,7 +157,7 @@ const AdminSubjectCreate = () => {
         <Box sx={stylesAdmin.editName}>
           <Typography variant="h5">Створення дисципліни</Typography>
         </Box>
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             sx={styles.button}
             size={ButtonSize.MEDIUM}

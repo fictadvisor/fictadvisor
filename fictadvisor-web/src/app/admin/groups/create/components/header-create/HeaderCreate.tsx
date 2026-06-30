@@ -24,7 +24,7 @@ const HeaderCreate: FC<HeaderCreateProps> = ({ handleCreateSubmit }) => {
       <Typography sx={stylesAdmin.editName} variant="h5">
         Створення групи
       </Typography>
-      <Stack flexDirection="row" gap="8px">
+      <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
         <Button
           sx={styles.button}
           size={ButtonSize.MEDIUM}

@@ -38,7 +38,7 @@ const GroupsInfoEdit: FC<GroupsInfoEditProps> = ({ group, setGroupInfo }) => {
     <>
       {studentsData && (
         <Stack sx={{ flexDirection: 'column', gap: '16px' }}>
-          <Stack maxWidth={372} flexDirection="column" gap="16px">
+          <Stack sx={{ maxWidth: 372, flexDirection: 'column', gap: '16px' }}>
             <GroupInfoInputs
               students={studentsData.students}
               group={group}

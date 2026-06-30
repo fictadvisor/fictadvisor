@@ -45,7 +45,7 @@ export const DisciplineRelatedFields: FC<DisciplineRelatedFieldsProps> = ({
 
   return (
     <Fragment>
-      <Typography variant="body1Medium" alignSelf="start">
+      <Typography variant="body1Medium" sx={{ alignSelf: 'start' }}>
         Викладач
       </Typography>
       {isLoading || !data ? (

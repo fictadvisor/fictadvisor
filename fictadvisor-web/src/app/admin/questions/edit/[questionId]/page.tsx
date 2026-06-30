@@ -84,7 +84,7 @@ const Edit: FC<PageProps> = ({ params }) => {
           <Typography variant="h5">Редагування</Typography>
           <Typography sx={stylesAdmin.name}>{data?.text}</Typography>
         </Box>
-        <Stack flexDirection="row" gap="12px">
+        <Stack sx={{ flexDirection: 'row', gap: '12px' }}>
           <Button
             sx={stylesAdmin.button}
             size={ButtonSize.MEDIUM}

@@ -35,7 +35,7 @@ const TransferCaptainPopup: FC<TransferCaptainPopupProps> = ({
                 onClick={() => setNewCaptain(row.id)}
               >
                 {row.imgSrc && (
-                  <Grid item desktop={7} mobile={11}>
+                  <Grid size={{ desktop: 7, mobile: 11 }}>
                     <Avatar src={row.imgSrc} alt="avatar" />
                     {!isMobile && (
                       <Typography className="name">{row.fullName}</Typography>
@@ -49,7 +49,7 @@ const TransferCaptainPopup: FC<TransferCaptainPopupProps> = ({
                   </Grid>
                 )}
 
-                <Grid item desktop={5}>
+                <Grid size={{ desktop: 5 }}>
                   {!isMobile && (
                     <Typography className="email">{row.email}</Typography>
                   )}

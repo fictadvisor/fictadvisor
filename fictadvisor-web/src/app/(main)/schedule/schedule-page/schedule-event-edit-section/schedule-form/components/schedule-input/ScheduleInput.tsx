@@ -38,10 +38,12 @@ const ScheduleInput: FC<ScheduleInputProps> = ({
         placeholder={placeholder}
         disabled={isDisabled}
         sx={styles.input(size)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">{icon}</InputAdornment>
-          ),
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">{icon}</InputAdornment>
+            ),
+          },
         }}
       />
       {hasError && (

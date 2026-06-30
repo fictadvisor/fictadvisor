@@ -1,11 +1,11 @@
-import { TypographyOptions } from '@mui/material/styles/createTypography';
+import { TypographyVariantsOptions } from '@mui/material/styles';
 import { Manrope } from 'next/font/google';
 
 export const manrope = Manrope({
   subsets: ['cyrillic', 'latin'],
   weight: ['200', '300', '400', '500', '600', '700', '800'],
 });
-const typography: TypographyOptions = {
+const typography: TypographyVariantsOptions = {
   fontFamily: manrope.style.fontFamily,
   h1: {
     fontFamily: manrope.style.fontFamily,

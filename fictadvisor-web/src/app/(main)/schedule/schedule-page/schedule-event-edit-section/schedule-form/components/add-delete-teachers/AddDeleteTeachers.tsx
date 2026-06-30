@@ -54,7 +54,7 @@ export const AddDeleteTeachers: FC<AddDeleteTeachersProps> = ({
   return (
     <Box sx={styles.container}>
       {teachers.length === 0 && (
-        <Typography typography={'body3Medium'} pl={'12px'}>
+        <Typography sx={{ typography: 'body3Medium', pl: '12px' }}>
           Викладачів не додано
         </Typography>
       )}

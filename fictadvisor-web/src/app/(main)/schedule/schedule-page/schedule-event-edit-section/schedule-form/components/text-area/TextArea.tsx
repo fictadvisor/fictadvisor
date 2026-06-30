@@ -33,8 +33,10 @@ const TextArea: FC<ScheduleTextAreaProps> = ({ name, ...props }) => {
         sx={styles.textArea}
         multiline
         rows={3}
-        InputProps={{
-          disableUnderline: true,
+        slotProps={{
+          input: {
+            disableUnderline: true,
+          },
         }}
       />
       {hasError && <Typography sx={styles.error}>{error}</Typography>}

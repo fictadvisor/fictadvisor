@@ -17,7 +17,6 @@ const Privacy: FC = () => {
           <Box>
             <Typography
               variant={'body1'}
-              paragraph
               sx={stylesMUI.privacyListInfo}
             >
               FICE Advisor – це інформаційна система Студради ФІОТ для студентів
@@ -33,7 +32,6 @@ const Privacy: FC = () => {
             <Typography variant="h6Bold">Які дані ми збираємо?</Typography>
             <Typography
               variant={'body1'}
-              paragraph
               sx={stylesMUI.privacyListInfo}
             >
               Згідно з законом України “Про захист персональних прав”,
@@ -48,7 +46,6 @@ const Privacy: FC = () => {
             <Typography variant="h6Bold">Як ми ці дані оброблюємо?</Typography>
             <Typography
               variant={'body1'}
-              paragraph
               sx={stylesMUI.privacyListInfo}
             >
               Система є Open-Source проєктом, тому весь код знаходиться у
@@ -70,7 +67,6 @@ const Privacy: FC = () => {
             </Typography>
             <Typography
               variant={'body1'}
-              paragraph
               sx={stylesMUI.privacyListInfo}
             >
               Персональні дані користувача видаляються: після відрахування

@@ -6,8 +6,8 @@ const TabList: FC<TabListProps> = props => {
     <MuiTabList
       scrollButtons="auto"
       allowScrollButtonsMobile
-      TabIndicatorProps={{
-        style: { display: 'none' },
+      slotProps={{
+        indicator: { style: { display: 'none' } },
       }}
       aria-label="lab tabs"
       {...props}

@@ -81,7 +81,7 @@ const CommentTextArea: FC<CommentTextAreaProps> = ({
   }, [value]);
 
   return (
-    <Stack direction="row" alignItems="center" gap="16px">
+    <Stack direction="row" sx={{ alignItems: 'center', gap: '16px' }}>
       <Stack sx={styles.textAreaWrapper}>
         <TextArea
           label=""

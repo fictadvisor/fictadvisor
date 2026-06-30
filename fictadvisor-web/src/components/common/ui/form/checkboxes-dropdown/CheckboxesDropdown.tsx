@@ -6,6 +6,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  SelectProps,
 } from '@mui/material';
 
 import Checkbox from '@/components/common/ui/form/checkbox';
@@ -34,18 +35,17 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
       <Select
         sx={MergeSx(styles.select, dropdownSx)}
         multiple
-        // @ts-expect-error MUI type is not support arrays
         value={selectedValues}
-        onChange={handleChange}
+        onChange={handleChange as SelectProps['onChange']}
         input={<OutlinedInput sx={styles.input} />}
         renderValue={checked => {
           const selectedSubjects = values.filter(option =>
-            checked.includes(option.value),
+            (checked as string[]).includes(option.value),
           );
           return selectedSubjects.map(option => option.label).join(', ');
         }}
         MenuProps={{
-          PaperProps: { sx: MergeSx(styles.paperProps(width), menuSx) },
+          slotProps: { paper: { sx: MergeSx(styles.paperProps(width), menuSx) } },
         }}
         SelectDisplayProps={{
           style: styles.selectedItems(size, width),

@@ -1,4 +1,4 @@
-import { PopperProps } from '@mui/base';
+import { PopperProps } from '@mui/material/Popper';
 
 export const popperProps: Partial<PopperProps> = {
   placement: 'bottom-start',

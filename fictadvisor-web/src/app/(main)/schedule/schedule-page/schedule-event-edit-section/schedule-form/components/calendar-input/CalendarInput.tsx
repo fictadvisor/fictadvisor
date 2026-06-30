@@ -1,7 +1,7 @@
 import { Dispatch, FC } from 'react';
 import { CalendarIcon as CalendarIconMUI } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import { ukUA } from '@mui/x-date-pickers';
+import { ukUA } from '@mui/x-date-pickers/locales';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useField } from 'formik';
 import moment, { Moment } from 'moment';
@@ -53,13 +53,14 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
         maxDate={moment(semester?.endDate)}
         localeText={ukrainianLocale}
         dayOfWeekFormatter={day => {
-          return day.charAt(0).toUpperCase() + day.slice(1);
+          const formatted = day.format('dd');
+          return formatted.charAt(0).toUpperCase() + formatted.slice(1);
         }}
         closeOnSelect
         desktopModeMediaQuery="@media (min-width: 0px)"
       />
       {touched && error && !date && (
-        <Typography sx={styles.remark} paragraph>
+        <Typography sx={styles.remark}>
           Обов'язкове поле
         </Typography>
       )}
