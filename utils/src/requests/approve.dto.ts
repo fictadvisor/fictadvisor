@@ -6,6 +6,7 @@ import { validationOptionsMsg } from '../validation.util';
 export class ApproveDTO {
   @ApiProperty({
     enum: State,
+    enumName: 'State',
     description: 'State for student verification',
   })
   @IsEnum(State, validationOptionsMsg('State must be an enum'))

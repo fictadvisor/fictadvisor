@@ -48,6 +48,7 @@ export class UpdateStudentDTO {
 export class UpdateStudentWithRolesDTO extends UpdateStudentDTO {
   @ApiPropertyOptional({
     enum: GroupRoles,
+    enumName: 'GroupRoles',
     description: 'Student roles',
   })
   @IsEnum(GroupRoles, validationOptionsMsg('Role name must be an enum'))

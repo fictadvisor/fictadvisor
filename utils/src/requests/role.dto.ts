@@ -6,6 +6,7 @@ import { RoleName } from '../enums';
 export class RoleDTO {
   @ApiProperty({
     enum: RoleName,
+    enumName: 'RoleName',
     description: 'User roles',
   })
   @IsEnum(RoleName, validationOptionsMsg('Role name must be enum'))

@@ -15,6 +15,7 @@ export class AttachLessonDTO {
 
   @ApiProperty({
     enum: EventTypeEnum,
+    enumName: 'EventTypeEnum',
   })
   @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
   @IsNotEmpty()

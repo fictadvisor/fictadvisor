@@ -40,13 +40,13 @@ export class ScheduleProfile extends AutomapperProfile {
         extend(DbEvent, TelegramShortEventResponse),
 
         forMember((response) => response.disciplineInfo,
-          mapWithArguments((_, { discipline }: { discipline: DbDiscipline }) => discipline?.description ?? null)),
+          mapWithArguments((_, { discipline }: any) => discipline?.description ?? null)),
 
         forMember((response) => response.disciplineId,
-          mapWithArguments((_, { discipline }: { discipline: DbDiscipline }) => discipline?.id ?? null)),
+          mapWithArguments((_, { discipline }: any) => discipline?.id ?? null)),
 
         forMember((response) => response.teachers,
-          mapWithArguments(({ lessons }, { discipline }: { discipline: DbDiscipline }) =>
+          mapWithArguments(({ lessons }, { discipline }: any) =>
             this.getTeachers(discipline?.disciplineTeachers, lessons[0]?.disciplineType))
         ));
     };

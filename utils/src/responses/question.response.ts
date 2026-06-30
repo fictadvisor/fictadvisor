@@ -48,6 +48,7 @@ export class QuestionResponse {
 
   @ApiProperty({
     enum: QuestionType,
+    enumName: 'QuestionType',
     description: 'An enum of question\'s types',
   })
   @AutoMap(() => String)
@@ -55,6 +56,7 @@ export class QuestionResponse {
 
   @ApiProperty({
     enum: QuestionDisplay,
+    enumName: 'QuestionDisplay',
     description: 'An enum of question\'s display',
   })
   @AutoMap(() => String)

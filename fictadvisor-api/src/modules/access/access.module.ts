@@ -19,7 +19,7 @@ import { PermissionModule } from '../permission/permission.module';
       useFactory: (configService: SecurityConfigService) => ({
         secret: configService.secret,
         signOptions: {
-          expiresIn: configService.jwtTtl,
+          expiresIn: configService.jwtTtl as any,
         },
       }),
     })],

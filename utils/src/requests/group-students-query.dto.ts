@@ -6,6 +6,7 @@ import { OrderQAParam, SortQGSParam } from '../enums';
 export class GroupStudentsQueryDTO {
   @ApiPropertyOptional({
     enum: SortQGSParam,
+    enumName: 'SortQGSParam',
     description: 'Sort by option',
     default: null,
   })
@@ -15,6 +16,7 @@ export class GroupStudentsQueryDTO {
   
   @ApiPropertyOptional({
     enum: OrderQAParam,
+    enumName: 'OrderQAParam',
     description: 'Get result in ascending or descending order',
     default: OrderQAParam.ASC,
   })

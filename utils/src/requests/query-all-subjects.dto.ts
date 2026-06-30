@@ -15,6 +15,7 @@ export class QueryAllSubjectsDTO extends QueryAllDTO {
 
   @ApiPropertyOptional({
     enum: SortQASParam,
+    enumName: 'SortQASParam',
   })
   @IsOptional()
     sort?: SortQASParam;

@@ -42,6 +42,7 @@ export class CreateEventDTO {
   @ApiPropertyOptional({
     description: 'Event type',
     enum: EventTypeEnum,
+    enumName: 'EventTypeEnum',
   })
   @IsOptional()
   @IsEnum(EventTypeEnum, validationOptionsMsg('Event type must be an enum'))
@@ -74,6 +75,7 @@ export class CreateEventDTO {
   @ApiProperty({
     description: 'Event recurrence period',
     enum: Period,
+    enumName: 'Period',
   })
   @IsNotEmpty(validationOptionsMsg('Period cannot be empty'))
   @IsEnum(Period, validationOptionsMsg('Period must be an enum'))

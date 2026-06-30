@@ -17,6 +17,7 @@ export class QueryAllTeachersDTO extends QueryAllDTO {
 
   @ApiPropertyOptional({
     enum: SortQATParam,
+    enumName: 'SortQATParam',
   })
   @IsEnum(SortQATParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()
@@ -40,6 +41,7 @@ export class QueryAllTeachersDTO extends QueryAllDTO {
     description: 'Teacher\'s discipline types',
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
   })
   @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each element of discipline types should be an enum', true))
   @IsArray(validationOptionsMsg('Discipline types must be an array'))

@@ -18,6 +18,7 @@ export class SpecialityResponse {
   @ApiProperty({
     description: 'Speciality abbreviation',
     enum: AbbreviationOfSpeciality,
+    enumName: 'AbbreviationOfSpeciality',
   })
   @AutoMap(() => String)
     abbreviation: AbbreviationOfSpeciality;

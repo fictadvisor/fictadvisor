@@ -13,6 +13,7 @@ export class EventResponse extends TelegramShortEventResponse {
 
   @ApiProperty({
     enum: Period,
+    enumName: 'Period',
     description: 'The period during which the event occurs',
   })
   @AutoMap(() => String)

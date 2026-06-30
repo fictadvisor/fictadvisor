@@ -34,6 +34,7 @@ export class BaseStudentResponse {
   @ApiProperty({
     description: 'Student\'s state',
     enum: State,
+    enumName: 'State',
   })
   @AutoMap(() => String)
     state: State;
@@ -43,6 +44,7 @@ export class SimpleStudentResponse extends BaseStudentResponse {
   @ApiProperty({
     description: 'Student\'s group role',
     enum: GroupRoles,
+    enumName: 'GroupRoles',
   })
   @AutoMap(() => String)
     role: keyof typeof GroupRoles;

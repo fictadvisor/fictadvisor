@@ -13,6 +13,7 @@ export class BaseRoleResponse {
   @ApiProperty({
     description: 'The name of the role',
     enum: RoleName,
+    enumName: 'RoleName',
   })
   @AutoMap(() => String)
     name: RoleName;

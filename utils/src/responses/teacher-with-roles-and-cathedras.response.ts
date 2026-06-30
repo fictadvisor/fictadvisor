@@ -8,6 +8,7 @@ export class TeacherWithRolesAndCathedrasResponse extends TeacherResponse {
   @ApiProperty({
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
     description: 'List of teacher\'s discipline types',
   })
   @AutoMap(() => [String])

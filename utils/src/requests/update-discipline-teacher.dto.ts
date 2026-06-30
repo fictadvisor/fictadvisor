@@ -7,6 +7,7 @@ export class UpdateDisciplineTeacherDTO {
   @ApiProperty({
     description: 'Array of discipline types of discipline teacher',
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
     type: [DisciplineTypeEnum],
   })
   @IsNotEmpty(validationOptionsMsg('Discipline types can not be empty'))

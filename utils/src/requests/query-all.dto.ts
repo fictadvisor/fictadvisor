@@ -34,6 +34,7 @@ export class QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Sorting order',
     enum: ['asc', 'desc'],
+    enumName: 'SortOrder',
   })
   @IsIn(['asc', 'desc'], validationOptionsMsg('Wrong value for order'))
   @IsOptional()

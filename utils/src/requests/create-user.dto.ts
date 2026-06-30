@@ -31,6 +31,7 @@ export class CreateUserDTO {
     @ApiProperty({
       description: 'User\'s state',
       enum: State,
+      enumName: 'State',
     })
     @IsEnum(State, validationOptionsMsg('State must be an enum'))
     @IsNotEmpty(validationOptionsMsg('State cannot be empty'))

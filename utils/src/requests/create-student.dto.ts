@@ -59,6 +59,7 @@ export class CreateStudentDTO {
 export class CreateStudentWithRolesDTO extends CreateStudentDTO {
   @ApiProperty({
     enum: GroupRoles,
+    enumName: 'GroupRoles',
     description: 'Student roles',
   })
   @IsEnum(GroupRoles, validationOptionsMsg('Role name should be an enum'))

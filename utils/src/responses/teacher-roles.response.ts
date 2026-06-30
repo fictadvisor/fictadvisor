@@ -7,6 +7,7 @@ export class TeacherRolesResponse {
     description: 'List of teacher discipline types',
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
   })
   @AutoMap(() => [String])
     disciplineTypes: DisciplineTypeEnum[];

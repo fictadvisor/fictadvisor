@@ -7,6 +7,7 @@ export class UpdateRoleDTO {
   @ApiPropertyOptional({
     description: 'The name of the role',
     enum: RoleName,
+    enumName: 'RoleName',
   })
   @IsOptional()
   @IsEnum(RoleName, validationOptionsMsg('Name must be an enum'))

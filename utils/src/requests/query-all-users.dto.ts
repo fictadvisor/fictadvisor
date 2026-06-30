@@ -7,6 +7,7 @@ import { State, SortQAUParam } from '../enums';
 export class QueryAllUsersDTO extends QueryAllDTO {
     @ApiPropertyOptional({
       enum: SortQAUParam,
+      enumName: 'SortQAUParam',
       description: 'Sorting by field',
       default: 'username',
     })
@@ -24,6 +25,7 @@ export class QueryAllUsersDTO extends QueryAllDTO {
     @ApiPropertyOptional({
       description: 'State of the user',
       enum: State,
+      enumName: 'State',
       type: [State],
     })
     @IsArray()

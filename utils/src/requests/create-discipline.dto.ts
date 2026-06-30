@@ -26,6 +26,7 @@ class Discipline_DisciplineTeacher {
     description: 'Array of discipline types of discipline teacher',
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
   })
   @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each discipline type in array must be an enum', true))
   @IsArray(validationOptionsMsg('Discipline types must be an array'))

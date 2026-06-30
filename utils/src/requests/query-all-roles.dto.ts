@@ -14,6 +14,7 @@ export class QueryAllRolesDTO extends QueryAllDTO {
 
   @ApiPropertyOptional({
     enum: SortQARParam,
+    enumName: 'SortQARParam',
     description: 'Sorting by field',
     default: 'displayName',
   })
@@ -24,6 +25,7 @@ export class QueryAllRolesDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'The name of the role',
     enum: RoleName,
+    enumName: 'RoleName',
   })
   @IsEnum(RoleName, validationOptionsMsg('Name must be an enum'))
   @IsOptional()

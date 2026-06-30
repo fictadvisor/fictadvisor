@@ -44,6 +44,7 @@ export class TeacherResponse extends ShortTeacherResponse {
   @ApiProperty({
     description: 'Academic status of the teacher',
     enum: AcademicStatus,
+    enumName: 'AcademicStatus',
   })
   @AutoMap(() => String)
     academicStatus: AcademicStatus;
@@ -51,6 +52,7 @@ export class TeacherResponse extends ShortTeacherResponse {
   @ApiProperty({
     description: 'Scientific degree of the teacher',
     enum: ScientificDegree,
+    enumName: 'ScientificDegree',
   })
   @AutoMap(() => String)
     scientificDegree: ScientificDegree;
@@ -58,6 +60,7 @@ export class TeacherResponse extends ShortTeacherResponse {
   @ApiProperty({
     description: 'Position of the teacher',
     enum: Position,
+    enumName: 'Position',
   })
   @AutoMap(() => String)
     position: Position;

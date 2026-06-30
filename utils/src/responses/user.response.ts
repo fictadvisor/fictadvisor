@@ -20,6 +20,7 @@ export class UserForGetAllResponse extends ShortUserResponse {
   @ApiProperty({
     description: 'User\'s state',
     enum: State,
+    enumName: 'State',
     default: State.PENDING,
   })
   @AutoMap(() => String)

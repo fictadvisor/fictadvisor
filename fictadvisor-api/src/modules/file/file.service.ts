@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { join, extname } from 'path';
-import * as admin from 'firebase-admin';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
 import * as process from 'process';
 import { find } from '../../common/utils/array.utils';
 import { StudentWithContactsData } from './types/student-with-contacts.data';
@@ -14,11 +15,11 @@ export class FileService {
   private storage: Bucket;
 
   constructor () {
-    admin.initializeApp({
-      credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    initializeApp({
+      credential: cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
       storageBucket: process.env.BUCKET_NAME,
     });
-    this.storage = admin.storage().bucket();
+    this.storage = getStorage().bucket();
   }
 
   async saveByHash (fileContent: Express.Multer.File, directory: string): Promise<string> {

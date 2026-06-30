@@ -6,6 +6,7 @@ import { DisciplineTypeEnum } from '../enums';
 export class CreateQuestionRoleDTO {
   @ApiProperty({
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
     description: 'An enum of teacher roles\'s',
   })
   @IsNotEmpty(validationOptionsMsg('Role cannot be empty'))

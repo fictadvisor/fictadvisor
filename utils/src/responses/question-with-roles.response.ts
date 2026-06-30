@@ -6,6 +6,7 @@ import { AutoMap } from '@automapper/classes';
 export class QuestionRole {
   @ApiProperty({
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
     description: 'An enum of teacher roles',
   })
   @AutoMap(() => String)
