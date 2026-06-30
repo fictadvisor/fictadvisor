@@ -2,12 +2,12 @@ import {
   ScientificDegree,
   AcademicStatus,
   Position,
+  Prisma,
 } from '@prisma-client/fictadvisor';
 import { DbDisciplineTeacher } from './discipline-teacher.entity';
 import { DbComplaint } from './complaint.entity';
 import { DbTeachersOnCathedras } from './teachers-on-cathedras.entity';
 import { AutoMap } from '@automapper/classes';
-import { Decimal } from '@prisma-client/fictadvisor/runtime/library';
 
 export class DbTeacher {
   @AutoMap()
@@ -38,7 +38,7 @@ export class DbTeacher {
     position: Position | null;
 
   @AutoMap(() => Number)
-    rating: Decimal;
+    rating: Prisma.Decimal;
 
   @AutoMap(() => [DbTeachersOnCathedras])
     cathedras?: DbTeachersOnCathedras[];

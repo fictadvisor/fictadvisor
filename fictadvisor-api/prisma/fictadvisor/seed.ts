@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma-client/fictadvisor';
-import process from 'process';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.FICTADVISOR_DATABASE_URL }),
+});
 async function main () {
   console.log('Start seeding');
   await prisma.semesterDate.createMany({
