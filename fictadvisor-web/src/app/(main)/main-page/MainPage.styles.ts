@@ -47,8 +47,8 @@ export const infoSectionContent: SxProps<Theme> = {
 
 export const infoSectionTitle: SxProps<Theme> = {
   typography: {
-    mobile: theme.typography.h4Bold,
-    tablet: theme.typography.h2Bold,
+    mobile: 'h4Bold',
+    tablet: 'h2Bold',
   },
   display: 'block',
   position: 'relative',
@@ -76,8 +76,8 @@ export const infoSectionParagraph: SxProps<Theme> = {
     desktop: '50px 0 45px 0',
   },
   typography: {
-    mobile: theme.typography.body1,
-    tablet: theme.typography.body2,
+    mobile: 'body1',
+    tablet: 'body2',
   },
   width: {
     tablet: '100%',
@@ -135,8 +135,8 @@ export const buttons: SxProps<Theme> = {
     mobileSemiMedium: 'auto',
   },
   typography: {
-    mobile: theme.typography.body1Bold,
-    tablet: theme.typography.buttonBold,
+    mobile: 'body1Bold',
+    tablet: 'buttonBold',
   },
   borderRadius: {
     mobile: '6px',
@@ -184,8 +184,8 @@ export const resourcesSection: SxProps<Theme> = {
 
 export const resourcesSectionTitle: SxProps<Theme> = {
   typography: {
-    mobile: theme.typography.h6Medium,
-    tablet: theme.typography.h3Bold,
+    mobile: 'h6Medium',
+    tablet: 'h3Bold',
   },
 };
 

@@ -25,7 +25,7 @@ export const notFoundText: SxProps<Theme> = {
   textAlign: 'center',
   marginTop: '64px',
   marginBottom: { desktop: '57px', mobile: '44px' },
-  typography: { desktop: theme.typography.h5, mobile: theme.typography.body2 },
+  typography: { desktop: 'h5', mobile: 'body2' },
 };
 
 export const frogImage: SxProps<Theme> = {

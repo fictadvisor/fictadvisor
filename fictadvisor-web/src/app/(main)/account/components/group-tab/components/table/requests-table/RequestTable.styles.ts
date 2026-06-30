@@ -21,14 +21,14 @@ export const divider: SxProps<Theme> = {
 
 export const fullName: SxProps<Theme> = {
   typography: {
-    mobile: theme.typography.overline,
-    desktop: theme.typography.body2Bold,
+    mobile: 'overline',
+    desktop: 'body2Bold',
   },
 };
 
 export const email: SxProps<Theme> = {
   typography: {
-    mobile: theme.typography.body1Bold,
-    desktop: theme.typography.body2Medium,
+    mobile: 'body1Bold',
+    desktop: 'body2Medium',
   },
 };
