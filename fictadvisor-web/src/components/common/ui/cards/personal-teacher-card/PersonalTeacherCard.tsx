@@ -117,13 +117,13 @@ const PersonalTeacherCard: FC<TeacherCard> = ({
         />
       </Box>
       <Box sx={styles.scienceInfo(isSubjectCard)}>
-        <Typography textTransform="none">
+        <Typography sx={{ textTransform: 'none' }}>
           {scientificFields.join(', ')}
         </Typography>
       </Box>
       {!isSubjectCard && (
         <Box sx={styles.info}>
-          <Typography textTransform="none">{description}</Typography>
+          <Typography sx={{ textTransform: 'none' }}>{description}</Typography>
         </Box>
       )}
       {contacts.length !== 0 && (

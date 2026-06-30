@@ -6,7 +6,7 @@ import {
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import Button from '@/components/common/ui/button-mui';

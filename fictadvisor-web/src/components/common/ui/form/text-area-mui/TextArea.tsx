@@ -40,7 +40,7 @@ const TextArea: React.FC<TextAreaProps> = ({
       disabled={disabled}
     >
       {label && (
-        <InputLabel sx={styles.label(state)} size="normal">
+        <InputLabel sx={styles.label(state)} size="medium">
           {label}
         </InputLabel>
       )}

@@ -149,7 +149,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>
-            <Grid item desktop={4} mobile={9}>
+            <Grid size={{ desktop: 4, mobile: 9 }}>
               <Avatar src={row.imgSrc} alt="avatar" />
               {!isMobile && (
                 <Typography className="name">{row.fullName}</Typography>
@@ -161,7 +161,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
                 </Box>
               )}
             </Grid>
-            <Grid item desktop={2} mobile={1}>
+            <Grid size={{ desktop: 2, mobile: 1 }}>
               {row.role !== GroupRoles.STUDENT && isMobile && (
                 <Tag
                   size={TagSize.SMALL}
@@ -185,12 +185,12 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
               )}
             </Grid>
 
-            <Grid item desktop={3}>
+            <Grid size={{ desktop: 3 }}>
               {!isMobile && (
                 <Typography className="email">{row.email}</Typography>
               )}
             </Grid>
-            <Grid item mobile={2} desktop={3}>
+            <Grid size={{ mobile: 2, desktop: 3 }}>
               {
                 <EditingColumn
                   student={row}

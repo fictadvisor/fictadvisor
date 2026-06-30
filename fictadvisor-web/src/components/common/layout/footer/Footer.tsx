@@ -89,7 +89,7 @@ const Footer: FC = () => {
                 icon={data.icon}
                 color={IconButtonColor.TRANSPARENT}
               />
-              <Typography variant="body1Bold" color="grey.600">
+              <Typography variant="body1Bold" sx={{ color: 'grey.600' }}>
                 {!isMobile && data.text}
               </Typography>
             </Link>

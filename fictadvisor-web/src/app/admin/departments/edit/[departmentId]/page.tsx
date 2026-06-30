@@ -149,7 +149,7 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
           subheader={department.data.name}
           sx={stylesAdmin.title}
         />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             color={ButtonColor.SECONDARY}
@@ -181,7 +181,7 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
           />
         </Stack>
       </Box>
-      <Stack maxWidth={308} flexDirection="column" gap="16px" padding="16px">
+      <Stack sx={{ maxWidth: 308, flexDirection: 'column', gap: '16px', padding: '16px' }}>
         <Input
           value={name ?? ''}
           onChange={setName}

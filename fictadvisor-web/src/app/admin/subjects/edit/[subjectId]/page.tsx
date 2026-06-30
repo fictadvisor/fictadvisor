@@ -87,7 +87,7 @@ const AdminSubjectEdit: FC<AdminSubjectEditProps> = ({ params }) => {
           subheader={`Предмет ${subject.name.toLowerCase()}`}
           sx={stylesAdmin.title}
         />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             color={ButtonColor.SECONDARY}

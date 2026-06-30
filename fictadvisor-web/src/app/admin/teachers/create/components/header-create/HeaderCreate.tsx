@@ -24,7 +24,7 @@ const HeaderCreate: FC<HeaderCreateProps> = ({ handleEditSubmit }) => {
       <Typography sx={stylesAdmin.editName} variant="h5">
         Створення викладача
       </Typography>
-      <Stack flexDirection="row" gap="8px">
+      <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
         <Button
           sx={styles.button}
           size={ButtonSize.MEDIUM}

@@ -69,7 +69,7 @@ export const CheckboxesDropdown = () => {
   return (
     <Box sx={styles.wrapper}>
       <Box sx={MergeSx(dropdownStyles.dropdown, styles.inputLabel)}>
-        <Autocomplete
+        <Autocomplete<any, true, false, false>
           disableCloseOnSelect
           onChange={handleChange}
           options={options}
@@ -106,14 +106,14 @@ export const CheckboxesDropdown = () => {
             );
           }}
           getOptionLabel={value => value.label}
-          componentsProps={{
+          slotProps={{
             popper: popperProps,
           }}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
+          renderValue={(value: any[], getItemProps: any) =>
+            value.map((option: any, index: number) => (
               <Tag
                 text={option.label}
-                {...getTagProps({ index })}
+                {...getItemProps({ index })}
                 key={index}
                 size={TagSize.SMALL}
                 sx={styles.tag}

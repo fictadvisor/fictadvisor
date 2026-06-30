@@ -50,7 +50,7 @@ const Page = () => {
     <Box sx={{ padding: '16px' }}>
       <Box sx={stylesAdmin.header}>
         <CardHeader title="Створення" sx={stylesAdmin.title} />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             text="Скасувати"
@@ -64,7 +64,7 @@ const Page = () => {
           />
         </Stack>
       </Box>
-      <Stack maxWidth={308} flexDirection="column" gap="16px" padding="16px">
+      <Stack sx={{ maxWidth: 308, flexDirection: 'column', gap: '16px', padding: '16px' }}>
         <Input
           value={name}
           onChange={setName}

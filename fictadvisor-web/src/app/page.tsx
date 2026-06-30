@@ -49,7 +49,7 @@ export default async function Main() {
             <Typography sx={stylesMUI.infoSectionTitle}>
               {pageTexts['mainpage_title'].value}
             </Typography>
-            <Typography paragraph sx={stylesMUI.infoSectionParagraph}>
+            <Typography sx={{ ...stylesMUI.infoSectionParagraph, mb: 2 }}>
               {pageTexts['mainpage_description'].value}
             </Typography>
             <Box sx={stylesMUI.buttonSection}>

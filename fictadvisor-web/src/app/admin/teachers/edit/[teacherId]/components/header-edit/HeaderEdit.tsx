@@ -39,7 +39,7 @@ const HeaderEdit: FC<HeaderEditProps> = ({
           {teacher.lastName} {teacher.firstName} {teacher.middleName}
         </Typography>
       </Box>
-      <Stack flexDirection="row" gap="8px">
+      <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
         <Button
           sx={styles.button}
           size={ButtonSize.MEDIUM}

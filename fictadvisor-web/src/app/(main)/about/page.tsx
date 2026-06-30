@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import stylesCSS from '@/app/(main)/about/AboutPage.module.scss';
 import * as styles from '@/app/(main)/about/AboutPage.styles';
 import Eclipse from '@/app/(main)/about/components/eclipse/Eclipse';
@@ -159,13 +160,13 @@ const About = () => (
               opacity={0.35}
               sx={{ zIndex: '-1', right: '65%', top: '60%' }}
             />
-            <Typography variant="body2Medium" marginTop="52px" flexGrow={1}>
+            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
               Катедра <b>обчислювальної техніки</b> найстаріша на факультеті,
               заснована у 1960 році. Освітній план спрямований на підготовку
               фахівців у галузі розробки високопродуктивних систем реального
               часу, мережевого програмного забезпечення та штучного інтелекту.
             </Typography>
-            <Typography variant="body1" marginTop="36px" flexGrow={1}>
+            <Typography variant="body1" sx={{ marginTop: '36px', flexGrow: 1 }}>
               Надає освітні програми для 121 та 123 спеціальностей.
             </Typography>
           </Box>
@@ -177,26 +178,26 @@ const About = () => (
               opacity={0.7}
               sx={{ zIndex: '-1', left: '70%', bottom: '30%' }}
             />
-            <Typography variant="body2Medium" marginTop="52px" flexGrow={1}>
+            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
               Катедра <b>інформатики та програмної інженерії</b> доволі молода
               на факультеті, заснована лише у 2021 році. Викладання орієнтоване
               на розвиток у студентів системного та алгоритмічного мислення в
               галузі розробки програмного забезпечення.
             </Typography>
-            <Typography variant="body1" marginTop="36px" flexGrow={1}>
+            <Typography variant="body1" sx={{ marginTop: '36px', flexGrow: 1 }}>
               Надає освітню програму для 121 спеціальності.
             </Typography>
           </Box>
           <Box sx={styles.cathedraCard}>
             <Typography variant="h4Bold">ІСТ</Typography>
-            <Typography variant="body2Medium" marginTop="52px" flexGrow={1}>
+            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
               Катедра <b>інформаційних систем та технологій</b> також заснована
               у 2021 році. Головною особливістю освітньої програми є підготовка
               випускників з глибокими різногалузевими знаннями найсучасніших
               напрямів: інформаційних технологій, комп'ютеризованих систем
               управління, обчислювальної техніки та електроніки.
             </Typography>
-            <Typography variant="body1" marginTop="36px" flexGrow={1}>
+            <Typography variant="body1" sx={{ marginTop: '36px', flexGrow: 1 }}>
               Надає освітні програми для 126 спеціальності.
             </Typography>
 
@@ -229,8 +230,8 @@ const About = () => (
           opacity={0.7}
           sx={{ zIndex: '-1', left: '70%', bottom: '15%' }}
         />
-        <Box display="flex" flexDirection="column" gap="26px">
-          <Box marginTop="30px">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '26px' }}>
+          <Box sx={{ marginTop: '30px' }}>
             <Typography
               sx={{
                 maxWidth: '370px',
@@ -271,7 +272,7 @@ const About = () => (
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" flexDirection="column" gap="20px">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Box sx={styles.specialtyTextCard}>
             <Typography
               sx={{ typography: { mobile: 'h6Bold', desktop: 'h4Bold' } }}
@@ -320,7 +321,7 @@ const About = () => (
           width: '100%',
         }}
       >
-        <Typography variant="h6Bold" mt="84px">
+        <Typography variant="h6Bold" sx={{ mt: '84px' }}>
           Студентська активність
         </Typography>
         <Box sx={styles.studActivityContainerMobile}>
@@ -382,9 +383,9 @@ const About = () => (
           mt: '140px',
         }}
       >
-        <Box display="flex" flexDirection="column">
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h4Bold">Студентська активність</Typography>
-          <Box width="100%" display="flex" marginTop="16px" gap="16px">
+          <Box sx={{ width: '100%', display: 'flex', marginTop: '16px', gap: '16px' }}>
             <Box>
               <img
                 src="/images/about-page/events.png"
@@ -406,7 +407,7 @@ const About = () => (
             </Box>
           </Box>
 
-          <Box display="flex" marginTop="16px" gap="16px">
+          <Box sx={{ display: 'flex', marginTop: '16px', gap: '16px' }}>
             <Box>
               <img
                 src="/images/about-page/dayF.png"
@@ -430,7 +431,7 @@ const About = () => (
             </Box>
           </Box>
         </Box>
-        <Box sx={styles.studentTextCard} maxWidth="300px" ml="16px">
+        <Box sx={mergeSx(styles.studentTextCard, { maxWidth: '300px', ml: '16px' })}>
           <Typography variant="h4Bold">Благодійність</Typography>
           <Typography variant="body2">
             З початку повномасштабного вторгнення студентство факультету
@@ -444,13 +445,7 @@ const About = () => (
         </Box>
       </Box>
 
-      <Box
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-        mb="48px"
-        mt="80px"
-      >
+      <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', mb: '48px', mt: '80px' }}>
         <Box
           sx={{
             display: { mobile: 'block', desktop: 'none' },

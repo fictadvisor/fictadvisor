@@ -58,7 +58,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
         {rows.map((row, index) => (
           <Grid container key={index} sx={gridStyles.row}>
             {row.imgSrc && (
-              <Grid item desktop={6} mobile={7}>
+              <Grid size={{ desktop: 6, mobile: 7 }}>
                 <img width={48} height={48} src={row.imgSrc} alt="avatar" />
                 {!isMobile && (
                   <Typography sx={styles.fullName}>{row.fullName}</Typography>
@@ -72,12 +72,12 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
               </Grid>
             )}
 
-            <Grid item mobile={3} desktop={4}>
+            <Grid size={{ mobile: 3, desktop: 4 }}>
               {!isMobile && (
                 <Typography sx={styles.email}>{row.email}</Typography>
               )}
             </Grid>
-            <Grid item mobile={2} desktop={2} sx={styles.lastColumn}>
+            <Grid size={{ mobile: 2, desktop: 2 }} sx={styles.lastColumn}>
               {isMobile ? (
                 <AlertButton
                   sx={styles.fixSized}

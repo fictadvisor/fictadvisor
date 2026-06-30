@@ -81,7 +81,7 @@ const AdminCommentEdit: FC<AdminCommentEditProps> = ({ params }) => {
               subheader={comment.comment}
               sx={styles.title}
             />
-            <Stack flexDirection="row" gap="8px">
+            <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
               <Button
                 size={ButtonSize.MEDIUM}
                 color={ButtonColor.SECONDARY}

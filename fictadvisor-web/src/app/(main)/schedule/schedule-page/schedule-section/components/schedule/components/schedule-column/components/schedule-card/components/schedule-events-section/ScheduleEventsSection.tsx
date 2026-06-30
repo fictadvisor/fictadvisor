@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ClickAwayListener } from '@mui/base';
+import { ClickAwayListener } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import moment from 'moment';
 

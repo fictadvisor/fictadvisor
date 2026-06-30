@@ -38,7 +38,8 @@ export const DatePicker = () => {
         views={['day']}
         showDaysOutsideCurrentMonth
         dayOfWeekFormatter={day => {
-          return day.charAt(0).toUpperCase() + day.slice(1);
+          const formatted = day.format('dd');
+          return formatted.charAt(0).toUpperCase() + formatted.slice(1);
         }}
         minDate={moment(semester?.startDate)}
         maxDate={moment(semester?.endDate)}

@@ -42,7 +42,7 @@ const Create = () => {
     <Box sx={{ padding: '16px' }}>
       <Box sx={stylesAdmin.header}>
         <CardHeader title="Створення користувача" sx={stylesAdmin.title} />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             text="Скасувати"

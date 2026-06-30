@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-import { Box, Slide, Snackbar } from '@mui/material';
+import { Box, Slide, SlideProps, Snackbar } from '@mui/material';
 
 import Alert from '@/components/common/ui/alert';
 import { AlertType, AlertVariant } from '@/components/common/ui/alert/types';
@@ -7,6 +7,8 @@ import { AlertType, AlertVariant } from '@/components/common/ui/alert/types';
 import * as styles from './Toast.styles';
 
 const AUTO_HIDE_DURATION = 12000;
+
+const SlideLeft = (props: SlideProps) => <Slide {...props} direction="left" />;
 
 interface ToastProps {
   /**
@@ -46,9 +48,9 @@ const Toast: FC<ToastProps> = ({
   return (
     <Snackbar
       key={title + type + description}
-      TransitionComponent={props => <Slide {...props} direction="left" />}
+      slots={{ transition: SlideLeft }}
       open={open}
-      ClickAwayListenerProps={{ onClickAway: () => null }}
+      slotProps={{ clickAwayListener: { onClickAway: () => null } }}
       autoHideDuration={timer ?? AUTO_HIDE_DURATION}
       onClose={onClose}
       anchorOrigin={{

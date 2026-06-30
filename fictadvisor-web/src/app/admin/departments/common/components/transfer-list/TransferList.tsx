@@ -132,11 +132,9 @@ const TransferList: FC<TransferListProps> = ({
     <Grid
       container
       spacing={2}
-      justifyContent="center"
-      alignItems="center"
-      padding="16px"
+      sx={{ justifyContent: 'center', alignItems: 'center', padding: '16px' }}
     >
-      <Grid item>
+      <Grid>
         <SideList
           teachers={left}
           title="Не на кафедрі"
@@ -144,7 +142,7 @@ const TransferList: FC<TransferListProps> = ({
           onCheck={setChecked}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <Grid container sx={styles.transferButtons}>
           <IconButton
             icon={<ChevronRightIcon />}
@@ -162,7 +160,7 @@ const TransferList: FC<TransferListProps> = ({
           />
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid>
         <SideList
           teachers={right}
           title="На кафедрі"

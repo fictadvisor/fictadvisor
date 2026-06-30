@@ -16,7 +16,7 @@ const HeaderMobileCard: FC<HeaderCardProps> = ({
       <Box sx={styles.headerCardInfo}>
         <Avatar src={avatar} alt="Картинка профілю" sx={styles.avatar} />
         <Box>
-          <Typography variant="body1Medium" color="grey.600">
+          <Typography variant="body1Medium" sx={{ color: 'grey.600' }}>
             {name}
           </Typography>
           <Box sx={styles.userInfo}>

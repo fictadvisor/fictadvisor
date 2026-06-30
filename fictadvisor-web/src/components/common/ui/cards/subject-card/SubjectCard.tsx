@@ -18,7 +18,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   return (
     <Box sx={styles.subjectCard(disabled)} {...rest}>
       <Box sx={styles.subjectName}>{name}</Box>
-      {details && <Typography paragraph={true}>{details}</Typography>}
+      {details && <Typography sx={{ mb: 2 }}>{details}</Typography>}
     </Box>
   );
 };

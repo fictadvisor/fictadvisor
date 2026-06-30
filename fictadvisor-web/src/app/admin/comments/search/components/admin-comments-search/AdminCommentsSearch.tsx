@@ -8,7 +8,7 @@ import {
   BarsArrowUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, Divider } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 import { sortOptions } from '@/app/admin/comments/common/constants';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';

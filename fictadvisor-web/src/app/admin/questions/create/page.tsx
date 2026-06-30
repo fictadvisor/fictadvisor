@@ -48,7 +48,7 @@ const Page = () => {
         <Box sx={styles.createName}>
           <Typography variant="h5">Створення питання</Typography>
         </Box>
-        <Stack flexDirection="row" gap="12px">
+        <Stack sx={{ flexDirection: 'row', gap: '12px' }}>
           <Button
             sx={styles.button}
             size={ButtonSize.MEDIUM}

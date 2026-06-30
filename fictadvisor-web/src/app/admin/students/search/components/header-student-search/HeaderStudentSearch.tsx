@@ -136,7 +136,6 @@ const HeaderStudentSearch: FC<HeaderStudentSearchProps> = ({
             }))}
             values={roleOptions}
             handleChange={handleRoleChange}
-            placeholder="Роль"
             label="Роль"
             size={FieldSize.MEDIUM}
           />

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useEffect } from 'react';
 import { FormControlLabel, RadioGroup, SxProps, Theme } from '@mui/material';
-import { RadioGroupProps } from '@mui/material/RadioGroup/RadioGroup';
+import { RadioGroupProps } from '@mui/material/RadioGroup';
 import { useField } from 'formik';
 
 import FormikRadio from '@/components/common/ui/form/with-formik/radio/FormikRadio';

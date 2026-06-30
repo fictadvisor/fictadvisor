@@ -104,7 +104,7 @@ const AdminUserEdit: FC<AdminUserEditProps> = ({ params }) => {
           subheader={`Користувач ${user.username}`}
           sx={stylesAdmin.title}
         />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             color={ButtonColor.SECONDARY}

@@ -15,7 +15,7 @@ import {
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
 import { Box, useMediaQuery } from '@mui/material';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { useQuery } from '@tanstack/react-query';
 import { Form, Formik, FormikProps, useFormikContext } from 'formik';
 

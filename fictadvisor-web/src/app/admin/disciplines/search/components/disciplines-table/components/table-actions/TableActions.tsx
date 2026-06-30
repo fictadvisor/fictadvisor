@@ -24,7 +24,7 @@ const TableActions: FC<TableActionsProps> = ({
   const [popupOpen, setPopupOpen] = useState(false);
 
   return (
-    <Stack sx={stylesAdmin.tableColumn} justifyContent="right">
+    <Stack sx={{ ...stylesAdmin.tableColumn, justifyContent: 'right' }}>
       <Button
         href={`/admin/disciplines/edit/${discipline.id}`}
         text="Редагувати"

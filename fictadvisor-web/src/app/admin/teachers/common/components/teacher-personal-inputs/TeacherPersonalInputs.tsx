@@ -115,8 +115,8 @@ const TeacherPersonalInputs: FC<TeacherPersonalInputsProps> = ({
 
   return (
     <Stack sx={styles.wrapper}>
-      <Stack flexDirection="row" gap="36px">
-        <Stack maxWidth={308} flexDirection="column" gap="16px">
+      <Stack sx={{ flexDirection: 'row', gap: '36px' }}>
+        <Stack sx={{ maxWidth: 308, flexDirection: 'column', gap: '16px' }}>
           <Input
             size={InputSize.MEDIUM}
             sx={styles.input}

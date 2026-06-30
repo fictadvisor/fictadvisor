@@ -51,7 +51,7 @@ const Page = () => {
     <>
       <Box sx={styles.header}>
         <CardHeader title="Головна сторінка" sx={styles.title} />
-        <Stack flexDirection="row" gap="8px">
+        <Stack sx={{ flexDirection: 'row', gap: '8px' }}>
           <Button
             size={ButtonSize.MEDIUM}
             text="Скасувати"

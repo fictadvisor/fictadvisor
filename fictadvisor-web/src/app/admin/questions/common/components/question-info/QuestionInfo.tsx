@@ -63,7 +63,7 @@ const QuestionInfo: FC<QuestionInfoProps> = ({ question, handleChanges }) => {
   };
 
   return (
-    <Stack sx={styles.infoSection} flexDirection="column" gap="14px">
+    <Stack sx={{ ...styles.infoSection, flexDirection: 'column', gap: '14px' }}>
       <Input
         sx={styles.input}
         size={InputSize.MEDIUM}
