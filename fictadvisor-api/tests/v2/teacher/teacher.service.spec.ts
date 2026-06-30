@@ -22,7 +22,6 @@ import { CreateContactData } from './datas/create-contact.data';
 import { GroupRepository } from '../../../src/database/v2/repositories/group.repository';
 import { InvalidEntityIdException } from '../../../src/common/exceptions/invalid-entity-id.exception';
 import { SubjectRepository } from '../../../src/database/v2/repositories/subject.repository';
-import { Decimal } from '@prisma/client/runtime/library';
 import { DbDisciplineTeacher } from '../../../src/database/v2/entities/discipline-teacher.entity';
 import { DisciplineTeacherRepository } from '../../../src/database/v2/repositories/discipline-teacher.repository';
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/discipline-teacher.service';
@@ -877,7 +876,7 @@ const teacher1: DbTeacher = {
   position: null,
   createdAt: new Date('2022-02-22T14:00:00.000Z'),
   updatedAt: new Date('2022-02-22T14:00:00.000Z'),
-  rating: new Decimal(60.00),
+  rating: new Prisma.Decimal(60.00),
   cathedras: [
     {
       cathedraId: cathedra1.id,
@@ -974,7 +973,7 @@ const teacher1UpdateInput: Prisma.TeacherUncheckedUpdateInput = {
   academicStatus: AcademicStatus.PROFESSOR,
   scientificDegree: ScientificDegree.CANDIDATE,
   position: Position.SENIOR_RESEARCH_ASSISTANT,
-  rating: new Decimal(100.00),
+  rating: new Prisma.Decimal(100.00),
 };
 
 const teacher1Updated: DbTeacher = {
@@ -987,7 +986,7 @@ const teacher1Updated: DbTeacher = {
   academicStatus: teacher1UpdateInput.academicStatus as AcademicStatus,
   scientificDegree: teacher1UpdateInput.scientificDegree as ScientificDegree,
   position: teacher1UpdateInput.position as Position,
-  rating: new Decimal(teacher1UpdateInput.rating as string),
+  rating: new Prisma.Decimal(teacher1UpdateInput.rating as string),
 };
 
 const teacher1Subject = {
@@ -1060,7 +1059,7 @@ const teacher2: DbTeacher = {
   scientificDegree: null,
   position: null,
   description: null,
-  rating: new Decimal(67.06),
+  rating: new Prisma.Decimal(67.06),
   cathedras: [
     {
       cathedraId: cathedra2.id,
@@ -1218,7 +1217,7 @@ function createTeacher (input : Prisma.TeacherUncheckedCreateInput) : DbTeacher 
     academicStatus: input.academicStatus,
     scientificDegree: input.scientificDegree,
     position: input.position,
-    rating: new Decimal(input.rating as string),
+    rating: new Prisma.Decimal(input.rating as string),
     createdAt: new Date('2022-02-22T14:00:00.000Z'),
     updatedAt: new Date('2022-02-22T14:00:00.000Z'),
     cathedras: [
@@ -1282,7 +1281,7 @@ function updateTeacher (id: string, input: Prisma.TeacherUncheckedUpdateInput, t
   teacherToUpdate.academicStatus = input.academicStatus as AcademicStatus;
   teacherToUpdate.scientificDegree = input.scientificDegree as ScientificDegree;
   teacherToUpdate.position = input.position as Position;
-  teacherToUpdate.rating = new Decimal(input.rating as string);
+  teacherToUpdate.rating = new Prisma.Decimal(input.rating as string);
 
   return teacherToUpdate;
 }

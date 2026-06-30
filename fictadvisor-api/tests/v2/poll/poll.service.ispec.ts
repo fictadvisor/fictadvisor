@@ -6,6 +6,7 @@ import { QuestionMapperModule } from '../../../src/modules/poll/v2/mappers/quest
 import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbDiscipline } from '../../../src/database/v2/entities/discipline.entity';
 import { Group, PrismaClient, QuestionDisplay, QuestionType, State, Subject, Teacher, User } from '@prisma-client/fictadvisor';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { DbQuestionWithRoles } from '../../../src/database/v2/entities/question-with-roles.entity';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
@@ -43,7 +44,9 @@ describe('PollService', () => {
     }).compile();
 
     pollService = testingModule.get(PollService);
-    prisma = new PrismaClient();
+    prisma = new PrismaClient({
+      adapter: new PrismaPg({ connectionString: process.env.FICTADVISOR_DATABASE_URL }),
+    });
 
     group = await prisma.group.create({
       data: {

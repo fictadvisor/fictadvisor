@@ -14,5 +14,23 @@
   },
   "coverageDirectory": "coverage/integration",
   "coverageReporters": ["html"],
-  "testEnvironment": "node"
+  "testEnvironment": "node",
+  "fakeTimers": {
+    "doNotFake": [
+      "hrtime",
+      "nextTick",
+      "performance",
+      "queueMicrotask",
+      "requestAnimationFrame",
+      "cancelAnimationFrame",
+      "requestIdleCallback",
+      "cancelIdleCallback",
+      "setImmediate",
+      "clearImmediate",
+      "setInterval",
+      "clearInterval",
+      "setTimeout",
+      "clearTimeout"
+    ]
+  }
 }
