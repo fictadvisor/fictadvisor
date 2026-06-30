@@ -61,7 +61,7 @@ export const gridWrapper: SxProps<Theme> = {
 export const row = (isSelected: boolean) => ({
   backgroundColor: isSelected ? 'grey.300' : 'transparent',
   cursor: 'pointer',
-  '& .MuiGrid-root.MuiGrid-item': {
+  '& > .MuiGrid-root': {
     '&:nth-of-type(1)': {
       gap: {
         mobile: '8px',

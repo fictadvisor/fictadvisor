@@ -15,7 +15,7 @@ export const row: SxProps<Theme> = {
     borderBottom: '1px solid',
     borderColor: 'grey.200',
   },
-  '& .MuiGrid-root.MuiGrid-item': {
+  '& > .MuiGrid-root': {
     display: 'flex',
     alignItems: 'center',
     '&:nth-of-type(4)': {
