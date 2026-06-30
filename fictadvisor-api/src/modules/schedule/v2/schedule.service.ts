@@ -12,7 +12,7 @@ import { EventTypeEnum, ParserTypeEnum } from '@fictadvisor/utils/enums';
 import { DisciplineTypeEnum, Period } from '@prisma-client/fictadvisor';
 import { CurrentSemester, DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DateUtils } from '../../date/date.utils';
-import { every, everyAsync, filterAsync, find, some } from '../../../common/utils/array.utils';
+import { every, everyAsync, find, some } from '../../../common/utils/array.utils';
 import { UserService } from '../../user/v2/user.service';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
 import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
@@ -102,14 +102,11 @@ export class ScheduleService {
     });
 
     week = week || (await this.dateService.getCurrentWeek());
-    const result = await filterAsync(events, async (event) => {
-      const indexOfLesson = this.scheduleHelperService.getIndexOfLesson(
-        week,
-        event,
-        startOfSemester
-      );
-      return indexOfLesson !== null;
-    });
+    const result = events.filter(
+      (event) =>
+        this.scheduleHelperService.getIndexOfLesson(week, event, startOfSemester) !==
+        null
+    );
 
     if (setWeekTime) {
       for (const event of result) {
@@ -410,14 +407,11 @@ export class ScheduleService {
       },
     });
 
-    let result = await filterAsync(events, async (event) => {
-      const indexOfLesson = this.scheduleHelperService.getIndexOfLesson(
-        week,
-        event,
-        startOfSemester
-      );
-      return indexOfLesson !== null;
-    });
+    let result = events.filter(
+      (event) =>
+        this.scheduleHelperService.getIndexOfLesson(week, event, startOfSemester) !==
+        null
+    );
 
     if (
       query.addLecture !== undefined ||

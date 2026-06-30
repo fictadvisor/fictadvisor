@@ -44,6 +44,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
 import { GeneralShortEventResponse } from '@fictadvisor/utils';
+import { EventTypeEnum } from '@fictadvisor/utils/enums';
 import { ScheduleHelperService } from './schedule.helper-service';
 
 @ApiTags('Schedule')
@@ -97,7 +98,18 @@ export class ScheduleController {
     @Query('week') week?: number,
   ): Promise<WeekGeneralEventsResponse> {
     const result = await this.scheduleService.getGeneralGroupEventsWrapper(groupId, query, week);
-    const mappedEvents = this.mapper.mapArray(result.events, DbEvent, GeneralShortEventResponse);
+
+    const mappedEvents = result.events.map((event) => {
+      const response = new GeneralShortEventResponse();
+      response.id = event.id;
+      response.name = event.name;
+      response.startTime = event.startTime;
+      response.endTime = event.endTime;
+      response.eventType =
+        (event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum) ??
+        EventTypeEnum.OTHER;
+      return response;
+    });
 
     return {
       events: this.scheduleHelperService.sortEvents(mappedEvents),
