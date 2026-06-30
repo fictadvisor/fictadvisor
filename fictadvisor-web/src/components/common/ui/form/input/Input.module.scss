@@ -41,6 +41,18 @@
   background: $background-dark-0;
   border: 2px $border-color solid;
   color: $text-color;
+
+  // Chrome autofill overrides text with its own dark -webkit-text-fill-color
+  // (grey on our dark inputs) and a yellow background — pin both to the theme.
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: $text-color;
+    -webkit-box-shadow: 0 0 0 1000px $background-dark-0 inset;
+    caret-color: $text-color;
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
 
 .default-input-color{
