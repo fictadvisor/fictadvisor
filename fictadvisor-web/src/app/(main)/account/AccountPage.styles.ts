@@ -24,7 +24,7 @@ export const tabList: SxProps<Theme> = {
     mobile: 'none',
     desktopSemiMedium: 'flex',
   },
-  '.MuiTabs-flexContainer': {
+  '.MuiTabs-list': {
     flexDirection: 'column',
     gap: '6px',
   },

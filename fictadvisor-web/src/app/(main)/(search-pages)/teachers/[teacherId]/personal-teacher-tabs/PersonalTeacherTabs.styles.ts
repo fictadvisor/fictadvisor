@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 export const tabList: SxProps<Theme> = {
-  '.MuiTabs-flexContainer': {
+  '.MuiTabs-list': {
     gap: '8px',
     overflow: 'scroll',
     scrollbarWidth: 'none',

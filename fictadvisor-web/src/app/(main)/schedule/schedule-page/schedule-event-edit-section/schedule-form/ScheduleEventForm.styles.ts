@@ -32,7 +32,7 @@ export const content: SxProps<Theme> = {
 
 export const infoContainer: SxProps<Theme> = {
   mt: '20px',
-  '& .MuiTabs-flexContainer': {
+  '& .MuiTabs-list': {
     gap: '8px',
   },
   '& .MuiTabs-root': {
