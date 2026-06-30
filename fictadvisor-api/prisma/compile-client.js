@@ -34,6 +34,7 @@ fs.writeFileSync(
         module: 'commonjs',
         target: 'ES2021',
         moduleResolution: 'node',
+        ignoreDeprecations: '6.0',
         esModuleInterop: true,
         skipLibCheck: true,
         declaration: false,
