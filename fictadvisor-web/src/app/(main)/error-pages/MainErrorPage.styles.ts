@@ -18,15 +18,15 @@ export const errorText: SxProps<Theme> = {
   textAlign: 'center',
   marginBottom: { desktop: '30px', mobile: '20px' },
   typography: {
-    desktop: theme.typography.h3Bold,
-    mobile: theme.typography.h5Bold,
+    desktop: 'h3Bold',
+    mobile: 'h5Bold',
   },
 };
 export const errorMessage: SxProps<Theme> = {
   width: { desktop: '700px', mobile: '300px' },
   height: 'fit-content',
   textAlign: 'center',
-  typography: { desktop: theme.typography.h4, mobile: theme.typography.h6 },
+  typography: { desktop: 'h4', mobile: 'h6' },
 };
 
 export const errorContent: SxProps<Theme> = {

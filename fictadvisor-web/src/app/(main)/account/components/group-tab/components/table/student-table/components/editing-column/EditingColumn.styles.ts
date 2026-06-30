@@ -20,8 +20,8 @@ export const transferCaptainPopup: SxProps<Theme> = {
       desktop: '16px',
     },
     typography: {
-      mobile: theme.typography.body2Medium,
-      desktop: theme.typography.h6Bold,
+      mobile: 'body2Medium',
+      desktop: 'h6Bold',
     },
   },
   '& .MuiDialogContent-root': {

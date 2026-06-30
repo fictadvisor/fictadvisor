@@ -11,8 +11,8 @@ export const questionNumber: SxProps<Theme> = {
 export const questionTitle: SxProps<Theme> = {
   fontSize: '20px',
   typography: {
-    mobile: theme.typography.body2Bold,
-    desktop: theme.typography.h6Bold,
+    mobile: 'body2Bold',
+    desktop: 'h6Bold',
   },
   color: theme.palette.white.main,
 };
