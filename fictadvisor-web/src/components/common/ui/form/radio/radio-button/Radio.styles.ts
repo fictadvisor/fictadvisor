@@ -28,9 +28,6 @@ export const radio = (state: FieldState): SxProps<Theme> => ({
       content: '""',
     },
   },
-  '& .MuiIconButton-label': {
-    color: radioColour(state),
-  },
 });
 
 export const label = (disabled: boolean, label: string): SxProps<Theme> => ({
