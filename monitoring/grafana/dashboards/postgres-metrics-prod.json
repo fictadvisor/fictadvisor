@@ -135,13 +135,13 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_blks_hit{job=\"postgres\"}[5m])) / clamp_min(sum(rate(pg_stat_database_blks_hit{job=\"postgres\"}[5m])) + sum(rate(pg_stat_database_blks_read{job=\"postgres\"}[5m])), 1)"
+          "expr": "sum(rate(pg_stat_database_blks_hit{job=\"postgres\"}[$__range])) / clamp_min(sum(rate(pg_stat_database_blks_hit{job=\"postgres\"}[$__range])) + sum(rate(pg_stat_database_blks_read{job=\"postgres\"}[$__range])), 1)"
         }
       ]
     },
     {
       "type": "stat",
-      "title": "Deadlocks (5m)",
+      "title": "Deadlocks (range)",
       "gridPos": {
         "h": 6,
         "w": 6,
@@ -163,7 +163,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(pg_stat_database_deadlocks{job=\"postgres\"}[5m]))"
+          "expr": "sum(increase(pg_stat_database_deadlocks{job=\"postgres\"}[$__range]))"
         }
       ]
     },
@@ -222,7 +222,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_xact_commit{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_commit{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "commits"
         },
         {
@@ -231,7 +231,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_xact_rollback{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_rollback{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "rollbacks"
         }
       ]
@@ -262,7 +262,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_tup_fetched{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_fetched{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "fetched"
         },
         {
@@ -271,7 +271,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_tup_returned{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_returned{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "returned"
         }
       ]
@@ -302,7 +302,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_tup_inserted{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_inserted{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "inserted"
         },
         {
@@ -311,7 +311,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_tup_updated{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_updated{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "updated"
         },
         {
@@ -320,7 +320,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(pg_stat_database_tup_deleted{job=\"postgres\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_deleted{job=\"postgres\"}[$__rate_interval]))",
           "legendFormat": "deleted"
         }
       ]
@@ -372,6 +372,98 @@
           },
           "expr": "pg_settings_max_connections{job=\"postgres\"}",
           "legendFormat": "max connections"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Query execution time per model + operation (ms)",
+      "description": "Prisma client query execution time (includes engine overhead; pg_stat_statements is not enabled for true server-side timing). Aggregated over the selected time range.",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "filterable": true
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "displayName": "p50 (ms)",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api\"}[$__range]))) * 1000 > 0",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "job": true,
+              "instance": true,
+              "app": true
+            },
+            "renameByName": {
+              "model": "model",
+              "action": "operation",
+              "Value #A": "p50 (ms)",
+              "Value #B": "p90 (ms)",
+              "Value #C": "p99 (ms)"
+            }
+          }
         }
       ]
     }

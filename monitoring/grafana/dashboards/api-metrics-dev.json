@@ -48,7 +48,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[5m]))"
+          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[$__range]))"
         }
       ]
     },
@@ -91,7 +91,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\",status_code=~\"5..\"}[5m]))"
+          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\",status_code=~\"5..\"}[$__range]))"
         }
       ]
     },
@@ -121,7 +121,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le)) > 0"
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range])) by (le)) > 0"
         }
       ]
     },
@@ -181,7 +181,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[5m])) by (route, method)",
+          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (route, method)",
           "legendFormat": "{{method}} {{route}}"
         }
       ]
@@ -212,7 +212,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le, route))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le, route))",
           "legendFormat": "{{route}}"
         }
       ]
@@ -243,7 +243,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p50"
         },
         {
@@ -252,7 +252,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p95"
         },
         {
@@ -261,7 +261,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p99"
         }
       ]
@@ -292,7 +292,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[5m])) by (status_code)",
+          "expr": "sum(rate(http_requests_total{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (status_code)",
           "legendFormat": "{{status_code}}"
         }
       ]
@@ -488,7 +488,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p50"
         },
         {
@@ -497,7 +497,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.90, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.90, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p90"
         },
         {
@@ -506,7 +506,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum(rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (le))",
           "legendFormat": "p99"
         }
       ]
@@ -537,7 +537,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api-dev\"}[5m])) by (model)",
+          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (model)",
           "legendFormat": "{{model}}"
         }
       ]
@@ -568,7 +568,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api-dev\",status=\"error\"}[5m])) by (model)",
+          "expr": "sum(rate(prisma_queries_total{job=\"fictadvisor-api-dev\",status=\"error\"}[$__rate_interval])) by (model)",
           "legendFormat": "{{model}}"
         }
       ]
@@ -614,7 +614,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.50, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -624,7 +624,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.90, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -634,7 +634,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.99, sum by (model, action, le) (rate(prisma_query_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         }
@@ -705,7 +705,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.50, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -715,7 +715,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.90, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.90, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         },
@@ -725,7 +725,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[5m]))) * 1000 > 0",
+          "expr": "histogram_quantile(0.99, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"fictadvisor-api-dev\"}[$__range]))) * 1000 > 0",
           "format": "table",
           "instant": true
         }
