@@ -12,7 +12,7 @@ export const tabBox: SxProps<Theme> = {
     minHeight: 'fit-content',
   },
   width: '100%',
-  '& .MuiTabs-flexContainer': { justifyContent: 'center' },
+  '& .MuiTabs-list': { justifyContent: 'center' },
   '& .MuiButtonBase-root.MuiTab-root': {
     width: 'fit-content',
   },
