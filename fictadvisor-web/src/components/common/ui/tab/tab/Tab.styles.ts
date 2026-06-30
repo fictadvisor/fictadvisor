@@ -69,16 +69,22 @@ export const tab = (
     color: 'grey.200',
     backgroundColor: 'transparent',
     cursor: 'none',
-    '.MuiTab-iconWrapper': {
+    '.MuiTab-icon': {
       opacity: '15%',
     },
   },
-  '.MuiTab-iconWrapper': {
+  '.MuiTab-icon': {
     display: icon ? 'flex' : 'none',
     alignItems: 'center',
     width: '24px',
     height: '24px',
     margin: '0',
+    // heroicons svgs carry no intrinsic width/height and MUI 9 no longer sizes
+    // the iconWrapper's svg child, so size it explicitly or it collapses to 0.
+    '& svg': {
+      width: '24px',
+      height: '24px',
+    },
   },
 });
 export const counter = (disabled: boolean): SxProps<Theme> => ({
