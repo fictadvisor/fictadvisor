@@ -11,10 +11,10 @@ export const picker: SxProps<Theme> = {
   '& .MuiButtonBase-root': {
     color: 'white.main',
     fontFamily: manrope.style.fontFamily,
-    '&.MuiPickersDay-dayOutsideMonth': {
+    '&.MuiPickerDay-dayOutsideMonth': {
       color: 'grey.400',
     },
-    '&.MuiPickersDay-dayWithMargin': {
+    '&.MuiPickerDay-root': {
       color: 'grey.800',
       borderRadius: '6px',
       m: '4px 6px',
@@ -31,7 +31,7 @@ export const picker: SxProps<Theme> = {
         color: 'grey.200',
       },
 
-      '&.MuiPickersDay-today': {
+      '&.MuiPickerDay-today': {
         backgroundColor: 'primary.400',
         border: 'none',
         '&:hover': {

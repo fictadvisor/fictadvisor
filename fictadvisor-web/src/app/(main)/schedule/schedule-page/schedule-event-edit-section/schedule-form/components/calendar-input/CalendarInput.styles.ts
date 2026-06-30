@@ -75,9 +75,6 @@ export const calendar: SxProps<Theme> = {
   '& .MuiDateCalendar-root': {
     backgroundColor: 'backgroundDark.100',
   },
-  '& .MuiPickersDay-root': {
-    color: 'white.main',
-  },
   '& .MuiButtonBase-root': {
     color: 'white.main',
     '&.Mui-disabled': {
@@ -90,7 +87,8 @@ export const calendar: SxProps<Theme> = {
   '& .MuiTypography-root': {
     color: 'grey.400',
   },
-  '& .MuiPickersDay-dayWithMargin': {
+  '& .MuiPickerDay-root': {
+    color: 'white.main',
     borderRadius: '6px',
     m: '4px 6px',
     width: '28px',
@@ -101,7 +99,7 @@ export const calendar: SxProps<Theme> = {
     '&.Mui-selected': {
       backgroundColor: 'grey.200',
     },
-    '&.MuiPickersDay-today': {
+    '&.MuiPickerDay-today': {
       backgroundColor: 'primary.400',
       border: 'none',
       '&:hover': {
