@@ -25,6 +25,7 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import theme from '@/styles/theme';
 
 import * as styles from './SchedulePage.styles';
+import { useShallow } from 'zustand/react/shallow';
 export interface SchedulePageProps {
   groups: MappedGroupResponse[];
   semester: CurrentSemester | null;
@@ -42,13 +43,13 @@ const SchedulePage: FC<SchedulePageProps> = ({ semester, groups }) => {
     groupId,
     openedEvent,
     isNewEventAdded,
-  ] = useSchedule(state => [
+  ] = useSchedule(useShallow(state => [
     state.useInitialise,
     state.handleWeekChange,
     state.groupId,
     state.openedEvent,
     state.isNewEventAdded,
-  ]);
+  ]));
 
   useInitialise(semester, groups);
 

@@ -14,6 +14,7 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { calculateTop } from './components/schedule-column/components/schedule-card/utils/calculateTop';
 import ScheduleLine from './components/schedule-line/ScheduleLine';
 import * as styles from './Schedule.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 const Schedule = () => {
   const { user } = useAuthentication();
@@ -25,7 +26,7 @@ const Schedule = () => {
     loading,
     currentTime,
     updateCheckboxes,
-  } = useSchedule(state => ({
+  } = useSchedule(useShallow(state => ({
     events: state.eventsBody,
     checkboxes: state.checkboxes,
     week: state.week,
@@ -33,7 +34,7 @@ const Schedule = () => {
     loading: state.isLoading,
     currentTime: state.currentTime.toISOString(),
     updateCheckboxes: state.updateCheckboxes,
-  }));
+  })));
 
   const eventsPerWeek = useMemo(() => {
     if (!events[week - 1]) return null;

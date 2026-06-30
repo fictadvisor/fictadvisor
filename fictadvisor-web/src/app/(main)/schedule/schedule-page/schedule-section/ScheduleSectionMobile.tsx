@@ -9,9 +9,10 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 
 import ScheduleColumn from './components/schedule/components/schedule-column';
 import * as styles from './ScheduleSection.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 const ScheduleSectionMobile = () => {
-  const { events, week, disciplines, loading, currentTime } = useSchedule(
+  const { events, week, disciplines, loading, currentTime } = useSchedule(useShallow(
     state => ({
       events: state.eventsBody,
       week: state.week,
@@ -19,7 +20,7 @@ const ScheduleSectionMobile = () => {
       loading: state.isLoading,
       currentTime: state.currentTime,
     }),
-  );
+  ));
   const dayMapper = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 
   const eventsPerWeek = useMemo(() => {

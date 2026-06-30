@@ -25,15 +25,16 @@ import {
   TagLabelMapper,
 } from './constants/CheckboxConstants';
 import * as styles from './CheckboxesDropDown.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 export const CheckboxesDropdown = () => {
   const { user } = useAuthentication();
 
-  const { checkboxes, updateCheckboxes, groupId } = useSchedule(state => ({
+  const { checkboxes, updateCheckboxes, groupId } = useSchedule(useShallow(state => ({
     checkboxes: state.checkboxes,
     updateCheckboxes: state.updateCheckboxes,
     groupId: state.groupId,
-  }));
+  })));
 
   const options = useMemo(
     () =>

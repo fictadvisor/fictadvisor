@@ -24,6 +24,7 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 
 import * as styles from './ScheduleHeader.styles';
+import { useShallow } from 'zustand/react/shallow';
 
 const dayMapper = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 const monthMapper = [
@@ -50,7 +51,7 @@ const ScheduleHeader = () => {
     chosenDay,
     currentTime,
     loading,
-  } = useSchedule(state => ({
+  } = useSchedule(useShallow(state => ({
     week: state.week,
     setChosenDay: state.setChosenDay,
     eventsBody: state.eventsBody,
@@ -58,7 +59,7 @@ const ScheduleHeader = () => {
     chosenDay: state.chosenDay,
     currentTime: state.currentTime,
     loading: state.isLoading,
-  }));
+  })));
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;

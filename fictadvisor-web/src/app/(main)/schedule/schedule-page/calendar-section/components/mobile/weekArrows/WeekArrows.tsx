@@ -30,9 +30,10 @@ import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
+import { useShallow } from 'zustand/react/shallow';
 
 export const WeekArrows = () => {
-  const { week, eventsBody, setChosenDay, semester, loading } = useSchedule(
+  const { week, eventsBody, setChosenDay, semester, loading } = useSchedule(useShallow(
     state => ({
       week: state.week,
       eventsBody: state.eventsBody,
@@ -40,7 +41,7 @@ export const WeekArrows = () => {
       setChosenDay: state.setChosenDay,
       loading: state.isLoading,
     }),
-  );
+  ));
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;
