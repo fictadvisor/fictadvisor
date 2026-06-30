@@ -42,7 +42,7 @@
     "@automapper/classes": "^8.8.1",
     "@automapper/core": "^8.8.1",
     "@automapper/nestjs": "^8.8.1",
-    "@fictadvisor/utils": "workspace:^",
+    "@fictadvisor/utils": "*",
     "@nestjs-modules/mailer": "^2.3.7",
     "@nestjs/common": "^11.1.27",
     "@nestjs/config": "^4.0.4",

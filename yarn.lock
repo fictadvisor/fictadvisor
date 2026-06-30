@@ -2793,7 +2793,7 @@ __metadata:
   dependencies:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.1"
-    "@fictadvisor/utils": "workspace:^"
+    "@fictadvisor/utils": "npm:*"
     "@heroicons/react": "npm:^2.2.0"
     "@mui/lab": "npm:^9.0.0-beta.5"
     "@mui/material": "npm:^9.1.2"
@@ -2849,7 +2849,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@fictadvisor/utils@workspace:^, @fictadvisor/utils@workspace:utils":
+"@fictadvisor/utils@npm:*, @fictadvisor/utils@workspace:utils":
   version: 0.0.0-use.local
   resolution: "@fictadvisor/utils@workspace:utils"
   dependencies:
@@ -12643,7 +12643,7 @@ __metadata:
     "@automapper/classes": "npm:^8.8.1"
     "@automapper/core": "npm:^8.8.1"
     "@automapper/nestjs": "npm:^8.8.1"
-    "@fictadvisor/utils": "workspace:^"
+    "@fictadvisor/utils": "npm:*"
     "@nestjs-modules/mailer": "npm:^2.3.7"
     "@nestjs/cli": "npm:^11.0.23"
     "@nestjs/common": "npm:^11.1.27"
