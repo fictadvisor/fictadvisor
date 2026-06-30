@@ -8,6 +8,7 @@ import { SortQAGrantsParam } from '../enums';
 export class QueryAllGrantsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     enum: SortQAGrantsParam,
+    enumName: 'SortQAGrantsParam',
     description: 'Sorting by field',
     default: SortQAGrantsParam.PERMISSION,
   })

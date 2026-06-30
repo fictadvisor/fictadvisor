@@ -36,6 +36,7 @@ export class PermissionValuesDTO {
 export class CheckPermissionsDTO {
   @ApiProperty({
     enum: PERMISSION,
+    enumName: 'PERMISSION',
     type: [PERMISSION],
     description: 'Permissions to check',
   })

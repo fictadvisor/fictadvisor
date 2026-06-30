@@ -41,6 +41,7 @@ export class QueryAllGroupsDTO extends QueryAllDTO {
   
   @ApiPropertyOptional({
     enum: SortQAGroupsParam,
+    enumName: 'SortQAGroupsParam',
   })
   @IsEnum(SortQAGroupsParam, validationOptionsMsg('Cathedras must be an array'))
   @IsOptional()
@@ -48,6 +49,7 @@ export class QueryAllGroupsDTO extends QueryAllDTO {
 
   @ApiPropertyOptional({
     enum: OrderQAParam,
+    enumName: 'OrderQAParam',
     description: 'Ascending by default',
   })
   @IsIn(['asc', 'desc'], {

@@ -1,5 +1,5 @@
 import { ApiBodyOptions, ApiParamOptions, ApiQueryOptions, ApiResponseOptions } from '@nestjs/swagger';
-import { ApiImplicitFileMetadata } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import { ApiImplicitFileMetadata } from '../api-implicit-file.decorator';
 
 export class ApiDocumentationParams {
   isAuth?: boolean;

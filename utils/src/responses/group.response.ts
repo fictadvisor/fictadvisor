@@ -19,6 +19,7 @@ export class GroupResponse {
 export class ExtendedGroupResponse extends GroupResponse {
   @ApiProperty({
     enum: State,
+    enumName: 'State',
     description: 'State for the student in group',
   })
   @AutoMap(() => String)
@@ -26,6 +27,7 @@ export class ExtendedGroupResponse extends GroupResponse {
 
   @ApiProperty({
     enum: RoleName,
+    enumName: 'RoleName',
     description: 'User\'s role in the group',
   })
   @AutoMap(() => String)

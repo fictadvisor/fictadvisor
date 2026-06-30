@@ -7,6 +7,7 @@ export class CreateRoleDTO {
   @ApiProperty({
     description: 'The name of role',
     enum: RoleName,
+    enumName: 'RoleName',
   })
   @IsEnum(RoleName, validationOptionsMsg('Name must be an enum'))
   @IsNotEmpty(validationOptionsMsg('Name can not be empty'))

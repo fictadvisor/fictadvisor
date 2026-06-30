@@ -69,6 +69,7 @@ export class UpdateQuestionDTO {
 
   @ApiPropertyOptional({
     enum: QuestionType,
+    enumName: 'QuestionType',
     description: 'An enum of question\'s type',
   })
   @IsEnum(QuestionType, validationOptionsMsg('Type must be an enum'))
@@ -77,6 +78,7 @@ export class UpdateQuestionDTO {
 
   @ApiPropertyOptional({
     enum: QuestionDisplay,
+    enumName: 'QuestionDisplay',
     description: 'An enum of question\'s display',
   })
   @IsEnum(QuestionDisplay, validationOptionsMsg('Display must be an enum'))

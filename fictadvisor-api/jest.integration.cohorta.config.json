@@ -10,9 +10,16 @@
   ],
   "testRegex": ".*\\.ispec\\.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "diagnostics": false
+      }
+    ]
   },
   "coverageDirectory": "coverage/integration",
-  "coverageReporters": ["html"],
+  "coverageReporters": [
+    "html"
+  ],
   "testEnvironment": "node"
 }

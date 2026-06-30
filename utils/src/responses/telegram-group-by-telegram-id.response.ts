@@ -6,6 +6,7 @@ import { AutoMap } from '@automapper/classes';
 export class TelegramGroupByTelegramIdResponse {
   @ApiProperty({
     enum: TelegramSource,
+    enumName: 'TelegramSource',
     description: 'Type of telegram chat',
   })
   @AutoMap(() => String)

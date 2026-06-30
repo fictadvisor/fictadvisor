@@ -61,6 +61,7 @@ export class UpdateTeacherDTO {
   @ApiPropertyOptional({
     description: 'Teacher`s academic status',
     enum: AcademicStatus,
+    enumName: 'AcademicStatus',
   })
   @IsEnum(AcademicStatus, validationOptionsMsg('Academic status must be enum'))
   @IsOptional()
@@ -69,6 +70,7 @@ export class UpdateTeacherDTO {
   @ApiPropertyOptional({
     description: 'Scientific degree of the teacher',
     enum: ScientificDegree,
+    enumName: 'ScientificDegree',
   })
   @IsEnum(ScientificDegree, validationOptionsMsg('Scientific degree must be an enum'))
   @IsOptional()
@@ -77,6 +79,7 @@ export class UpdateTeacherDTO {
   @ApiPropertyOptional({
     description: 'Position of the teacher',
     enum: Position,
+    enumName: 'Position',
   })
   @IsEnum(Position, validationOptionsMsg('Position must be an enum'))
   @IsOptional()

@@ -28,7 +28,7 @@ export class StudentProfile extends AutomapperProfile {
       createMap(mapper, DbStudent, OrdinaryStudentResponse,
         forSelf(DbUser, (dto) => dto.user),
         forMember((response) => response.group,
-          mapWithArguments((dto, { hasGroup = true }: { hasGroup: boolean }) => this.getGroup(dto, hasGroup)),
+          mapWithArguments((dto, { hasGroup = true }: any) => this.getGroup(dto, hasGroup)),
         ));
 
       createMap(mapper, DbStudent, SimpleStudentResponse,

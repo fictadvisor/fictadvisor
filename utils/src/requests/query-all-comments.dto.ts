@@ -9,6 +9,7 @@ import { CommentsSortBy } from '../enums/other/comments-sort-by.enum';
 export class QueryAllCommentsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     enum: CommentsSortBy,
+    enumName: 'CommentsSortBy',
     default: CommentsSortBy.SEMESTER,
   })
   @IsEnum(CommentsSortBy, validationOptionsMsg('Sort must be an enum'))

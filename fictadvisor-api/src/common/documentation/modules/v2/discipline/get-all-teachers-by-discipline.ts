@@ -27,6 +27,7 @@ export const disciplineDocumentationGetAllTeachersByDiscipline: ApiDocumentation
     name: 'disciplineType',
     required: true,
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
     description: 'Discipline type of some discipline',
   }],
 };

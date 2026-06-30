@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { JSDOM } from 'jsdom';
+import type { JSDOM } from 'jsdom';
+// jsdom and its ESM-only deps are loaded lazily: importing this module must
+// not pull the heavy ESM tree (keeps Jest's CommonJS loader happy and trims
+// startup). Node resolves the ESM deps fine via require() at call time.
+const loadJSDOM = (): typeof import('jsdom').JSDOM => require('jsdom').JSDOM;
 import { Injectable } from '@nestjs/common';
 import { Parser } from './interfaces/parser.interface';
 import { DateService } from '../../date/v2/date.service';
@@ -69,7 +73,7 @@ export class RozParser implements Parser {
     );
 
     const { data } = await axios.post(url, VIEW_SCHEDULE_PARAMS);
-    const dom = new JSDOM(data);
+    const dom = new (loadJSDOM())(data);
 
     await new Promise((res) => setTimeout(res, 3000));
 
@@ -93,7 +97,7 @@ export class RozParser implements Parser {
       SCHEDULE_GROUP_SELECTION_PARAMS
     );
 
-    const dom = new JSDOM(response.data);
+    const dom = new (loadJSDOM())(response.data);
     const form = dom.window.document.querySelector(SCHEDULE_SELECTION_FORM_SELECTOR);
     return form.getAttribute('action').split('?g=')[1];
   }

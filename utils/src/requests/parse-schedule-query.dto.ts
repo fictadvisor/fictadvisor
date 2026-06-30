@@ -7,6 +7,7 @@ import { validationOptionsMsg } from '../validation.util';
 export class ParseScheduleQueryDTO {
   @ApiProperty({
     enum: ParserTypeEnum,
+    enumName: 'ParserTypeEnum',
     description: 'Type of parser',
   })
   @IsNotEmpty(validationOptionsMsg('Parser type cannot be empty'))
@@ -23,6 +24,7 @@ export class ParseScheduleQueryDTO {
 
   @ApiProperty({
     enum: [1, 2],
+    enumName: 'SemesterNumber',
     description: 'Semester number',
   })
   @IsNotEmpty(validationOptionsMsg('The year cannot be empty'))

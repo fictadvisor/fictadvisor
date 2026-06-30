@@ -31,6 +31,7 @@ export class BaseShortEventResponse {
 export class ShortEventResponse extends BaseShortEventResponse {
   @ApiProperty({
     enum: EventTypeEnum,
+    enumName: 'EventTypeEnum',
     description: 'Type of event',
   })
   @AutoMap(() => String)
@@ -40,6 +41,7 @@ export class ShortEventResponse extends BaseShortEventResponse {
 export class GeneralShortEventResponse extends BaseShortEventResponse {
   @ApiProperty({
     enum: [EventTypeEnum.LECTURE, EventTypeEnum.PRACTICE, EventTypeEnum.LABORATORY],
+    enumName: 'GeneralEventType',
     description: 'General event type',
   })
   @AutoMap(() => String)

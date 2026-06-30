@@ -51,13 +51,13 @@ export class DisciplineProfile extends AutomapperProfile {
 
       createMap(mapper, DbSelectiveAmount, SelectiveBySemestersResponse,
         forMember((response) => response.disciplines,
-          mapWithArguments((dto, { disciplines }: { disciplines: DbDiscipline[]}) =>
+          mapWithArguments((dto, { disciplines }: any) =>
             this.getDisciplineNames(dto, disciplines))
         ));
 
       createMap(mapper, DbDiscipline, SelectiveDisciplinesResponse,
         forMember((response) => response.disciplines,
-          mapWithArguments((dto, { disciplines }: { disciplines: DbDiscipline[]}) => {
+          mapWithArguments((dto, { disciplines }: any) => {
             const filtered = this.filterBySemester(dto as any, disciplines);
             return this.mapper.mapArray(filtered, DbDiscipline, BaseSelectiveDisciplineResponse);
           })

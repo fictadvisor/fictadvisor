@@ -29,6 +29,7 @@ export class CommentsQueryDTO {
 
   @ApiPropertyOptional({
     enum: CommentsSortOrder,
+    enumName: 'CommentsSortOrder',
     description: 'Ascending by default',
   })
   @IsEnum(CommentsSortOrder, validationOptionsMsg('SortBy must be an enum'))

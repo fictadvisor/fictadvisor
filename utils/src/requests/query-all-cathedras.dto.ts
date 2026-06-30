@@ -7,6 +7,7 @@ import { SortQACParam } from '../enums';
 export class QueryAllCathedrasDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     enum: SortQACParam,
+    enumName: 'SortQACParam',
   })
   @IsEnum(SortQACParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()

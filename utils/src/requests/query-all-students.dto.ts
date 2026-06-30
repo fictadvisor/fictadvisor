@@ -16,6 +16,7 @@ export class QueryAllStudentsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Sorting parameters',
     enum: SortQGSParam,
+    enumName: 'SortQGSParam',
     default: SortQGSParam.LAST_NAME,
   })
   @IsOptional()
@@ -25,6 +26,7 @@ export class QueryAllStudentsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Sorting order',
     enum: ['asc', 'desc'],
+    enumName: 'SortOrder',
     default: 'asc',
   })
     order?: 'asc' | 'desc';
@@ -39,6 +41,7 @@ export class QueryAllStudentsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Array of students roles',
     enum: GroupRoles,
+    enumName: 'GroupRoles',
     type: [GroupRoles],
   })
   @IsArray(validationOptionsMsg('Roles must be an array'))
@@ -49,6 +52,7 @@ export class QueryAllStudentsDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Array of students states',
     enum: State,
+    enumName: 'State',
     type: [State],
   })
   @IsArray(validationOptionsMsg('States must be an array'))

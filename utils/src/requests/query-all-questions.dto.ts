@@ -16,6 +16,7 @@ export class QueryAllQuestionsDTO extends QueryAllDTO {
     description: 'Accepts answer types',
     type: [QuestionType],
     enum: QuestionType,
+    enumName: 'QuestionType',
   })
   @IsArray(validationOptionsMsg('Answer types must be an array'))
   @IsEnum(QuestionType, validationOptionsMsg('Each answer type should be an enum', true))
@@ -24,6 +25,7 @@ export class QueryAllQuestionsDTO extends QueryAllDTO {
 
   @ApiPropertyOptional({
     enum: SortQAQParam,
+    enumName: 'SortQAQParam',
   })
   @IsEnum(SortQAQParam, validationOptionsMsg('Sort must be an enum'))
   @IsOptional()

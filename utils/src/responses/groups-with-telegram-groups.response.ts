@@ -24,6 +24,7 @@ export class TelegramGroups {
   @ApiProperty({
     description: 'Type of telegram group',
     enum: TelegramSource,
+    enumName: 'TelegramSource',
   })
   @AutoMap(() => String)
     source: TelegramSource;

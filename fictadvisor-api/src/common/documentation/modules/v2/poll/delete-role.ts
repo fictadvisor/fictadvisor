@@ -19,6 +19,7 @@ export const PollDocumentationDeleteRole: ApiDocumentationParams = {
     {
       name: 'questionRole',
       enum: DisciplineTypeEnum,
+      enumName: 'DisciplineTypeEnum',
       required: true,
       description: 'Question`s role, that you want to delete',
     },

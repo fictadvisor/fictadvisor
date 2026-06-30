@@ -23,6 +23,7 @@ export class TelegramGroupResponse {
 
   @ApiProperty({
     enum: TelegramSource,
+    enumName: 'TelegramSource',
     description: 'Type of telegram chat',
   })
   @AutoMap(() => String)

@@ -5,7 +5,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnsupportedMediaTypeResponse,
 } from '@nestjs/swagger';
-import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
+import { ApiImplicitFile } from './api-implicit-file.decorator';
 import { ApiDocumentationParams } from './types/api-documentation-params.type';
 
 export function getDocumentationDecorators (summary: string, description: string, documentation?: ApiDocumentationParams) {

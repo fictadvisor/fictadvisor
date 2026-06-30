@@ -33,6 +33,7 @@ export class QueryAllDisciplinesDTO extends QueryAllDTO {
   @ApiPropertyOptional({
     description: 'Sorting parameter',
     enum: ['name', 'semester', 'group'],
+    enumName: 'DisciplineSortParam',
   })
   @IsIn(['name', 'semester', 'group'], validationOptionsMsg('Wrong value for sort'))
   @IsOptional()

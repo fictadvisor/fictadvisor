@@ -61,6 +61,7 @@ export class CreateTeacherDTO {
   @ApiProperty({
     description: 'Academic status of the teacher',
     enum: AcademicStatus,
+    enumName: 'AcademicStatus',
   })
   @IsEnum(AcademicStatus, validationOptionsMsg('Academic status must be enum'))
   @IsNotEmpty(validationOptionsMsg('Academic status cannot be empty'))
@@ -69,6 +70,7 @@ export class CreateTeacherDTO {
   @ApiProperty({
     description: 'Scientific degree of the teacher',
     enum: ScientificDegree,
+    enumName: 'ScientificDegree',
   })
   @IsEnum(ScientificDegree, validationOptionsMsg('Scientific degree must be an enum'))
   @IsNotEmpty(validationOptionsMsg('Scientific degree can not be empty'))
@@ -77,6 +79,7 @@ export class CreateTeacherDTO {
   @ApiProperty({
     description: 'Position of the teacher',
     enum: Position,
+    enumName: 'Position',
   })
   @IsEnum(Position, validationOptionsMsg('Position must be an enum'))
   @IsNotEmpty(validationOptionsMsg('Position cannot be empty'))

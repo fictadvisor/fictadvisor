@@ -13,6 +13,7 @@ export class UpdateTelegramGroupDTO {
 
   @ApiPropertyOptional({
     enum: TelegramSource,
+    enumName: 'TelegramSource',
     description: 'Type of telegram chat',
   })
   @IsEnum(TelegramSource, validationOptionsMsg('Source must be an enum'))

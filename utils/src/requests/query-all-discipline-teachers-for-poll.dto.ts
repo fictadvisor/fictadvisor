@@ -17,6 +17,7 @@ export class QueryAllDisciplineTeachersForPollDTO {
 
   @ApiPropertyOptional({
     enum: SortQATParam,
+    enumName: 'SortQATParam',
     description: 'Sorting by field',
     default: 'lastName',
   })
@@ -26,6 +27,7 @@ export class QueryAllDisciplineTeachersForPollDTO {
 
   @ApiPropertyOptional({
     enum: OrderQAParam,
+    enumName: 'OrderQAParam',
     description: 'Order in',
     default: 'asc',
   })
@@ -37,6 +39,7 @@ export class QueryAllDisciplineTeachersForPollDTO {
     description: 'Teacher\'s discipline types',
     type: [DisciplineTypeEnum],
     enum: DisciplineTypeEnum,
+    enumName: 'DisciplineTypeEnum',
   })
   @Transform(({ value }) => Array.isArray(value) ? value : Array(value))
   @IsEnum(DisciplineTypeEnum, validationOptionsMsg('Each element of discipline types should be an enum', true))

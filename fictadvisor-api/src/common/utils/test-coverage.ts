@@ -49,7 +49,7 @@ export class TestCoverage {
       if (dirent.isFile()) {
         const { name } = dirent;
 
-        const filePath = path.join(dirent.parentPath ?? dirent.path, name);
+        const filePath = path.join(dirent.parentPath, name);
         const extension = name.match(/[^.]*$/g)[0];
         const prefix = filePath.replace(/(index)?\.html$/, '');
 

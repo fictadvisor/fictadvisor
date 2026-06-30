@@ -42,6 +42,7 @@ export class UpdateEventDTO {
 
   @ApiPropertyOptional({
     enum: EventTypeEnum,
+    enumName: 'EventTypeEnum',
     description: 'Event type',
   })
   @IsOptional()
@@ -88,6 +89,7 @@ export class UpdateEventDTO {
 
   @ApiPropertyOptional({
     enum: Period,
+    enumName: 'Period',
     description: 'Period of the event\'s occurrence\n',
   })
   @IsOptional()

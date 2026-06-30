@@ -24,6 +24,7 @@ export class UpdateUserDTO {
     @ApiPropertyOptional({
       description: 'User\'s state',
       enum: State,
+      enumName: 'State',
     })
     @IsEnum(State, validationOptionsMsg('State must be an enum'))
     @IsOptional()
