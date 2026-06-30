@@ -148,7 +148,7 @@ const StudentsTable: React.FC<StudentsTableProps> = ({
       </Box>
       <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
-          <Grid container key={index} sx={gridStyles.row}>
+          <Grid container size={12} key={index} sx={gridStyles.row}>
             <Grid size={{ desktop: 4, mobile: 9 }}>
               <Avatar src={row.imgSrc} alt="avatar" />
               {!isMobile && (

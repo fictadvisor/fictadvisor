@@ -30,6 +30,7 @@ const TransferCaptainPopup: FC<TransferCaptainPopupProps> = ({
             .map((row, index) => (
               <Grid
                 container
+                size={12}
                 key={index}
                 sx={mergeSx(gridStyles.row, styles.row(row.id === newCaptain))}
                 onClick={() => setNewCaptain(row.id)}
