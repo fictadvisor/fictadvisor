@@ -56,7 +56,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
       />
       <Grid container sx={gridStyles.studentsGrid}>
         {rows.map((row, index) => (
-          <Grid container key={index} sx={gridStyles.row}>
+          <Grid container size={12} key={index} sx={gridStyles.row}>
             {row.imgSrc && (
               <Grid size={{ desktop: 6, mobile: 7 }}>
                 <img width={48} height={48} src={row.imgSrc} alt="avatar" />
