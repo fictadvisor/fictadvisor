@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 export const wrapper: SxProps<Theme> = {};
 
 export const datePicker: SxProps<Theme> = {
-  '.MuiInputBase-root': {
+  '.MuiPickersInputBase-root': {
     display: 'flex',
     flexDirection: 'row-reverse',
   },
@@ -13,7 +13,7 @@ export const input: SxProps<Theme> = {
   width: '100%',
   backgroundColor: 'backgroundDark.200',
   borderRadius: '8px',
-  '& .MuiOutlinedInput-input': {
+  '& .MuiPickersInputBase-root': {
     color: 'white.main',
     '&::placeholder': {
       color: 'grey.600',
@@ -31,14 +31,14 @@ export const input: SxProps<Theme> = {
   },
 
   '&:hover': {
-    '& .MuiOutlinedInput-input': {
+    '& .MuiPickersInputBase-root': {
       '&::placeholder': {
         color: 'grey.700',
       },
     },
   },
 
-  '& .MuiOutlinedInput-root': {
+  '& .MuiPickersOutlinedInput-root': {
     '& > fieldset': {
       border: 'none',
     },
@@ -48,14 +48,14 @@ export const input: SxProps<Theme> = {
     color: 'grey.800',
   },
 
-  '.MuiInputBase-root': {
+  '.MuiPickersInputBase-root': {
     paddingY: '10px',
     height: '40px',
     display: 'flex',
     flexDirection: 'row-reverse',
     gap: '16px',
   },
-  '.MuiInputBase-input': {
+  '.MuiPickersInputBase-sectionsContainer': {
     padding: 0,
   },
 };
