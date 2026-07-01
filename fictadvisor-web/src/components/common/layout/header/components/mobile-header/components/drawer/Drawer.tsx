@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import Divider from '@/components/common/ui/divider';
 import Progress from '@/components/common/ui/progress';
 import { ProgressSize } from '@/components/common/ui/progress/types';
-import Tab from '@/components/common/ui/tab/tab';
+import NavTab from '@/components/common/ui/tab/nav-tab';
 import { TabTextPosition } from '@/components/common/ui/tab/tab/types';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 
@@ -61,7 +61,7 @@ const Drawer: FC<DrawerProps> = ({ isOpened, handleClick }) => {
                 underline="none"
                 color="inherit"
               >
-                <Tab
+                <NavTab
                   label={button.text}
                   textPosition={TabTextPosition.LEFT}
                   icon={button.icon}
@@ -89,7 +89,7 @@ const Drawer: FC<DrawerProps> = ({ isOpened, handleClick }) => {
             underline="none"
             color="inherit"
           >
-            <Tab
+            <NavTab
               label={data.text}
               sx={
                 pathname === data.link ? styles.activeMenuTab : styles.menuTab
