@@ -112,9 +112,7 @@ const Dropdown: FC<DropdownProps> = memo(function Dropdown({
           )}
         />
         {showRemark && (
-          <Typography
-            sx={remarkSx ?? styles.remark(dropdownState, isFocused)}
-          >
+          <Typography sx={remarkSx ?? styles.remark(dropdownState, isFocused)}>
             {touched && error ? error : defaultRemark}
           </Typography>
         )}

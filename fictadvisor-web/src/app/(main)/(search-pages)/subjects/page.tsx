@@ -44,6 +44,10 @@ const SubjectsPage: FC = () => {
   };
   const [loadedSubjects, setLoadedSubjects] = useState<Subject[]>([]);
   const [reloadSubjects, setReloadSubjects] = useState(true);
+  // Refetching is driven manually via the useEffect below (on queryObj/currPage),
+  // not the queryKey; adding data/loadedSubjects here would cause refetch loops
+  // since the queryFn itself calls setLoadedSubjects.
+  // eslint-disable-next-line @tanstack/query/exhaustive-deps
   const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: ['subjects', reloadSubjects],
 

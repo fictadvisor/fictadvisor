@@ -448,11 +448,11 @@ export class GroupService {
     const students = await this.studentRepository.findMany({ groupId });
 
     const oldModerators = students.filter(
-      (student) => student.roles.find(({ role }) => role.name === RoleName.MODERATOR)
+      (student) => student.roles.find(({ role }) => role.name === RoleName.MODERATOR),
     );
 
     const newModerators = students.filter(
-      (student) => studentIds.find((id) => id === student.userId)
+      (student) => studentIds.find((id) => id === student.userId),
     );
 
     if (newModerators.length !== studentIds.length) {

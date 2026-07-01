@@ -28,27 +28,19 @@ import * as stylesMUI from './PersonalTeacherTabs.styles';
 
 const CommentTab = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/comment-tab'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/comment-tab'),
 );
 const GeneralTab = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/general-tab'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/general-tab'),
 );
 const PollButtons = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/poll-buttons'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/poll-buttons'),
 );
 const SubjectTab = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/subject-tab'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/subject-tab'),
 );
 
 interface PersonalTeacherTabsProps {

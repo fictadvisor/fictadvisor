@@ -36,7 +36,7 @@ export class PrismaRepository<
 > {
   constructor (
     model: PrismaClient[Model],
-    repositoryInclude?: IncludeType
+    repositoryInclude?: IncludeType,
   ) {
     super(model, repositoryInclude);
   }

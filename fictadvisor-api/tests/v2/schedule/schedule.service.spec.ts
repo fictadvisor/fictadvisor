@@ -54,7 +54,7 @@ describe('ScheduleService', () => {
       const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
-        startOfSemester
+        startOfSemester,
       );
       expect(result).toBe(0);
     });
@@ -75,7 +75,7 @@ describe('ScheduleService', () => {
       const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
-        startOfSemester
+        startOfSemester,
       );
       expect(result).toBeNull();
     });
@@ -96,7 +96,7 @@ describe('ScheduleService', () => {
       const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
-        startOfSemester
+        startOfSemester,
       );
       expect(result).toBe(1);
     });
@@ -117,7 +117,7 @@ describe('ScheduleService', () => {
       const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
-        startOfSemester
+        startOfSemester,
       );
       expect(result).toBe(2);
     });
@@ -138,7 +138,7 @@ describe('ScheduleService', () => {
       const result = scheduleHelperService.getIndexOfLesson(
         week,
         event as DbEvent,
-        startOfSemester
+        startOfSemester,
       );
       expect(result).toBeNull();
     });

@@ -661,7 +661,7 @@ export class UserService {
     const periods = [];
     disciplines.map((discipline) => {
       const period = periods.find(
-        (p) => p.semester === discipline.semester && p.year === discipline.year
+        (p) => p.semester === discipline.semester && p.year === discipline.year,
       );
       if (!period) {
         periods.push({

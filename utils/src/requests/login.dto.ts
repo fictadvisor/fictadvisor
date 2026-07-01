@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, Matches } from 'class-validator';
 import {
   ENG_REGEX,
   NUM_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../validation.util';
 
 export class LoginDTO {

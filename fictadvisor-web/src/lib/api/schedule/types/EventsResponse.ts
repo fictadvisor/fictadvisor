@@ -2,8 +2,10 @@ import { WeekEventsResponse as APIEventsResponse } from '@fictadvisor/utils/resp
 
 import { MainEventInfoResponse } from './MainEventInfoResponse';
 
-export interface EventsResponse
-  extends Omit<APIEventsResponse, 'events' | 'startTime'> {
+export interface EventsResponse extends Omit<
+  APIEventsResponse,
+  'events' | 'startTime'
+> {
   events: MainEventInfoResponse[];
   startTime: string;
 }

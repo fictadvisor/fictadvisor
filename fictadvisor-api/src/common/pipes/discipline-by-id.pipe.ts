@@ -5,7 +5,7 @@ import { InvalidEntityIdException } from '../exceptions/invalid-entity-id.except
 @Injectable()
 export class DisciplineByIdPipe implements PipeTransform<string, Promise<string>> {
   constructor (
-    private disciplineRepository: DisciplineRepository
+    private disciplineRepository: DisciplineRepository,
   ) {}
 
   async transform (id: string): Promise<string> {

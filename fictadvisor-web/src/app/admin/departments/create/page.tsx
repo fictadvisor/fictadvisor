@@ -64,7 +64,14 @@ const Page = () => {
           />
         </Stack>
       </Box>
-      <Stack sx={{ maxWidth: 308, flexDirection: 'column', gap: '16px', padding: '16px' }}>
+      <Stack
+        sx={{
+          maxWidth: 308,
+          flexDirection: 'column',
+          gap: '16px',
+          padding: '16px',
+        }}
+      >
         <Input
           value={name}
           onChange={setName}

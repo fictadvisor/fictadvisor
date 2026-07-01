@@ -2,13 +2,13 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Metadata } from 'next';
 
-import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import stylesCSS from '@/app/(main)/about/AboutPage.module.scss';
 import * as styles from '@/app/(main)/about/AboutPage.styles';
 import Eclipse from '@/app/(main)/about/components/eclipse/Eclipse';
 import MobileStudActivityCard from '@/app/(main)/about/components/mobile-stud-activity-card/MobileStudActivityCard';
 import { EclipseSize, EclipseType } from '@/app/(main)/about/types';
 import aboutMetadata from '@/lib/metadata/about';
+import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 export const metadata: Metadata = aboutMetadata;
 const About = () => (
   <>
@@ -160,7 +160,10 @@ const About = () => (
               opacity={0.35}
               sx={{ zIndex: '-1', right: '65%', top: '60%' }}
             />
-            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
+            <Typography
+              variant="body2Medium"
+              sx={{ marginTop: '52px', flexGrow: 1 }}
+            >
               Катедра <b>обчислювальної техніки</b> найстаріша на факультеті,
               заснована у 1960 році. Освітній план спрямований на підготовку
               фахівців у галузі розробки високопродуктивних систем реального
@@ -178,7 +181,10 @@ const About = () => (
               opacity={0.7}
               sx={{ zIndex: '-1', left: '70%', bottom: '30%' }}
             />
-            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
+            <Typography
+              variant="body2Medium"
+              sx={{ marginTop: '52px', flexGrow: 1 }}
+            >
               Катедра <b>інформатики та програмної інженерії</b> доволі молода
               на факультеті, заснована лише у 2021 році. Викладання орієнтоване
               на розвиток у студентів системного та алгоритмічного мислення в
@@ -190,7 +196,10 @@ const About = () => (
           </Box>
           <Box sx={styles.cathedraCard}>
             <Typography variant="h4Bold">ІСТ</Typography>
-            <Typography variant="body2Medium" sx={{ marginTop: '52px', flexGrow: 1 }}>
+            <Typography
+              variant="body2Medium"
+              sx={{ marginTop: '52px', flexGrow: 1 }}
+            >
               Катедра <b>інформаційних систем та технологій</b> також заснована
               у 2021 році. Головною особливістю освітньої програми є підготовка
               випускників з глибокими різногалузевими знаннями найсучасніших
@@ -385,7 +394,14 @@ const About = () => (
       >
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h4Bold">Студентська активність</Typography>
-          <Box sx={{ width: '100%', display: 'flex', marginTop: '16px', gap: '16px' }}>
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              marginTop: '16px',
+              gap: '16px',
+            }}
+          >
             <Box>
               <img
                 src="/images/about-page/events.png"
@@ -431,7 +447,12 @@ const About = () => (
             </Box>
           </Box>
         </Box>
-        <Box sx={mergeSx(styles.studentTextCard, { maxWidth: '300px', ml: '16px' })}>
+        <Box
+          sx={mergeSx(styles.studentTextCard, {
+            maxWidth: '300px',
+            ml: '16px',
+          })}
+        >
           <Typography variant="h4Bold">Благодійність</Typography>
           <Typography variant="body2">
             З початку повномасштабного вторгнення студентство факультету
@@ -445,7 +466,15 @@ const About = () => (
         </Box>
       </Box>
 
-      <Box sx={{ width: '100%', justifyContent: 'center', alignItems: 'center', mb: '48px', mt: '80px' }}>
+      <Box
+        sx={{
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          mb: '48px',
+          mt: '80px',
+        }}
+      >
         <Box
           sx={{
             display: { mobile: 'block', desktop: 'none' },

@@ -15,9 +15,7 @@ interface VerifyEmailTokenPageProps {
     token: string;
   }>;
 }
-const VerifyEmailTokenPage = ({
-  params,
-}: VerifyEmailTokenPageProps) => {
+const VerifyEmailTokenPage = ({ params }: VerifyEmailTokenPageProps) => {
   const { token } = use(params);
   const router = useRouter();
 

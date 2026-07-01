@@ -73,7 +73,7 @@ export class MetricsService {
       registers: [this.registry],
       collect: () => {
         const now = Date.now();
-        const counts = new Map(VISITOR_WINDOWS.map(w => [w.label, 0]));
+        const counts = new Map(VISITOR_WINDOWS.map((w) => [w.label, 0]));
         for (const [id, lastSeen] of this.visitorLastSeen) {
           const age = now - lastSeen;
           if (age > VISITOR_RETENTION_MS) {

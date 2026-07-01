@@ -15,7 +15,10 @@ const AdminMain = () => {
           src="https://giphy.com/embed/wpLcabJkBNcUk0fcE5/video"
         ></iframe>
       </div>
-      <Typography variant="h3SemiBold" sx={{ marginTop: '15px', textAlign: 'center' }}>
+      <Typography
+        variant="h3SemiBold"
+        sx={{ marginTop: '15px', textAlign: 'center' }}
+      >
         Вітаємо в admin панелі
       </Typography>
       <Typography variant="h6" sx={{ textAlign: 'center' }}>

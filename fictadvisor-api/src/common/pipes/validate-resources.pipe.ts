@@ -6,7 +6,7 @@ import { ResourceRepository } from '../../database/v2/repositories/resource.repo
 @Injectable()
 export class ValidateResourcesPipe implements PipeTransform {
   constructor (
-    private resourceRepository: ResourceRepository
+    private resourceRepository: ResourceRepository,
   ) {}
 
   async transform (updateResources: UpdateResourcesDTO): Promise<UpdateResourcesDTO> {

@@ -18,6 +18,7 @@ const monthMapper = [
 ];
 
 import { CurrentSemester } from '@fictadvisor/utils/responses';
+import { useShallow } from 'zustand/react/shallow';
 
 import { MAX_WEEK_NUMBER } from '@/app/(main)/schedule/schedule-page/constants';
 import {
@@ -30,18 +31,17 @@ import { EventsResponse } from '@/lib/api/schedule/types/EventsResponse';
 import { transformEvents } from '@/lib/api/schedule/utils/transformEvents';
 import { useSchedule } from '@/store/schedule/useSchedule';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
-import { useShallow } from 'zustand/react/shallow';
 
 export const WeekArrows = () => {
-  const { week, eventsBody, setChosenDay, semester, loading } = useSchedule(useShallow(
-    state => ({
+  const { week, eventsBody, setChosenDay, semester, loading } = useSchedule(
+    useShallow(state => ({
       week: state.week,
       eventsBody: state.eventsBody,
       semester: state.semester,
       setChosenDay: state.setChosenDay,
       loading: state.isLoading,
-    }),
-  ));
+    })),
+  );
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;

@@ -8,7 +8,7 @@ export class CreateGroupDTO {
   })
   @Matches(
     /І[МПКАСОВТ]-([зпв]|зп)?\d\d(мн|мп|ф)?і?/,
-    validationOptionsMsg('Proper name is expected')
+    validationOptionsMsg('Proper name is expected'),
   )
   @IsNotEmpty(validationOptionsMsg('Code cannot be empty'))
   @IsString(validationOptionsMsg('Code must be a string'))

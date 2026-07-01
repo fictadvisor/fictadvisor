@@ -6,8 +6,10 @@ import { useField } from 'formik';
 import Dropdown from '@/components/common/ui/form/dropdown';
 import { DropdownProps } from '@/components/common/ui/form/dropdown/types';
 
-export interface FormikDropdownProps
-  extends Omit<DropdownProps, 'value' | 'onChange'> {
+export interface FormikDropdownProps extends Omit<
+  DropdownProps,
+  'value' | 'onChange'
+> {
   name: string;
   clearOnUnmount?: boolean;
 }

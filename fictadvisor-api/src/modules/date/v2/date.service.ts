@@ -222,7 +222,7 @@ export class DateService {
 
   getWeekDates (semesterStartDate: Date, week: number) {
     const startOfWeek = DateTime.fromJSDate(semesterStartDate)
-      .startOf('week')
+      .startOf('week');
 
     const endOfWeek = DateTime.fromJSDate(semesterStartDate)
       .endOf('week');

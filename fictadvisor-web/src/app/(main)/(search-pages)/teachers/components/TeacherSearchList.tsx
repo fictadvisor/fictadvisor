@@ -9,8 +9,7 @@ import useToast from '@/hooks/use-toast';
 import * as styles from './TeacherSearchList.styles';
 
 interface TeacherSearchListProps
-  extends HTMLProps<HTMLDivElement>,
-    PaginatedTeachersResponse {
+  extends HTMLProps<HTMLDivElement>, PaginatedTeachersResponse {
   isFetching: boolean;
 }
 

@@ -17,7 +17,7 @@ export class CreateUserDTO {
     @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
     @Matches(
       createRegex(ENG_REGEX, NUM_REGEX, '_'),
-      validationOptionsMsg('Username is incorrect (a-zA-Z0-9_))')
+      validationOptionsMsg('Username is incorrect (a-zA-Z0-9_))'),
     )
       username: string;
 

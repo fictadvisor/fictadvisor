@@ -111,7 +111,7 @@ describe('PermissionService', () => {
       const permissions: PERMISSION[] = [PERMISSION.GROUPS_$GROUPID_CAPTAIN_GET];
 
       await expect(
-        permissionService.checkPermissions(userId, { permissions, values })
+        permissionService.checkPermissions(userId, { permissions, values }),
       ).rejects.toThrow(DataNotFoundException);
     });
 

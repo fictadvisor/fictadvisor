@@ -3,6 +3,7 @@ import type { JSDOM } from 'jsdom';
 // jsdom and its ESM-only deps are loaded lazily: importing this module must
 // not pull the heavy ESM tree (keeps Jest's CommonJS loader happy and trims
 // startup). Node resolves the ESM deps fine via require() at call time.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const loadJSDOM = (): typeof import('jsdom').JSDOM => require('jsdom').JSDOM;
 import { Injectable } from '@nestjs/common';
 import { Parser } from './interfaces/parser.interface';
@@ -62,14 +63,14 @@ export class RozParser implements Parser {
 
   async parseGroupSchedule (
     { name }: BaseGroup,
-    semester: SemesterDate
+    semester: SemesterDate,
   ): Promise<GroupParsedSchedule> {
     const groupHashId = await this.getGroupHashId(name);
     const url = `${VIEW_SCHEDULE_URL_BASE}${groupHashId}`;
 
     VIEW_SCHEDULE_PARAMS.set(
       'ctl00$MainContent$ddlSemesterType',
-      semester.semester + ''
+      semester.semester + '',
     );
 
     const { data } = await axios.post(url, VIEW_SCHEDULE_PARAMS);
@@ -94,7 +95,7 @@ export class RozParser implements Parser {
 
     const response = await axios.post(
       SCHEDULE_GROUP_SELECTION_URL,
-      SCHEDULE_GROUP_SELECTION_PARAMS
+      SCHEDULE_GROUP_SELECTION_PARAMS,
     );
 
     const dom = new (loadJSDOM())(response.data);
@@ -105,11 +106,11 @@ export class RozParser implements Parser {
   private async parseWeek (
     semester: SemesterDate,
     weekNumber: ScheduleWeekNumber,
-    dom: JSDOM
+    dom: JSDOM,
   ): Promise<ParsedScheduleWeek> {
     const result = new ParsedScheduleWeek(weekNumber);
     const table = dom.window.document.getElementById(
-      WEEK_TAGS[weekNumber]
+      WEEK_TAGS[weekNumber],
     ) as HTMLTableElement;
 
     for (const row of table.rows) {
@@ -136,7 +137,7 @@ export class RozParser implements Parser {
             dayNumber,
             time,
           },
-          dom
+          dom,
         );
         this.parseTableCellTeachers(td, tableCellPairs, dom);
 
@@ -152,7 +153,7 @@ export class RozParser implements Parser {
     for (const pair of pairs) {
       pair.isSelective = pairs.some(
         ({ name, startTime }) =>
-          pair.name !== name && pair.startTime.getTime() === startTime.getTime()
+          pair.name !== name && pair.startTime.getTime() === startTime.getTime(),
       );
     }
   }
@@ -165,7 +166,7 @@ export class RozParser implements Parser {
   private parseTableCellTeachers (
     td: HTMLElement,
     tableCellPairs: ParsedSchedulePair[],
-    dom: JSDOM
+    dom: JSDOM,
   ) {
     let linksCounter = 0;
     const teacherLinks = Object.values(td.childNodes).filter(
@@ -177,7 +178,7 @@ export class RozParser implements Parser {
             dom.window.HTMLSpanElement,
           ].some((excludedElement) => node instanceof excludedElement) ||
           node.href.match(DOMAIN_EXTRACTION_REGEX)?.includes(GOOGLE_MAPS_URL)
-        )
+        ),
     );
 
     for (let k = 0; k < teacherLinks.length; k++) {
@@ -219,7 +220,7 @@ export class RozParser implements Parser {
       dayNumber: ScheduleDayNumber;
       time: string;
     },
-    dom: JSDOM
+    dom: JSDOM,
   ) {
     for (const childNode of span.childNodes) {
       if (childNode instanceof dom.window.Text) continue;
@@ -229,7 +230,7 @@ export class RozParser implements Parser {
           semester.startDate,
           weekNumber,
           dayNumber,
-          time
+          time,
         );
 
       tableCellPairs.push({

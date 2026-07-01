@@ -1,20 +1,22 @@
 'use client';
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
+import { useShallow } from 'zustand/react/shallow';
 
 import { Dropdown } from '@/components/common/ui/form';
 import { useSchedule } from '@/store/schedule/useSchedule';
-import { useShallow } from 'zustand/react/shallow';
 
 export interface DropDownSectionProps {
   groups: MappedGroupResponse[];
 }
 
 export const GroupsDropDown: FC<DropDownSectionProps> = ({ groups }) => {
-  const { useSetGroupId, groupId } = useSchedule(useShallow(state => ({
-    useSetGroupId: state.useSetGroupId,
-    groupId: state.groupId,
-  })));
+  const { useSetGroupId, groupId } = useSchedule(
+    useShallow(state => ({
+      useSetGroupId: state.useSetGroupId,
+      groupId: state.groupId,
+    })),
+  );
   const setGroupId = useSetGroupId();
 
   const memoGroups = useMemo(

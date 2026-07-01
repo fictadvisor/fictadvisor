@@ -376,7 +376,7 @@ describe('UserService', () => {
     it('should return empty obj for reason all needed disciplines taken', async () => {
       const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
-        { year: 2022, semester: 2 }
+        { year: 2022, semester: 2 },
       );
 
       expect(remainingDisciplines).toStrictEqual({});
@@ -385,7 +385,7 @@ describe('UserService', () => {
     it('should return empty obj for incorrect date', async () => {
       const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
-        { year: 2000, semester: 2 }
+        { year: 2000, semester: 2 },
       );
 
       expect(remainingDisciplines).toStrictEqual({});
@@ -394,7 +394,7 @@ describe('UserService', () => {
     it('should return correct remaining disciplines', async () => {
       const remainingDisciplines = await userService.getRemainingSelectivesForSemester(
         'userWithSelectiveId',
-        { year: 2022, semester: 1 }
+        { year: 2022, semester: 1 },
       );
 
       const expectedRemaining = {
@@ -440,19 +440,19 @@ describe('UserService', () => {
 
     it('should throw NotBelongException if the discipline does not belong to the user\'s group',  async () => {
       await expect(
-        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
+        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] }),
       ).rejects.toThrow(NotBelongException);
     });
 
     it('should throw AlreadySelectedException if the user has already selected this discipline', async () => {
       await expect(
-        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDiscipline1Id'] })
+        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDiscipline1Id'] }),
       ).rejects.toThrow(AlreadySelectedException);
     });
 
     it('should throw ExcessiveSelectiveDisciplinesException if selected disciplines are more than selective amount', async () => {
       await expect(
-        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['excessiveSelectiveDisciplineId'] })
+        userService.selectDisciplines('userWithSelectiveId', { disciplines: ['excessiveSelectiveDisciplineId'] }),
       ).rejects.toThrow(ExcessiveSelectiveDisciplinesException);
     });
   });
@@ -481,13 +481,13 @@ describe('UserService', () => {
 
     it('should throw NotBelongException if discipline does not belong to the user\'s group', async () => {
       await expect(
-        userService.deselectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] })
+        userService.deselectDisciplines('userWithSelectiveId', { disciplines: ['selectiveDisciplineOfNewGroupId'] }),
       ).rejects.toThrow(NotBelongException);
     });
 
     it('should throw NotSelectedDisciplineException if the user has not selected this discipline', async () => {
       await expect(
-        userService.deselectDisciplines('userWithoutSelective', { disciplines: ['nonSelectedDisciplineId'] })
+        userService.deselectDisciplines('userWithoutSelective', { disciplines: ['nonSelectedDisciplineId'] }),
       ).rejects.toThrow(NotSelectedDisciplineException);
     });
   });

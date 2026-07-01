@@ -7,6 +7,6 @@ import { SubjectMapperModule } from '../../../subject/v2/mappers/subject-mapper.
 @Module({
   providers: [TeacherProfile, DisciplineTeacherProfile],
   exports: [TeacherProfile, DisciplineTeacherProfile],
-  imports: [forwardRef(() => CathedraMapperModule), SubjectMapperModule]
+  imports: [forwardRef(() => CathedraMapperModule), SubjectMapperModule],
 })
 export class TeacherMapperModule {}

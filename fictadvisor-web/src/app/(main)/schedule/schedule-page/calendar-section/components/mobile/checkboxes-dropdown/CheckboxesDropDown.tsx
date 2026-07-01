@@ -3,6 +3,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { Box } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { useShallow } from 'zustand/react/shallow';
 
 import { CheckboxOption } from '@/app/(main)/schedule/schedule-page/calendar-section/components/mobile/checkboxes-dropdown/types/CheckboxOption';
 import Checkbox from '@/components/common/ui/form/checkbox/Checkbox';
@@ -25,16 +26,17 @@ import {
   TagLabelMapper,
 } from './constants/CheckboxConstants';
 import * as styles from './CheckboxesDropDown.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 export const CheckboxesDropdown = () => {
   const { user } = useAuthentication();
 
-  const { checkboxes, updateCheckboxes, groupId } = useSchedule(useShallow(state => ({
-    checkboxes: state.checkboxes,
-    updateCheckboxes: state.updateCheckboxes,
-    groupId: state.groupId,
-  })));
+  const { checkboxes, updateCheckboxes, groupId } = useSchedule(
+    useShallow(state => ({
+      checkboxes: state.checkboxes,
+      updateCheckboxes: state.updateCheckboxes,
+      groupId: state.groupId,
+    })),
+  );
 
   const options = useMemo(
     () =>
@@ -70,7 +72,7 @@ export const CheckboxesDropdown = () => {
   return (
     <Box sx={styles.wrapper}>
       <Box sx={MergeSx(dropdownStyles.dropdown, styles.inputLabel)}>
-        <Autocomplete<any, true, false, false>
+        <Autocomplete<CheckboxOption, true, false, false>
           disableCloseOnSelect
           onChange={handleChange}
           options={options}
@@ -110,8 +112,8 @@ export const CheckboxesDropdown = () => {
           slotProps={{
             popper: popperProps,
           }}
-          renderValue={(value: any[], getItemProps: any) =>
-            value.map((option: any, index: number) => (
+          renderValue={(value, getItemProps) =>
+            value.map((option, index) => (
               <Tag
                 text={option.label}
                 {...getItemProps({ index })}

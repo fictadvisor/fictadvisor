@@ -105,8 +105,8 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({
 
   const handleCoursesChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
-    const newCourses = value.map(
-      value => courseOptions.find(course => course.value === value)!,
+    const newCourses = value.map(value =>
+      courseOptions.find(course => course.value === value)!,
     );
     setCourses(newCourses);
   };
@@ -115,8 +115,8 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({
     if (!cathedrasOptions) return;
 
     const value = event.target.value as unknown as string[];
-    const newCathedras = value.map(
-      value => cathedrasOptions.find(cathedra => cathedra.value === value)!,
+    const newCathedras = value.map(value =>
+      cathedrasOptions.find(cathedra => cathedra.value === value)!,
     );
     setCathedras(newCathedras);
   };
@@ -125,9 +125,8 @@ const GroupsAdminSearch: FC<GroupsAdminSearchProps> = ({
     if (!specialitiesOptions) return;
 
     const value = event.target.value as unknown as string[];
-    const newSpecialities = value.map(
-      value =>
-        specialitiesOptions.find(speciality => speciality.value === value)!,
+    const newSpecialities = value.map(value =>
+      specialitiesOptions.find(speciality => speciality.value === value)!,
     );
     setSpecialities(newSpecialities);
   };

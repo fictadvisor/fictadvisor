@@ -3,6 +3,7 @@ import { GroupRoles } from '@fictadvisor/utils/enums';
 import { MappedGroupResponse } from '@fictadvisor/utils/responses';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Box, Stack } from '@mui/material';
+import { useShallow } from 'zustand/react/shallow';
 
 import { GroupsDropDown } from '@/app/(main)/schedule/schedule-page/calendar-section/components/groups-dropdown/GroupsDropDown';
 import Button from '@/components/common/ui/button-mui/Button';
@@ -16,14 +17,15 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { CheckBoxSection } from './components/checkboxes-section/CheckBoxSection';
 import { DatePicker } from './components/date-picker/DatePicker';
 import * as styles from './CalendarSection.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 export interface CalendarSectionProps {
   groups: MappedGroupResponse[];
 }
 export const CalendarSection: FC<CalendarSectionProps> = ({ groups }) => {
   const { user } = useAuthentication();
-  const { groupId } = useSchedule(useShallow(state => ({ groupId: state.groupId })));
+  const { groupId } = useSchedule(
+    useShallow(state => ({ groupId: state.groupId })),
+  );
 
   const validPrivilege =
     user &&

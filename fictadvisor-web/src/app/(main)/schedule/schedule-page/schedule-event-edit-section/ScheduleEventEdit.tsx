@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { CurrentSemester } from '@fictadvisor/utils/responses';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
+import { useShallow } from 'zustand/react/shallow';
 
 import { formValidationSchema } from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-form/validation';
 import ScheduleInfoCard from '@/app/(main)/schedule/schedule-page/schedule-event-edit-section/schedule-info-card';
@@ -16,16 +17,17 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { getWeekByDate } from '@/store/schedule/utils/getWeekByDate';
 
 import { ScheduleEventForm } from './schedule-form/ScheduleEventForm';
-import { useShallow } from 'zustand/react/shallow';
 
 //TODO:ADD ERROR HANDLING
 export const ScheduleEventEdit = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { openedEvent, semester, handleWeekChange } = useSchedule(useShallow(state => ({
-    openedEvent: state.openedEvent,
-    semester: state.semester,
-    handleWeekChange: state.handleWeekChange,
-  })));
+  const { openedEvent, semester, handleWeekChange } = useSchedule(
+    useShallow(state => ({
+      openedEvent: state.openedEvent,
+      semester: state.semester,
+      handleWeekChange: state.handleWeekChange,
+    })),
+  );
   const { displayError } = useToastError();
 
   const week = useMemo(

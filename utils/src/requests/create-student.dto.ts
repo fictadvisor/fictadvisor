@@ -6,7 +6,7 @@ import {
   NUM_REGEX,
   UKR_REGEX,
   UKRSPEC_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../validation.util';
 import { GroupRoles } from '../enums/other/group-roles.enum';
 

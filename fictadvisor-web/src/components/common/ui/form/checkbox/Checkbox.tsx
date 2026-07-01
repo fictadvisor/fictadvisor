@@ -14,8 +14,10 @@ import Icon from './components/Icon';
 import * as styles from './Checkbox.styles';
 import { CheckboxColor, CheckboxTextType } from './types';
 
-export interface CheckboxProps
-  extends Omit<MuiCheckboxProps, 'color' | 'checkedIcon' | 'disabled'> {
+export interface CheckboxProps extends Omit<
+  MuiCheckboxProps,
+  'color' | 'checkedIcon' | 'disabled'
+> {
   label?: string;
   sx?: SxProps<Theme>;
   color?: CheckboxColor;

@@ -97,7 +97,7 @@ export class DisciplineController {
   })
   @Get('/:disciplineId')
   async getById (
-    @Param('disciplineId', DisciplineByIdPipe) disciplineId: string
+    @Param('disciplineId', DisciplineByIdPipe) disciplineId: string,
   ): Promise<ExtendedDisciplineTeachersResponse> {
     const discipline = await this.disciplineService.getById(disciplineId);
     return this.mapper.map(discipline, DbDiscipline, ExtendedDisciplineTeachersResponse);

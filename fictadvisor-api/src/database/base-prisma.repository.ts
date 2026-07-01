@@ -28,14 +28,14 @@ export abstract class BasePrismaRepository<
 > implements RepositoryInterface<Dto, WhereType, SortType, IncludeType> {
   protected constructor (
     readonly model: TPrismaClient[Model],
-    readonly repositoryInclude?: IncludeType
+    readonly repositoryInclude?: IncludeType,
   ) {}
 
   async findMany (
     where: WhereType,
     include?: IncludeType,
     page?: { take: number; skip: number },
-    orderBy?: SortType
+    orderBy?: SortType,
   ): Promise<Dto[]> {
     const methodInclude = {
       ...this.repositoryInclude,

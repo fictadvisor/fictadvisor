@@ -1,4 +1,3 @@
-// eslint-disable-next-line simple-import-sort/imports
 import { ChartOptions } from 'chart.js';
 
 import { manrope } from '@/styles/theme/constants/typography/typography';
@@ -53,7 +52,7 @@ const getOptions = (
             if (isMobile) return t;
             const words = t.split(' ');
             const result = [];
-            for (let i = 0; i < words.length; ) {
+            for (let i = 0; i < words.length;) {
               const line = [];
               for (let j = 0; j < 2; j++) {
                 line.push(words[i]);

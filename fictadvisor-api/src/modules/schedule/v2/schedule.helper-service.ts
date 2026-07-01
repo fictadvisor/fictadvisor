@@ -11,18 +11,18 @@ import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-
 
 @Injectable()
 export class ScheduleHelperService {
-  constructor(private readonly dateUtils: DateUtils) {}
+  constructor (private readonly dateUtils: DateUtils) {}
 
-  setWeekTime(event: DbEvent, week: number, startOfSemester: Date): void {
+  setWeekTime (event: DbEvent, week: number, startOfSemester: Date): void {
     const { startTime, endTime } = this.addEventTimezones(
       event,
-      startOfSemester
+      startOfSemester,
     );
 
     const startWeek = this.dateUtils.getCeiledDifference(
       startOfSemester,
       startTime,
-      WEEK
+      WEEK,
     );
     event.startTime = DateTime.fromJSDate(startTime)
       .setZone('Europe/Kyiv')
@@ -34,7 +34,7 @@ export class ScheduleHelperService {
       .toJSDate();
   }
 
-  addTimezone(startDate: Date, time: Date) {
+  addTimezone (startDate: Date, time: Date) {
     const newDate = new Date(startDate);
     newDate.setHours(time.getHours(), time.getMinutes());
 
@@ -47,9 +47,9 @@ export class ScheduleHelperService {
       .toJSDate();
   }
 
-  addEventTimezones(
+  addEventTimezones (
     { startTime, endTime, ...events }: DbEvent,
-    startOfSemester?: Date
+    startOfSemester?: Date,
   ) {
     startTime = this.addTimezone(startOfSemester, startTime);
     endTime = this.addTimezone(startOfSemester, endTime);
@@ -57,13 +57,13 @@ export class ScheduleHelperService {
     return { startTime, endTime, ...events };
   }
 
-  getIndexOfLesson(
+  getIndexOfLesson (
     week: number,
     event: DbEvent,
-    startOfSemester: Date
+    startOfSemester: Date,
   ): number | null {
     const startWeek = Math.ceil(
-      (event.startTime.getTime() - startOfSemester.getTime()) / WEEK
+      (event.startTime.getTime() - startOfSemester.getTime()) / WEEK,
     );
     if (event.period === Period.NO_PERIOD && week - startWeek !== 0)
       return null;
@@ -73,19 +73,19 @@ export class ScheduleHelperService {
     return index;
   }
 
-  sortEvents<T extends BaseShortEventResponse>(events: T[]) {
+  sortEvents<T extends BaseShortEventResponse> (events: T[]) {
     return events.sort(
       (firstEvent, secondEvent) =>
-        firstEvent.startTime.getTime() - secondEvent.startTime.getTime()
+        firstEvent.startTime.getTime() - secondEvent.startTime.getTime(),
     );
   }
 
-  eventTypeFilter(
+  eventTypeFilter (
     event: DbEvent,
     addLecture: boolean,
     addLaboratory: boolean,
     addPractice: boolean,
-    addOtherEvents?: boolean
+    addOtherEvents?: boolean,
   ): boolean {
     if (!event.lessons.length) return !!addOtherEvents;
     const typeFilter: Record<DisciplineTypeEnum, boolean> = {
@@ -97,14 +97,14 @@ export class ScheduleHelperService {
       [DisciplineTypeEnum.WORKOUT]: addOtherEvents,
     };
     return event.lessons.some(
-      (lesson) => typeFilter[lesson.disciplineType.name]
+      (lesson) => typeFilter[lesson.disciplineType.name],
     );
   }
 
-  calculateEventsAmount(
+  calculateEventsAmount (
     startOfEvent: Date,
     eventPeriod: string,
-    { endDate }: CurrentSemester
+    { endDate }: CurrentSemester,
   ): number {
     const endSemester = new Date(endDate.getTime() - FORTNITE);
     if (startOfEvent > endSemester || eventPeriod === Period.NO_PERIOD) {
@@ -113,12 +113,12 @@ export class ScheduleHelperService {
     const eventWeeks = this.dateUtils.getCeiledDifference(
       startOfEvent,
       endSemester,
-      WEEK
+      WEEK,
     );
     return Math.ceil(eventWeeks / weeksPerEvent[eventPeriod]);
   }
 
-  getNewDateTime(
+  getNewDateTime (
     event: DbEvent,
     {
       startTime,
@@ -126,7 +126,7 @@ export class ScheduleHelperService {
       changeStartDate,
       changeEndDate,
       period,
-    }: UpdateEventDTO
+    }: UpdateEventDTO,
   ) {
     if (!startTime && changeStartDate)
       throw new ObjectIsRequiredException('startTime');
@@ -143,7 +143,7 @@ export class ScheduleHelperService {
     const newEndTime = new Date(newStartTime);
     newEndTime.setHours(
       (endTime ?? event.endTime).getHours(),
-      (endTime ?? event.endTime).getMinutes()
+      (endTime ?? event.endTime).getMinutes(),
     );
 
     return {

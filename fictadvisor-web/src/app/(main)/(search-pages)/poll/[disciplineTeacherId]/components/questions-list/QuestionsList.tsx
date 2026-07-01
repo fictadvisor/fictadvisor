@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { DisciplineTeacherQuestionsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
+import { useShallow } from 'zustand/react/shallow';
 
 import PollCard from '@/components/common/ui/cards/poll-card';
 import TeacherHeaderCard from '@/components/common/ui/cards/teacher-header-card';
 import { usePollStore } from '@/store/poll-page/usePollStore';
 
 import * as styles from './QuestionsList.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 interface QuestionListProps {
   data: DisciplineTeacherQuestionsResponse;
@@ -17,11 +17,13 @@ const QuestionsList: React.FC<QuestionListProps> = ({ data, progress }) => {
   const { subject, teacher, categories } = data;
   const { lastName, firstName, middleName, avatar } = teacher;
   const { currentCategory, setCurrentCategory, setQuestionsListOpened } =
-    usePollStore(useShallow(state => ({
-      currentCategory: state.currentCategory,
-      setCurrentCategory: state.setCurrentCategory,
-      setQuestionsListOpened: state.setQuestionsListOpened,
-    })));
+    usePollStore(
+      useShallow(state => ({
+        currentCategory: state.currentCategory,
+        setCurrentCategory: state.setCurrentCategory,
+        setQuestionsListOpened: state.setQuestionsListOpened,
+      })),
+    );
   useEffect(() => {
     setCurrentCategory(0);
   }, []);

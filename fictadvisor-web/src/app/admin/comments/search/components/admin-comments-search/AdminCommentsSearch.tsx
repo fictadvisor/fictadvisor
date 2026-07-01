@@ -62,9 +62,8 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, values }) => {
 
   const handleSemestersChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
-    const newSemesters = value.map(
-      value =>
-        semestersMultiOptions.find(semester => semester.value === value)!,
+    const newSemesters = value.map(value =>
+      semestersMultiOptions.find(semester => semester.value === value)!,
     );
     setSemesters(newSemesters);
   };

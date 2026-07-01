@@ -91,9 +91,7 @@ const AdminRolesEdit: FC<AdminRolesEditProps> = ({ params }) => {
 
   if (error) {
     displayError(error);
-    throw new Error(
-      `An error has occurred while editing ${roleId} role`,
-    );
+    throw new Error(`An error has occurred while editing ${roleId} role`);
   }
 
   return (

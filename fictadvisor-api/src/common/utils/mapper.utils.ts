@@ -5,12 +5,12 @@ type MappingConfig<TSource, TDest> = {
 };
 
 export function forMembers<TSource, TDest> (
-  config: MappingConfig<TSource, TDest>
+  config: MappingConfig<TSource, TDest>,
 ): MappingConfiguration<TSource, TDest>[] {
   return (Object.keys(config) as Array<keyof TDest>).map((key) =>
     forMember(
       (dest: TDest) => dest[key],
-      mapFrom((src: TSource) => config[key]?.(src))
-    )
+      mapFrom((src: TSource) => config[key]?.(src)),
+    ),
   );
 }

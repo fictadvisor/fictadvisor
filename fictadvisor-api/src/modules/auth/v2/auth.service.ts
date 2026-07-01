@@ -265,8 +265,8 @@ export class AuthService {
     new Promise((resolve) => {
       setTimeout(() =>
         resolve(
-          repo.deleteMany({ where: { token: token.token } })
-        ), HOUR
+          repo.deleteMany({ where: { token: token.token } }),
+        ), HOUR,
       );
     });
   }
@@ -318,8 +318,8 @@ export class AuthService {
     new Promise((resolve) => {
       setTimeout(() =>
         resolve(
-          repo.deleteMany({ where: { token: token.token } })
-        ), HOUR
+          repo.deleteMany({ where: { token: token.token } }),
+        ), HOUR,
       );
     });
   }
@@ -480,8 +480,8 @@ export class AuthService {
     new Promise((resolve) => {
       setTimeout(() =>
         resolve(
-          repo.deleteMany({ where: { token: data.token } })
-        ), HOUR
+          repo.deleteMany({ where: { token: data.token } }),
+        ), HOUR,
       );
     });
   }

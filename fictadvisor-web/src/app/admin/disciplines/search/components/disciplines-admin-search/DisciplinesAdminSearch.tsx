@@ -83,25 +83,24 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
 
   const handleGroupsChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
-    const newGroups = value.map(
-      value => groupsMultiOptions.find(group => group.value === value)!,
+    const newGroups = value.map(value =>
+      groupsMultiOptions.find(group => group.value === value)!,
     );
     setGroups(newGroups);
   };
 
   const handleSemestersChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
-    const newSemesters = value.map(
-      value =>
-        semestersMultiOptions.find(semester => semester.value === value)!,
+    const newSemesters = value.map(value =>
+      semestersMultiOptions.find(semester => semester.value === value)!,
     );
     setSemesters(newSemesters);
   };
 
   const handleTeachersChange = (event: SelectChangeEvent) => {
     const value = event.target.value as unknown as string[];
-    const newTeachers = value.map(
-      value => teachersMultiOptions.find(teacher => teacher.value === value)!,
+    const newTeachers = value.map(value =>
+      teachersMultiOptions.find(teacher => teacher.value === value)!,
     );
     setTeachers(newTeachers);
   };

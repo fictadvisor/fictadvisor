@@ -72,7 +72,7 @@ export class DisciplineService {
       await this.disciplineTeacherService.create(
         teacher.teacherId,
         discipline.id,
-        teacher.disciplineTypes
+        teacher.disciplineTypes,
       );
     }
 

@@ -80,9 +80,7 @@ const AdminGroupEditBodyPage: FC<AdminGroupEditBodyPageProps> = ({
 
   if (error) {
     displayError(error);
-    throw new Error(
-      `An error has occurred while editing ${groupId} group`,
-    );
+    throw new Error(`An error has occurred while editing ${groupId} group`);
   }
 
   return (

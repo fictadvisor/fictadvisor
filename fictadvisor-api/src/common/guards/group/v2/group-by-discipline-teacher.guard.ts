@@ -8,7 +8,7 @@ import { InvalidEntityIdException } from '../../../exceptions/invalid-entity-id.
 export class GroupByDisciplineTeacherGuard implements CanActivate {
 
   constructor (
-    private disciplineTeacherRepository: DisciplineTeacherRepository
+    private disciplineTeacherRepository: DisciplineTeacherRepository,
   ) {}
 
   async canActivate (context: ExecutionContext) {

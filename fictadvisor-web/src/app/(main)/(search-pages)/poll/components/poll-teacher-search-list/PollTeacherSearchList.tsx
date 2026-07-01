@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { SearchFormProps } from '@/app/(main)/(search-pages)/search-form/SearchForm';
 import { PollTeacherCard } from '@/components/common/ui/cards/poll-teacher-card';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import { defaultAvatarPath } from '@/lib/constants/image';
 import theme from '@/styles/theme';
 
 import PollSearchForm from '../poll-search-form';
@@ -15,7 +16,6 @@ import PollSearchForm from '../poll-search-form';
 import * as styles from './PollTeacherSearchList.styles';
 
 import style from './PollTeacherSearchList.module.scss';
-import { defaultAvatarPath } from '@/lib/constants/image';
 
 interface PollTeacherSearchListProps {
   data: PollDisciplineTeachersResponse;

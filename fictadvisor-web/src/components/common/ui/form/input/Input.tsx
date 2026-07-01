@@ -27,8 +27,10 @@ export enum InputType {
   SEARCH = 'search',
 }
 
-interface InputProps
-  extends Omit<React.ComponentPropsWithoutRef<'input'>, 'size'> {
+interface InputProps extends Omit<
+  React.ComponentPropsWithoutRef<'input'>,
+  'size'
+> {
   label?: string;
   placeholder?: string;
   size?: InputSize;
