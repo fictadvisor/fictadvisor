@@ -28,7 +28,9 @@ WORKDIR /app
 COPY --from=pruner /app/out/yarn.lock ./yarn.lock
 COPY --from=pruner /app/out/json/ .
 
-RUN yarn install --frozen-lockfile
+# Persist Yarn's global cache across builds so unchanged deps are not re-fetched.
+RUN --mount=type=cache,target=/root/.yarn/berry/cache,sharing=locked \
+    YARN_ENABLE_GLOBAL_CACHE=1 yarn install --frozen-lockfile
 
 COPY --from=pruner /app/out/full/ .
 
@@ -37,7 +39,10 @@ RUN if [ "$NODE_ENV" = "development" ]; then \
     cp /app/fictadvisor-web/.env.development /app/fictadvisor-web/.env.production; fi
 
 ENV NODE_ENV="production"
-RUN turbo build --filter @fictadvisor/frontend
+# Persist Next.js' incremental compiler cache (.next/cache) across builds.
+# It is not part of the standalone output, so it is never copied into the final image.
+RUN --mount=type=cache,target=/app/fictadvisor-web/.next/cache \
+    turbo build --filter @fictadvisor/frontend
 
 ###################
 # PRODUCTION
