@@ -15,6 +15,7 @@ import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
 
 import * as styles from './TeacherHeaderCard.styles';
+import { defaultLecturerAvatarPath } from '@/lib/constants/image';
 
 type TeacherHeaderCardProps = {
   name: string;
@@ -26,7 +27,7 @@ type TeacherHeaderCardProps = {
 const TeacherHeaderCard: React.FC<TeacherHeaderCardProps> = ({
   name,
   description,
-  url = '/images/lecturer-avatar.png',
+  url = defaultLecturerAvatarPath,
   sx = {},
 }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('desktop'));
