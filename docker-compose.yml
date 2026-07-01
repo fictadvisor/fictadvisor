@@ -113,6 +113,22 @@ services:
     env_file:
       - ~/deployment/env/postgres.env
 
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    container_name: minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    volumes:
+      - ~/minio/data:/data
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # web console
+    networks:
+      - fictadvisor
+      - fictadvisor-dev
+    env_file:
+      - ~/deployment/env/minio.env
+
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower

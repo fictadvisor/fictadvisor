@@ -435,7 +435,7 @@ export class UserService {
   async updateAvatar (file: Express.Multer.File, userId: string) {
     const { avatar } = await this.userRepository.findOne({ id: userId });
 
-    if (avatar.includes('storage.googleapis.com')) {
+    if (this.fileService.isStorageLink(avatar)) {
       const oldPath = this.fileService.getPathFromLink(avatar);
       await this.deleteAvatarIfNotUsed(avatar, oldPath);
     }
@@ -450,7 +450,7 @@ export class UserService {
   async deleteAvatar (userId: string) {
     const { avatar } = await this.userRepository.findOne({ id: userId });
 
-    if (avatar.includes('storage.googleapis.com')) {
+    if (this.fileService.isStorageLink(avatar)) {
       const oldPath = this.fileService.getPathFromLink(avatar);
       await this.deleteAvatarIfNotUsed(avatar, oldPath);
     }

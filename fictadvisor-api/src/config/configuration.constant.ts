@@ -1,3 +1,5 @@
+import process from 'process';
+
 export default () => ({
   logLevel: process.env.LOG_LEVEL ?? 'info',
   port: parseInt(process.env.PORT) || 3000,
@@ -27,5 +29,13 @@ export default () => ({
   dates: {
     currentYear: process.env.CURRENT_YEAR ?? 2022,
     currentSemester: process.env.CURRENT_SEMESTER ?? 1,
+  },
+  minio: {
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_KEY,
+    endpoint: process.env.S3_ENDPOINT,
+    publicUrl: process.env.S3_PUBLIC_URL,
+    bucket: process.env.S3_BUCKET,
+    region: process.env.S3_REGION || 'us-east-1',
   },
 });

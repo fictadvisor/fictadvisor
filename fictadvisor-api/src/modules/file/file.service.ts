@@ -1,39 +1,73 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { join, extname } from 'path';
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getStorage } from 'firebase-admin/storage';
-import * as process from 'process';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { find } from '../../common/utils/array.utils';
 import { StudentWithContactsData } from './types/student-with-contacts.data';
 import { MINUTE } from '../date/v2/date.service';
-import { Bucket } from '@google-cloud/storage';
 import { utils, write } from 'xlsx';
+import { MinioConfigService } from '../../config/minio-config.service';
 
 @Injectable()
 export class FileService {
-  private storage: Bucket;
+  // Data client — talks to MinIO over the internal endpoint (fast, off any CDN).
+  private readonly client: S3Client;
+  // Presign client — bound to the PUBLIC endpoint so presigned URLs carry a
+  // browser-reachable host (SigV4 signs the host, so it can't be swapped later).
+  private readonly presignClient: S3Client;
+  private readonly bucket: string;
+  // Base URL for building public object links, e.g. `${publicUrl}/${bucket}`.
+  private readonly publicBase: string;
 
-  constructor () {
-    initializeApp({
-      credential: cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
-      storageBucket: process.env.BUCKET_NAME,
+  constructor (private minioConfigService: MinioConfigService) {
+    this.bucket = minioConfigService.bucket;
+    this.publicBase = `${minioConfigService.publicUrl.replace(/\/+$/, '')}/${this.bucket}`;
+    const credentials = {
+      accessKeyId: minioConfigService.accessKeyId,
+      secretAccessKey: minioConfigService.secretAccessKey,
+    };
+    // MinIO uses path-style addressing (`<endpoint>/<bucket>/<key>`).
+    this.client = new S3Client({
+      endpoint: minioConfigService.endpoint,
+      region: minioConfigService.region,
+      forcePathStyle: true,
+      credentials,
     });
-    this.storage = getStorage().bucket();
+    this.presignClient = new S3Client({
+      endpoint: minioConfigService.publicUrl,
+      region: minioConfigService.region,
+      forcePathStyle: true,
+      credentials,
+    });
   }
 
   async saveByHash (fileContent: Express.Multer.File, directory: string): Promise<string> {
     const fileName = createHash('md5').update(fileContent.buffer).digest('hex');
-    const filePath = join('static', directory, fileName + extname(fileContent.originalname));
+    const key = this.formatLink(join('static', directory, fileName + extname(fileContent.originalname)));
 
-    const file = this.storage.file(filePath);
-    await file.save(fileContent.buffer);
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: fileContent.buffer,
+      ContentType: fileContent.mimetype,
+    }));
 
-    const [url] = await file.getSignedUrl({
-      action: 'read',
-      expires: '01-01-2222',
-    });
-    return url;
+    return this.buildPublicUrl(key);
+  }
+
+  private buildPublicUrl (key: string): string {
+    return `${this.publicBase}/${key}`;
+  }
+
+  isStorageLink (link: string): boolean {
+    return link?.startsWith(`${this.publicBase}/`) ?? false;
   }
 
   private formatLink (path: string): string {
@@ -47,35 +81,45 @@ export class FileService {
   }
 
   async checkFileExist (path: string): Promise<boolean> {
-    const [result] = await this.storage.file(path).exists();
-    return result;
+    try {
+      await this.client.send(new HeadObjectCommand({ Bucket: this.bucket, Key: path }));
+      return true;
+    } catch (error) {
+      const err = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+      if (err?.name === 'NotFound' || err?.$metadata?.httpStatusCode === 404) {
+        return false;
+      }
+      throw error;
+    }
   }
 
   async deleteFile (path: string): Promise<void> {
-    await this.storage.file(path).delete();
+    await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: path }));
   }
 
   async getFileContent (path: string, isPrivate = true, encoding: BufferEncoding = 'utf-8') {
-    const filePath = this.formatLink(join(isPrivate ? 'private' : 'static', path));
-    const [file] = await this.storage.file(filePath).download();
+    const key = this.formatLink(join(isPrivate ? 'private' : 'static', path));
+    const { Body } = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: key }));
 
-    return file.toString(encoding);
+    return Body.transformToString(encoding);
+  }
+
+  private getSignedReadUrl (key: string, expiresInMs: number): Promise<string> {
+    return getSignedUrl(
+      this.presignClient,
+      new GetObjectCommand({ Bucket: this.bucket, Key: key }),
+      { expiresIn: Math.floor(expiresInMs / 1000) },
+    );
   }
 
   async generateGroupList (students: StudentWithContactsData[], groupId: string): Promise<string> {
     const fileName = `${groupId}.xlsx`;
-    const path = join('static', 'lists', fileName);
+    const key = this.formatLink(join('static', 'lists', fileName));
 
     const timeout = MINUTE * 15;
 
-    const file = this.storage.file(path);
-    if (await this.checkFileExist(path)) {
-      const [url] = await file.getSignedUrl({
-        action: 'read',
-        expires: Date.now() + timeout,
-      });
-
-      return url;
+    if (await this.checkFileExist(key)) {
+      return this.getSignedReadUrl(key, timeout);
     }
 
     const data = students.map((student) => ({
@@ -102,15 +146,17 @@ export class FileService {
       bookType: 'xlsx',
     });
 
-    await file.save(dataBuffer);
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: dataBuffer,
+      ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    }));
 
-    setTimeout(async () => this.storage.file(path).delete(), timeout);
+    setTimeout(() => {
+      this.deleteFile(key).catch(() => undefined);
+    }, timeout);
 
-    const [url] = await file.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + timeout,
-    });
-
-    return url;
+    return this.getSignedReadUrl(key, timeout);
   }
 }
