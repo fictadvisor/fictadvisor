@@ -889,7 +889,8 @@
               "Time": true,
               "job": true,
               "instance": true,
-              "app": true
+              "app": true,
+              "__name__": true
             },
             "renameByName": {
               "Value": "requests",
