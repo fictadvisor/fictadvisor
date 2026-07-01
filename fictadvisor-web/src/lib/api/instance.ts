@@ -35,8 +35,17 @@ const authorizationInterceptor = async (req: any) => {
   const isRefresh = (req.url as string).includes(authRefreshPath);
   let cookieToSet;
   if (isServer) {
-    const { cookies } = await import('next/headers');
+    const { cookies, headers } = await import('next/headers');
     const cookieStore = await cookies();
+    // SSR requests reach the API from the Next.js server, so without this the
+    // API's unique-visitor metric would see the web server's IP for every user.
+    // Forward the incoming client IP so it is attributed to the real visitor.
+    const headerStore = await headers();
+    const forwardedFor =
+      headerStore.get('x-forwarded-for') ?? headerStore.get('x-real-ip');
+    if (forwardedFor) {
+      req.headers['x-forwarded-for'] = forwardedFor;
+    }
     if (isRefresh) {
       cookieToSet = cookieStore.get(AuthToken.RefreshToken)?.value;
     } else {

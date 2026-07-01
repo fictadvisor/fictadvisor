@@ -753,6 +753,86 @@
           }
         }
       ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Unique visitors (by IP)",
+      "description": "Distinct client IPs seen within each rolling window. The windows are fixed server-side (5m / 1h / 24h) and do not follow the dashboard time range.",
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 64
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"5m\"}",
+          "legendFormat": "last 5m"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\"}",
+          "legendFormat": "last 1h"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"}",
+          "legendFormat": "last 24h"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Unique visitors (24h)",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 64
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"}"
+        }
+      ]
     }
   ]
 }
