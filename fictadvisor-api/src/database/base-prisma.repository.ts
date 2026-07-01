@@ -123,4 +123,9 @@ export abstract class BasePrismaRepository<
       create,
     });
   }
+
+  async exists (where: WhereType): Promise<boolean> {
+    const result = await this.count(where);
+    return result > 0;
+  }
 }

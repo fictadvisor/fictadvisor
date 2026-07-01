@@ -7,8 +7,8 @@ export class QuestionByIdPipe implements PipeTransform<string, Promise<string>> 
   constructor (private questionRepository: QuestionRepository) {}
 
   async transform (id: string): Promise<string> {
-    const question = await this.questionRepository.findOne({ id }, {});
-    if (!question) {
+    const exists = await this.questionRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('Question');
     }
     return id;

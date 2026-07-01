@@ -1,5 +1,4 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { User } from '@prisma-client/fictadvisor';
 import { UserRepository } from '../../database/v2/repositories/user.repository';
 import { InvalidEntityIdException } from '../exceptions/invalid-entity-id.exception';
 
@@ -11,8 +10,8 @@ export class UserByIdPipe implements PipeTransform {
   ) {}
 
   async transform (id: string) {
-    const user: User = await this.userRepository.findOne({ id }, {});
-    if (!user) {
+    const exists = await this.userRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('User');
     }
     return id;

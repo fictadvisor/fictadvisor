@@ -11,9 +11,11 @@ export class ValidatePageTextsPipe implements PipeTransform {
 
   async transform (body: UpdatePageTextsDTO): Promise<UpdatePageTextsDTO> {
     for (const pageText of body.pageTexts) {
-      const existingText = await this.pageTextRepository.findOne({ key: pageText.key });
+      const exists = await this.pageTextRepository.exists({
+        key: pageText.key,
+      });
 
-      if (!existingText) {
+      if (!exists) {
         throw new InvalidEntityIdException('PageText');
       }
     }

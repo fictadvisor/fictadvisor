@@ -11,8 +11,10 @@ export class CommentsQueryPipe implements PipeTransform {
 
   async transform (query: CommentsQueryDTO) {
     if (query.subjectId) {
-      const subject = await this.subjectRepository.findOne({ id: query.subjectId });
-      if (!subject) {
+      const exists = await this.subjectRepository.exists({
+        id: query.subjectId,
+      });
+      if (!exists) {
         throw new InvalidEntityIdException('Subject');
       }
     }

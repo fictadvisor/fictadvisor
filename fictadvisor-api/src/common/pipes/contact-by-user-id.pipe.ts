@@ -1,7 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { ContactRepository } from '../../database/v2/repositories/contact.repository';
 import { UserRepository } from '../../database/v2/repositories/user.repository';
-import { User } from '@prisma-client/fictadvisor';
 import { InvalidEntityIdException } from '../exceptions/invalid-entity-id.exception';
 
 @Injectable()
@@ -14,17 +13,17 @@ export class ContactByUserIdPipe implements PipeTransform {
   async transform (params: {userId: string, contactId: string}) {
     const { userId, contactId } = params;
 
-    const user: User = await this.userRepository.findOne({ id: userId });
-    if (!user) {
+    const userExists = await this.userRepository.exists({ id: userId });
+    if (!userExists) {
       throw new InvalidEntityIdException('User');
     }
 
-    const contact = await this.contactRepository.findOne({
+    const contactExists = await this.contactRepository.exists({
       id: contactId,
       entityId: userId,
     });
 
-    if (!contact) {
+    if (!contactExists) {
       throw new InvalidEntityIdException('Contact');
     }
 

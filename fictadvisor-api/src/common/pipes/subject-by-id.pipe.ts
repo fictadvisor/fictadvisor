@@ -9,8 +9,8 @@ export class SubjectByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (id: string): Promise<string> {
-    const subject = await this.subjectRepository.findOne({ id }, {});
-    if (!subject) {
+    const exists = await this.subjectRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('Subject');
     }
     return id;

@@ -14,17 +14,17 @@ export class ContactByTeacherIdPipe implements PipeTransform {
 
     const { teacherId, contactId } = params;
 
-    const teacher = await this.teacherRepository.findOne({ id: teacherId });
-    if (!teacher) {
+    const teacherExists = await this.teacherRepository.exists({ id: teacherId });
+    if (!teacherExists) {
       throw new InvalidEntityIdException('Teacher');
     }
 
-    const contact = await this.contactRepository.findOne({
+    const contactExists = await this.contactRepository.exists({
       id: contactId,
       entityId: teacherId,
     });
 
-    if (!contact) {
+    if (!contactExists) {
       throw new InvalidEntityIdException('Contact');
     }
     return params;
