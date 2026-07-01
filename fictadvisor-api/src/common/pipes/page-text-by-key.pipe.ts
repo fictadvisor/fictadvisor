@@ -10,8 +10,8 @@ export class PageTextByKeyPipe implements PipeTransform {
   ) {}
 
   async transform (body: CreatePageTextDTO): Promise<CreatePageTextDTO> {
-    const existingText = await this.pageTextRepository.findOne({ key: body.key });
-    if (existingText) {
+    const exists = await this.pageTextRepository.exists({ key: body.key });
+    if (exists) {
       throw new AlreadyExistException('PageText with such key');
     }
 

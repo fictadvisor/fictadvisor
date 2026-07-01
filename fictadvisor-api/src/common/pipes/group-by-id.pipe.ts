@@ -7,8 +7,8 @@ export class GroupByIdPipe implements PipeTransform<string, Promise<string>> {
   constructor (private groupRepository: GroupRepository) {}
 
   async transform (id: string): Promise<string> {
-    const group = await this.groupRepository.findOne({ id }, {});
-    if (!group) {
+    const exists = await this.groupRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('Group');
     }
     return id;

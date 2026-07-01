@@ -7,8 +7,8 @@ export class CathedraByIdPipe implements PipeTransform<string, Promise<string>> 
   constructor (private cathedraRepository: CathedraRepository) {}
 
   async transform (id: string): Promise<string> {
-    const cathedra = await this.cathedraRepository.findOne({ id }, {});
-    if (!cathedra) {
+    const exists = await this.cathedraRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('Cathedra');
     }
     return id;

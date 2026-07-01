@@ -9,8 +9,8 @@ export class StudentByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (userId: string): Promise<string> {
-    const student = await this.studentRepository.findOne({ userId });
-    if (!student) {
+    const exists = await this.studentRepository.exists({ userId });
+    if (!exists) {
       throw new InvalidEntityIdException('Student');
     }
 

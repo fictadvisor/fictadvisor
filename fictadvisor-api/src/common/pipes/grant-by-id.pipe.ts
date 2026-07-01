@@ -9,8 +9,8 @@ export class GrantByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (id: string): Promise<string> {
-    const grant = await this.grantRepository.findOne({ id }, {});
-    if (!grant) {
+    const exists = await this.grantRepository.exists({ id });
+    if (!exists) {
       throw new InvalidEntityIdException('Grant');
     }
     return id;
