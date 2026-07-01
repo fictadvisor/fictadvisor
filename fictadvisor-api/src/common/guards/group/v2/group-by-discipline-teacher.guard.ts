@@ -18,7 +18,10 @@ export class GroupByDisciplineTeacherGuard implements CanActivate {
     if (!teacher) {
       throw new InvalidEntityIdException('Discipline teacher');
     }
-    request.query.groupId = teacher.discipline.group.id;
+    // Express 5's req.query is a getter that returns a fresh parsed object on
+    // each access, so mutating it doesn't persist to the PermissionGuard. Write
+    // to req.params (a stable object) — RequestUtil.get reads query ?? params ?? body.
+    request.params.groupId = teacher.discipline.group.id;
     return true;
   }
 }

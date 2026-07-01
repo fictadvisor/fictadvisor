@@ -17,7 +17,10 @@ export class GroupByDisciplineGuard implements CanActivate {
         },
       },
     });
-    request.query.groupId = group.id;
+    // Express 5's req.query is a getter that returns a fresh parsed object on
+    // each access, so mutating it doesn't persist to the PermissionGuard. Write
+    // to req.params (a stable object) — RequestUtil.get reads query ?? params ?? body.
+    request.params.groupId = group.id;
     return true;
   }
 }
