@@ -84,21 +84,23 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
   })));
   const toast = useToast();
 
-  const initialValues: Record<string, string> = useMemo(() => {
+  // SCALE answers must be numbers: MUI Slider treats a string `value` as a
+  // range array and calls `value.slice().sort()`, which throws on a string.
+  const initialValues: Record<string, string | number> = useMemo(() => {
     return currentQuestions?.questions
       .filter(question => question.type === QuestionType.SCALE)
       .reduce(
         (initialVals, question) => {
-          initialVals[question.id] = '1';
+          initialVals[question.id] = 1;
           return initialVals;
         },
-        {} as Record<string, string>,
+        {} as Record<string, string | number>,
       );
   }, [currentQuestions]);
 
   const handleFormEvent = (
     event: FormEvent<HTMLFormElement>,
-    values: Record<string, string>,
+    values: Record<string, string | number>,
   ) => {
     const name = (event.target as HTMLFormElement).name;
     const value = (event.target as HTMLFormElement).value;
@@ -119,7 +121,7 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     return resultAnswers;
   };
 
-  const handleSubmit = (value: Record<string, string>) => {
+  const handleSubmit = (value: Record<string, string | number>) => {
     const answers = updateAnswer({ ...initialValues, ...value });
     if (!isTheLast) {
       setCurrentCategory(currentCategory + 1);
