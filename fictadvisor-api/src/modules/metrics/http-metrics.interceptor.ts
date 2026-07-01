@@ -20,6 +20,8 @@ export class HttpMetricsInterceptor implements NestInterceptor {
       return next.handle();
     }
 
+    this.metrics.recordVisitor(this.clientIp(req));
+
     const stopTimer = this.metrics.httpRequestDuration.startTimer();
 
     // 'finish' fires after the exception filter has set the final status code,
@@ -37,5 +39,18 @@ export class HttpMetricsInterceptor implements NestInterceptor {
     });
 
     return next.handle();
+  }
+
+  // The API sits behind a reverse proxy, so `req.ip` is the proxy address.
+  // Prefer the first hop in X-Forwarded-For (the real client) when present.
+  private clientIp (req: any): string | undefined {
+    const forwarded = req.headers?.['x-forwarded-for'];
+    if (typeof forwarded === 'string' && forwarded.length) {
+      return forwarded.split(',')[0].trim();
+    }
+    if (Array.isArray(forwarded) && forwarded.length) {
+      return forwarded[0];
+    }
+    return req.ip ?? req.socket?.remoteAddress;
   }
 }
