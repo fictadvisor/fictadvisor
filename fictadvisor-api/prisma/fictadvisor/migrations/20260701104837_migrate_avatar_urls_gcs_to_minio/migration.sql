@@ -11,35 +11,36 @@
 --   ficeadvisor-dev.appspot.com  -> minio bucket `fictadvisor-dev`  (dev DB)
 -- The query string is stripped; imgur/default avatars are left untouched.
 -- Idempotent: after rewrite the URLs no longer match the GCS predicate.
+-- Tables are the @@map'd names (users / teachers / verify_email_tokens).
 
 -- ---- PROD bucket (ficeadvisor-prod.appspot.com -> fictadvisor) ----
-UPDATE "User"
+UPDATE "users"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-prod.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-prod.appspot.com/%';
 
-UPDATE "Teacher"
+UPDATE "teachers"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-prod.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-prod.appspot.com/%';
 
-UPDATE "VerifyEmailToken"
+UPDATE "verify_email_tokens"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-prod.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-prod.appspot.com/%';
 
 -- ---- DEV bucket (ficeadvisor-dev.appspot.com -> fictadvisor-dev) ----
-UPDATE "User"
+UPDATE "users"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor-dev/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-dev.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-dev.appspot.com/%';
 
-UPDATE "Teacher"
+UPDATE "teachers"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor-dev/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-dev.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-dev.appspot.com/%';
 
-UPDATE "VerifyEmailToken"
+UPDATE "verify_email_tokens"
 SET "avatar" = 'https://storage.ficeadvisor.com/fictadvisor-dev/' ||
   split_part(regexp_replace("avatar", '\?.*$', ''), 'ficeadvisor-dev.appspot.com/', 2)
 WHERE "avatar" LIKE 'https://storage.googleapis.com/ficeadvisor-dev.appspot.com/%';
