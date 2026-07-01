@@ -5,7 +5,8 @@ import { mkdirSync, existsSync } from 'fs';
 
 export const applyStaticMiddleware = (app: NestExpressApplication) => {
   const express = loadPackage('express', 'static.util', () =>
-    require('express')
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('express'),
   );
   const config = app.get<ConfigService>(ConfigService);
   const staticDir = config.get<string>('static.dir');

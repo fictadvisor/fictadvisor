@@ -72,7 +72,7 @@ export class QuestionProfile extends AutomapperProfile {
           mapWith(Comment, CommentData, (dto) => dto.comments.data)),
 
         forMember((response) => response.pagination,
-          mapFrom((dto) => dto.comments.pagination)
+          mapFrom((dto) => dto.comments.pagination),
         ));
     };
   }

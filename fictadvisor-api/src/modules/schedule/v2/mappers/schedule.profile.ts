@@ -47,7 +47,7 @@ export class ScheduleProfile extends AutomapperProfile {
 
         forMember((response) => response.teachers,
           mapWithArguments(({ lessons }, { discipline }: any) =>
-            this.getTeachers(discipline?.disciplineTeachers, lessons[0]?.disciplineType))
+            this.getTeachers(discipline?.disciplineTeachers, lessons[0]?.disciplineType)),
         ));
     };
   }

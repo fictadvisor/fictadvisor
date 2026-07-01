@@ -107,7 +107,7 @@ export class RoleController {
   @Patch('/:roleId')
   async update (
     @Param('roleId', RoleByIdPipe) roleId: string,
-    @Body() body: UpdateRoleDTO
+    @Body() body: UpdateRoleDTO,
   ): Promise<BaseRoleResponse> {
     const role = await this.roleService.update(roleId, body);
     return this.mapper.map(role, DbRole, BaseRoleResponse);

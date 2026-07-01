@@ -407,7 +407,7 @@ describe('PollService', () => {
         expect(questions.length).toBe(2);
         expect(questions[0].questionRoles).toStrictEqual(questionMark1.questionRoles);
         expect(questions[1].questionRoles).toStrictEqual(questionText.questionRoles);
-      }
+      },
     );
 
     it('should return only one question because the second one doesn\'t show LECTURER question but only PRACTICIAN',
@@ -420,7 +420,7 @@ describe('PollService', () => {
         ]);
         expect(questions.length).toBe(1);
         expect(questions[0].questionRoles).toStrictEqual(questionText.questionRoles);
-      }
+      },
     );
   });
 
@@ -430,8 +430,8 @@ describe('PollService', () => {
       expect(questions.length).toBe(2);
       expect(
         questions.every((question) =>
-          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
-        )
+          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE,
+        ),
       ).toBe(true);
     });
 
@@ -442,17 +442,17 @@ describe('PollService', () => {
           year: 2022,
           semester: 1,
           subjectId: subject.id,
-        }
+        },
       );
       const questionAnswers1 = questions1.filter(
-        (value) => value.questionAnswers.length > 0
+        (value) => value.questionAnswers.length > 0,
       )[0].questionAnswers;
 
       expect(questions1.length).toBe(2);
       expect(
         questions1.every((question) =>
-          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
-        )
+          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE,
+        ),
       ).toBe(true);
       expect(questionAnswers1[0].disciplineTeacherId).toBe(discipline2.disciplineTeachers[1].id);
 
@@ -461,17 +461,17 @@ describe('PollService', () => {
         {
           year: 2022,
           semester: 2,
-        }
+        },
       );
       const questionAnswers2 = questions2.filter(
-        (value) => value.questionAnswers.length > 0
+        (value) => value.questionAnswers.length > 0,
       )[0].questionAnswers;
 
       expect(questions2.length).toBe(2);
       expect(
         questions2.every((question) =>
-          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE
-        )
+          question.type === QuestionType.SCALE || question.type === QuestionType.TOGGLE,
+        ),
       ).toBe(true);
       expect(questionAnswers2[0].disciplineTeacherId).toBe(discipline1.disciplineTeachers[0].id);
     });
@@ -488,7 +488,7 @@ describe('PollService', () => {
         {
           subjectId: '87e204ea-4243-4633-b69d-014613bac59e',
           semester: 1,
-        }
+        },
       );
       const questionAnswers = questions.filter((value) => value.questionAnswers.length > 0);
       expect(questionAnswers.length).toBe(0);
@@ -500,7 +500,7 @@ describe('PollService', () => {
       const questionComments = await pollService.getQuestionWithText(teacherLaborant.id);
       expect(questionComments.length).not.toBe(0);
       expect(questionComments.every(
-        (questionComment) => questionComment.type === QuestionType.TEXT
+        (questionComment) => questionComment.type === QuestionType.TEXT,
       )).toBe(true);
     });
 
@@ -511,11 +511,11 @@ describe('PollService', () => {
           subjectId: subject.id,
           year: 2022,
           semester: 2,
-        }
+        },
       );
       expect(questionComments.length).toBe(1);
       expect(questionComments.every(
-        (questionComment) => questionComment.type === QuestionType.TEXT
+        (questionComment) => questionComment.type === QuestionType.TEXT,
       )).toBe(true);
       expect(questionComments[0].comments.data.length).toBe(1);
       expect(questionComments[0].comments.data[0].disciplineTeacher.discipline.id === discipline1.id);
@@ -526,13 +526,13 @@ describe('PollService', () => {
         teacherLecturer.id,
         {
           sortBy: CommentsSortOrder.OLDEST,
-        }
+        },
       );
       const questionCommentsNewest = await pollService.getQuestionWithText(
         teacherLecturer.id,
         {
           sortBy: CommentsSortOrder.NEWEST,
-        }
+        },
       );
       expect(questionCommentsOldest.length).toBe(1);
       expect(questionCommentsNewest.length).toBe(1);

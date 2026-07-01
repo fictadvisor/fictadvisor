@@ -1,5 +1,12 @@
 'use client';
-import React, { FC, use, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { TeacherWithRolesAndCathedrasResponse } from '@fictadvisor/utils/responses';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Box, CardHeader, Divider, Stack } from '@mui/material';
@@ -33,7 +40,7 @@ interface AdminDepartmentEditProps {
 }
 
 const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
-  const {departmentId} = use(params);
+  const { departmentId } = use(params);
   const {
     data: department,
     isLoading,
@@ -181,7 +188,14 @@ const Page: FC<AdminDepartmentEditProps> = ({ params }) => {
           />
         </Stack>
       </Box>
-      <Stack sx={{ maxWidth: 308, flexDirection: 'column', gap: '16px', padding: '16px' }}>
+      <Stack
+        sx={{
+          maxWidth: 308,
+          flexDirection: 'column',
+          gap: '16px',
+          padding: '16px',
+        }}
+      >
         <Input
           value={name ?? ''}
           onChange={setName}

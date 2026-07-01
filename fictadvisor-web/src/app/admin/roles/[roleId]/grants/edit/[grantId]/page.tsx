@@ -89,9 +89,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
 
   if (error) {
     displayError(error);
-    throw new Error(
-      `An error has occurred while editing ${grantId} grant`,
-    );
+    throw new Error(`An error has occurred while editing ${grantId} grant`);
   }
 
   return (

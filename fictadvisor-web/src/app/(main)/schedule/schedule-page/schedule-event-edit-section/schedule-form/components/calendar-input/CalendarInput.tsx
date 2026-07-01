@@ -1,8 +1,8 @@
 import { Dispatch, FC } from 'react';
 import { CalendarIcon as CalendarIconMUI } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
-import { ukUA } from '@mui/x-date-pickers/locales';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { ukUA } from '@mui/x-date-pickers/locales';
 import { useField } from 'formik';
 import moment, { Moment } from 'moment';
 
@@ -60,9 +60,7 @@ const CalendarInput: FC<CalendarInputProps> = ({ date, setDate }) => {
         desktopModeMediaQuery="@media (min-width: 0px)"
       />
       {touched && error && !date && (
-        <Typography sx={styles.remark}>
-          Обов'язкове поле
-        </Typography>
+        <Typography sx={styles.remark}>Обов'язкове поле</Typography>
       )}
     </Box>
   );

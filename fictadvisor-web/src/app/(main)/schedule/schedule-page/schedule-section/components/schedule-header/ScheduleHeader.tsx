@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 import moment from 'moment';
+import { useShallow } from 'zustand/react/shallow';
 
 import { MAX_WEEK_NUMBER } from '@/app/(main)/schedule/schedule-page/constants';
 import Button from '@/components/common/ui/button-mui';
@@ -24,7 +25,6 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { getFirstDayOfAWeek } from '@/store/schedule/utils/getFirstDayOfAWeek';
 
 import * as styles from './ScheduleHeader.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 const dayMapper = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 const monthMapper = [
@@ -51,15 +51,17 @@ const ScheduleHeader = () => {
     chosenDay,
     currentTime,
     loading,
-  } = useSchedule(useShallow(state => ({
-    week: state.week,
-    setChosenDay: state.setChosenDay,
-    eventsBody: state.eventsBody,
-    semester: state.semester,
-    chosenDay: state.chosenDay,
-    currentTime: state.currentTime,
-    loading: state.isLoading,
-  })));
+  } = useSchedule(
+    useShallow(state => ({
+      week: state.week,
+      setChosenDay: state.setChosenDay,
+      eventsBody: state.eventsBody,
+      semester: state.semester,
+      chosenDay: state.chosenDay,
+      currentTime: state.currentTime,
+      loading: state.isLoading,
+    })),
+  );
 
   const updateWeek = (amount: number) => {
     const newWeek = week + amount;

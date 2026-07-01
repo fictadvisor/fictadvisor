@@ -4,6 +4,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join, resolve } from 'path';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 import cookieParser = require('cookie-parser');
 import { AppModule } from './modules/app.module';
 import { TelegramAPI } from './modules/telegram-api/telegram-api';
@@ -55,7 +56,7 @@ async function bootstrap () {
       transform: true,
       whitelist: true,
       exceptionFactory: validationExceptionFactory(),
-    })
+    }),
   );
   app.enableVersioning({
     type: VersioningType.URI,
@@ -83,7 +84,7 @@ async function bootstrap () {
     `Started server on 0.0.0.0:${port}\n` +
     `Swagger: http://0.0.0.0:${port}/api\n` +
     `Unit coverage: http://0.0.0.0:${port}/unit-coverage/\n` +
-    `Integration coverage: http://0.0.0.0:${port}/integration-coverage/`
+    `Integration coverage: http://0.0.0.0:${port}/integration-coverage/`,
   );
 }
 bootstrap();

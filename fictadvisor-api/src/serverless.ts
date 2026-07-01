@@ -31,7 +31,7 @@ async function bootstrap () {
       transform: true,
       whitelist: true,
       exceptionFactory: validationExceptionFactory(),
-    })
+    }),
   );
   app.enableVersioning({
     type: VersioningType.URI,

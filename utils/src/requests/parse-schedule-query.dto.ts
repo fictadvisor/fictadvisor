@@ -38,7 +38,7 @@ export class ParseScheduleQueryDTO {
   @IsOptional()
   @Transform(({ value }) => parseInt(value))
   @IsNumber({}, validationOptionsMsg('Page value must be of type number'))
-  page?: number;
+    page?: number;
 
   @ApiPropertyOptional({
     description: 'Names of academic groups (separated by ;)',

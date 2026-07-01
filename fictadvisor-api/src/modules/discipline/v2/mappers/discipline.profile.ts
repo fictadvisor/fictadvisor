@@ -41,18 +41,18 @@ export class DisciplineProfile extends AutomapperProfile {
           mapFrom(({ subject }) => subject.name)),
 
         forMember((response) => response.teachers,
-          mapWith(ShortTeacherResponse, DbTeacher, (dto) => extractField(dto.disciplineTeachers, 'teacher'))
+          mapWith(ShortTeacherResponse, DbTeacher, (dto) => extractField(dto.disciplineTeachers, 'teacher')),
         ));
 
       createMap(mapper, DbDiscipline, ExtendedDisciplineTeachersResponse,
         forMember((response) => response.teachers,
-          mapWith(DisciplineTeacherResponse, DbDisciplineTeacher, (dto) => dto.disciplineTeachers)
+          mapWith(DisciplineTeacherResponse, DbDisciplineTeacher, (dto) => dto.disciplineTeachers),
         ));
 
       createMap(mapper, DbSelectiveAmount, SelectiveBySemestersResponse,
         forMember((response) => response.disciplines,
           mapWithArguments((dto, { disciplines }: any) =>
-            this.getDisciplineNames(dto, disciplines))
+            this.getDisciplineNames(dto, disciplines)),
         ));
 
       createMap(mapper, DbDiscipline, SelectiveDisciplinesResponse,
@@ -60,7 +60,7 @@ export class DisciplineProfile extends AutomapperProfile {
           mapWithArguments((dto, { disciplines }: any) => {
             const filtered = this.filterBySemester(dto as any, disciplines);
             return this.mapper.mapArray(filtered, DbDiscipline, BaseSelectiveDisciplineResponse);
-          })
+          }),
         ));
 
       createMap(mapper, DbDiscipline, SelectiveDisciplinesWithAmountResponse,
@@ -79,7 +79,7 @@ export class DisciplineProfile extends AutomapperProfile {
   private filterBySemester ({ semester, year }: DbSelectiveAmount, disciplines: DbDiscipline[]) {
     return disciplines.filter((discipline) =>
       discipline.semester === semester &&
-      discipline.year === year
+      discipline.year === year,
     );
   }
 

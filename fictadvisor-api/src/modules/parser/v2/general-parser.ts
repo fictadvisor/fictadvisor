@@ -46,7 +46,7 @@ type DatabasePair = Omit<BaseGeneralParserPair, 'isSelective' | 'teachers'> & {
 
 @Injectable()
 export class GeneralParser {
-  constructor(
+  constructor (
     private groupService: GroupService,
     private eventRepository: EventRepository,
     private teacherRepository: TeacherRepository,
@@ -57,14 +57,14 @@ export class GeneralParser {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private campusParser: CampusParser,
-    @InjectMapper() private mapper: Mapper
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   private parserTypes: Record<ParserTypeEnum, Parser> = {
     [ParserTypeEnum.CAMPUS]: this.campusParser,
   };
 
-  static parseTeacherNames(...teacherNames: string[]): ParsedScheduleTeacher[] {
+  static parseTeacherNames (...teacherNames: string[]): ParsedScheduleTeacher[] {
     const result = [];
 
     for (const teacherName of teacherNames) {
@@ -75,7 +75,7 @@ export class GeneralParser {
     return result;
   }
 
-  static ensureSelectivesAreValid(weeks: GroupParsedSchedule) {
+  static ensureSelectivesAreValid (weeks: GroupParsedSchedule) {
     const names = this.getUniqueSubjectsName(weeks);
     let result = weeks;
 
@@ -86,9 +86,9 @@ export class GeneralParser {
     return result;
   }
 
-  private static makePairsSelective(
+  private static makePairsSelective (
     weeks: GroupParsedSchedule,
-    pairName: string
+    pairName: string,
   ): GroupParsedSchedule {
     return {
       ...weeks,
@@ -103,9 +103,9 @@ export class GeneralParser {
     };
   }
 
-  private static makeWeekPairsSelective(
+  private static makeWeekPairsSelective (
     pairs: ParsedSchedulePair[],
-    pairName: string
+    pairName: string,
   ): ParsedSchedulePair[] {
     return pairs.map((pair) => ({
       ...pair,
@@ -113,26 +113,26 @@ export class GeneralParser {
     }));
   }
 
-  private static checkIfDisciplineIsSelective(
+  private static checkIfDisciplineIsSelective (
     weeks: GroupParsedSchedule,
-    pairName: string
+    pairName: string,
   ): boolean {
     return [...weeks.firstWeek.pairs, ...weeks.secondWeek.pairs]
       .filter(({ name }) => name === pairName)
       .some(({ isSelective }) => isSelective);
   }
 
-  private static getUniqueSubjectsName({
+  private static getUniqueSubjectsName ({
     firstWeek,
     secondWeek,
   }: GroupParsedSchedule) {
     const names = [firstWeek, secondWeek].flatMap((week) =>
-      week.pairs.map((pair) => pair.name)
+      week.pairs.map((pair) => pair.name),
     );
     return [...new Set(names)];
   }
 
-  private static parseTeacherName(teacherName: string): ParsedScheduleTeacher {
+  private static parseTeacherName (teacherName: string): ParsedScheduleTeacher {
     if (!teacherName) return;
     const [middleName, firstName, lastName] = teacherName.split(' ').reverse();
 
@@ -147,9 +147,9 @@ export class GeneralParser {
     }
   }
 
-  private async getDates(
+  private async getDates (
     initialIndex: number,
-    semesterStartDate: Date
+    semesterStartDate: Date,
   ): Promise<EventWhereInput[]> {
     const weekCount = await this.getEventsAmount(Period.EVERY_FORTNIGHT);
 
@@ -157,7 +157,7 @@ export class GeneralParser {
     return periods.map((_, index) => {
       const { startOfWeek, endOfWeek } = this.dateService.getWeekDates(
         semesterStartDate,
-        index * 2 + initialIndex
+        index * 2 + initialIndex,
       );
 
       return {
@@ -169,11 +169,11 @@ export class GeneralParser {
     });
   }
 
-  async parse(
+  async parse (
     parserType: ParserTypeEnum,
     groupList?: string[],
     period?: StudyingSemester,
-    page?: number
+    page?: number,
   ) {
     const weekNumber = await this.dateService.getCurrentWeek();
 
@@ -193,7 +193,7 @@ export class GeneralParser {
     const parser = this.parserTypes[parserType];
     const groups = (await parser.parseGroups(groupList)).slice(
       ((page ?? 1) - 1) * groupsPerPage,
-      page ? page * groupsPerPage : undefined
+      page ? page * groupsPerPage : undefined,
     );
 
     const dates = await Promise.all([
@@ -213,14 +213,14 @@ export class GeneralParser {
         weekNumber,
         semester,
         dates,
-        semesterStartDate
+        semesterStartDate,
       );
     }
 
     console.log('\nPARSE COMPLETED\n');
   }
 
-  private async handleGroupSchedule(
+  private async handleGroupSchedule (
     groupId: string,
     schedule: GroupParsedSchedule,
     weekNumber: number,
@@ -229,7 +229,7 @@ export class GeneralParser {
       EventWhereInput[],
       EventWhereInput[],
     ],
-    semesterStartDate: Date
+    semesterStartDate: Date,
   ) {
     const { firstWeek, secondWeek } = schedule;
     const weeks = [firstWeek, secondWeek];
@@ -242,7 +242,7 @@ export class GeneralParser {
       groupId,
       semester,
       dates[this.getWeekIndex(weekNumber)],
-      semesterStartDate
+      semesterStartDate,
     );
 
     await this.saveWeekSchedule(
@@ -251,21 +251,21 @@ export class GeneralParser {
       groupId,
       semester,
       dates[this.getWeekIndex(weekNumber + 1)],
-      semesterStartDate
+      semesterStartDate,
     );
   }
 
-  private getWeekIndex(week: number) {
+  private getWeekIndex (week: number) {
     return (week + 1) % 2;
   }
 
-  private async saveWeekSchedule(
+  private async saveWeekSchedule (
     parsedPairs: BaseGeneralParserPair[],
     weekNumber: number,
     groupId: string,
     semester: StudyingSemester,
     dates: EventWhereInput[],
-    semesterStartDate: Date
+    semesterStartDate: Date,
   ) {
     const databasePairs = await this.getDatabasePairs(groupId, dates);
 
@@ -280,7 +280,7 @@ export class GeneralParser {
           databasePair.startTime.getTime() === startTime.getTime() &&
           databasePair.endTime.getTime() === endTime.getTime() &&
           databasePair.disciplineType.name === disciplineType.name &&
-          databasePair.period === period
+          databasePair.period === period,
       );
 
       if (newPairIndex !== -1) {
@@ -308,7 +308,7 @@ export class GeneralParser {
       oldChanged,
       groupId,
       semester,
-      currentSemester
+      currentSemester,
     );
 
     await Promise.all([
@@ -317,7 +317,7 @@ export class GeneralParser {
     ]);
   }
 
-  private async handleNotChanged(pairs: DatabasePair[], currentSemester?: CurrentSemester) {
+  private async handleNotChanged (pairs: DatabasePair[], currentSemester?: CurrentSemester) {
     for (const {
       id: eventId,
       disciplineId,
@@ -343,26 +343,26 @@ export class GeneralParser {
             teacherId,
             disciplineId,
             disciplineType,
-            eventId
+            eventId,
           );
         }
       }
     }
   }
 
-  private async updateDiscipline(disciplineId: string, isSelective: boolean) {
+  private async updateDiscipline (disciplineId: string, isSelective: boolean) {
     return this.disciplineRepository.update(
       { id: disciplineId },
-      { isSelective }
+      { isSelective },
     );
   }
 
-  private async handleNewPairs(
+  private async handleNewPairs (
     pairs: BaseGeneralParserPair[],
     oldPairs: DatabasePair[],
     groupId: string,
     semester: StudyingSemester,
-    currentSemester: CurrentSemester
+    currentSemester: CurrentSemester,
   ) {
     for (const pair of pairs) {
       if (pair.period === Period.NO_PERIOD) {
@@ -385,7 +385,7 @@ export class GeneralParser {
       if (defendant.length) {
         await this.updateDiscipline(
           defendant[0].disciplineId,
-          pair.isSelective
+          pair.isSelective,
         );
       }
 
@@ -405,14 +405,14 @@ export class GeneralParser {
     return oldPairs;
   }
 
-  private async handleOldPairs(
+  private async handleOldPairs (
     oldPairs: DatabasePair[],
     weekNumber: number,
-    semesterStartDate: Date
+    semesterStartDate: Date,
   ) {
     const { startOfWeek } = this.dateService.getWeekDates(
       semesterStartDate,
-      weekNumber
+      weekNumber,
     );
 
     const filteredOld = oldPairs.filter((pair) => {
@@ -445,11 +445,11 @@ export class GeneralParser {
     }
   }
 
-  private async calculateEventsAmount(
+  private async calculateEventsAmount (
     startOfEvent: Date,
     eventPeriod: Period,
     week: number,
-    startOfWeek?: Date
+    startOfWeek?: Date,
   ) {
     const weekStart = startOfWeek ??
       (await this.dateService.getDatesOfWeek(week)).startOfWeek;
@@ -460,12 +460,12 @@ export class GeneralParser {
     const eventWeeks = this.dateUtils.getFlooredDifference(
       startOfEvent,
       weekStart,
-      WEEK
+      WEEK,
     );
     return Math.floor(eventWeeks / weeksPerEvent[eventPeriod]);
   }
 
-  private async savePair(
+  private async savePair (
     {
       name,
       isSelective,
@@ -477,7 +477,7 @@ export class GeneralParser {
     }: BaseGeneralParserPair,
     groupId: string,
     semester: StudyingSemester,
-    currentSemester?: CurrentSemester
+    currentSemester?: CurrentSemester,
   ) {
     const { id: subjectId } =
       (await this.subjectRepository.findOne({ name })) ??
@@ -491,11 +491,11 @@ export class GeneralParser {
         semester: semester.semester,
       },
       disciplineType.name as DisciplineTypeEnum,
-      isSelective
+      isSelective,
     );
 
     const DbDisciplineType = discipline.disciplineTypes.find(
-      (type) => type.name === disciplineType.name
+      (type) => type.name === disciplineType.name,
     );
 
     const event = {
@@ -529,11 +529,11 @@ export class GeneralParser {
       teacherIds,
       discipline,
       DbDisciplineType,
-      eventId
+      eventId,
     );
   }
 
-  private async getEventsAmount(period: Period, currentSemester?: CurrentSemester) {
+  private async getEventsAmount (period: Period, currentSemester?: CurrentSemester) {
     if (period === Period.NO_PERIOD) return 1;
 
     const { startDate, endDate } = currentSemester ??
@@ -541,28 +541,28 @@ export class GeneralParser {
     const lastWeek = this.dateUtils.getCeiledDifference(
       startDate,
       new Date(endDate.getTime() - FORTNITE),
-      WEEK
+      WEEK,
     );
     return lastWeek / weeksPerEvent[period];
   }
 
-  private async handleTeachers(
+  private async handleTeachers (
     teacherIds: string[],
     discipline: DbDiscipline,
     disciplineType: DbDisciplineType,
-    eventId: string
+    eventId: string,
   ) {
     for (const teacherId of teacherIds) {
       await this.createOrUpdateDisciplineTeacher(
         teacherId,
         discipline.id,
         disciplineType,
-        eventId
+        eventId,
       );
     }
   }
 
-  private async getOrCreateDiscipline(
+  private async getOrCreateDiscipline (
     disciplineData: {
       subjectId: string;
       groupId: string;
@@ -570,7 +570,7 @@ export class GeneralParser {
       semester: number;
     },
     disciplineTypeName: DisciplineTypeEnum,
-    isSelective: boolean
+    isSelective: boolean,
   ) {
     const discipline =
       (await this.disciplineRepository.findOne(disciplineData)) ??
@@ -582,7 +582,7 @@ export class GeneralParser {
 
     if (
       !discipline.disciplineTypes.some(
-        (type) => type.name === disciplineTypeName
+        (type) => type.name === disciplineTypeName,
       )
     ) {
       updateData.disciplineTypes = {
@@ -595,7 +595,7 @@ export class GeneralParser {
     return this.disciplineRepository.updateById(discipline.id, updateData);
   }
 
-  private async getOrCreateTeacher({
+  private async getOrCreateTeacher ({
     lastName,
     firstName,
     middleName,
@@ -615,11 +615,11 @@ export class GeneralParser {
     );
   }
 
-  private async createOrUpdateDisciplineTeacher(
+  private async createOrUpdateDisciplineTeacher (
     teacherId: string,
     disciplineId: string,
     disciplineType: ParsedDisciplineType,
-    eventId: string
+    eventId: string,
   ) {
     const disciplineTeacherWhere = {
       teacherId,
@@ -628,7 +628,7 @@ export class GeneralParser {
 
     const disciplineTeacher =
       (await this.disciplineTeacherRepository.findOne(
-        disciplineTeacherWhere
+        disciplineTeacherWhere,
       )) ??
       (await this.disciplineTeacherRepository.create({
         ...disciplineTeacherWhere,
@@ -641,7 +641,7 @@ export class GeneralParser {
 
     if (
       !disciplineTeacher.roles.some(
-        (role) => role.disciplineType.name === disciplineType.name
+        (role) => role.disciplineType.name === disciplineType.name,
       )
     ) {
       await Promise.all([
@@ -664,12 +664,12 @@ export class GeneralParser {
     }
   }
 
-  private async prepareParsedPairs(
+  private async prepareParsedPairs (
     dates: [
       Prisma.Enumerable<EventWhereInput>,
       Prisma.Enumerable<EventWhereInput>,
     ],
-    weeks: ParsedScheduleWeek[]
+    weeks: ParsedScheduleWeek[],
   ): Promise<[BaseGeneralParserPair[], BaseGeneralParserPair[]]> {
     const result: [BaseGeneralParserPair[], BaseGeneralParserPair[]] = [[], []];
 
@@ -709,22 +709,22 @@ export class GeneralParser {
     ];
   }
 
-  private filterWeekPairs(
+  private filterWeekPairs (
     dates: Prisma.Enumerable<EventWhereInput>,
-    pairs: BaseGeneralParserPair[]
+    pairs: BaseGeneralParserPair[],
   ) {
     return pairs.filter((pair) =>
       new Array(dates).flat().some(({ startTime }) => {
         const { gte, lte } = startTime as Prisma.DateTimeFilter;
         return gte <= pair.startTime && pair.startTime < lte;
-      })
+      }),
     );
   }
 
-  private calculateEventPeriod(
+  private calculateEventPeriod (
     weeks: BaseGeneralParserPair[][],
     currentWeekPair: BaseGeneralParserPair,
-    weekIndex: number
+    weekIndex: number,
   ) {
     if (!currentWeekPair.isRecurring) {
       return Period.NO_PERIOD;
@@ -739,15 +739,15 @@ export class GeneralParser {
         currentWeekPair.disciplineType.name === disciplineType.name &&
         currentWeekPair.startTime.getTime() + weekOffset ===
           startTime.getTime() &&
-        currentWeekPair.endTime.getTime() + weekOffset === endTime.getTime()
+        currentWeekPair.endTime.getTime() + weekOffset === endTime.getTime(),
     );
 
     return otherWeekMatches ? Period.EVERY_WEEK : Period.EVERY_FORTNIGHT;
   }
 
-  private async getDatabasePairs(
+  private async getDatabasePairs (
     groupId: string,
-    dates: EventWhereInput[]
+    dates: EventWhereInput[],
   ): Promise<DatabasePair[]> {
     const events = await this.eventRepository.findMany({
       groupId,

@@ -29,18 +29,18 @@ export function getDocumentationDecorators (summary: string, description: string
   decorators.push(
     ...responseTypes
       .filter((responseType) => documentation?.[responseType.key])
-      .map((responseType) => responseType.decorator(documentation[responseType.key]))
+      .map((responseType) => responseType.decorator(documentation[responseType.key])),
   );
 
   if (documentation?.params) {
     decorators.push(
-      ...documentation.params.map((query) => ApiParam(query))
+      ...documentation.params.map((query) => ApiParam(query)),
     );
   }
 
   if (documentation?.queries) {
     decorators.push(
-      ...documentation.queries.map((query) => ApiQuery(query))
+      ...documentation.queries.map((query) => ApiQuery(query)),
     );
   }
 

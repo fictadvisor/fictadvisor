@@ -3,6 +3,7 @@ import { QuestionType } from '@fictadvisor/utils/enums';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { Box, Typography } from '@mui/material';
 import { Form, Formik, FormikValues } from 'formik';
+import { useShallow } from 'zustand/react/shallow';
 
 import * as sxStyles from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/answers-sheet/AnswerSheet.style';
 import { createValidationSchema } from '@/app/(main)/(search-pages)/poll/[disciplineTeacherId]/components/answers-sheet/validation';
@@ -19,7 +20,6 @@ import { Answer, Question } from '@/types/poll';
 import AnswersSaved from './AnswersSaved';
 
 import styles from './AnswersSheet.module.scss';
-import { useShallow } from 'zustand/react/shallow';
 
 interface AnswersSheetProps {
   setProgress: React.Dispatch<React.SetStateAction<number[]>>;
@@ -71,17 +71,19 @@ const AnswersSheet: React.FC<AnswersSheetProps> = ({
     setIsSendingStatus,
     currentQuestions,
     setQuestionsListOpened,
-  } = usePollStore(useShallow(state => ({
-    setCurrentCategory: state.setCurrentCategory,
-    currentCategory: state.currentCategory,
-    answers: state.answers,
-    setAnswers: state.setAnswers,
-    isValid: state.isValid,
-    sendingStatus: state.sendingStatus,
-    setIsSendingStatus: state.setIsSendingStatus,
-    currentQuestions: state.currentQuestions,
-    setQuestionsListOpened: state.setQuestionsListOpened,
-  })));
+  } = usePollStore(
+    useShallow(state => ({
+      setCurrentCategory: state.setCurrentCategory,
+      currentCategory: state.currentCategory,
+      answers: state.answers,
+      setAnswers: state.setAnswers,
+      isValid: state.isValid,
+      sendingStatus: state.sendingStatus,
+      setIsSendingStatus: state.setIsSendingStatus,
+      currentQuestions: state.currentQuestions,
+      setQuestionsListOpened: state.setQuestionsListOpened,
+    })),
+  );
   const toast = useToast();
 
   // SCALE answers must be numbers: MUI Slider treats a string `value` as a

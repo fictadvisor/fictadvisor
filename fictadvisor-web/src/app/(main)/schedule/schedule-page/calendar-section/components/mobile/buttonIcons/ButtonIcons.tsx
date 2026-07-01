@@ -2,18 +2,20 @@ import { useEffect, useState } from 'react';
 import { GroupRoles } from '@fictadvisor/utils/enums';
 import { ArrowUpIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { Box } from '@mui/material';
+import { useShallow } from 'zustand/react/shallow';
 
 import ButtonIcon from '@/components/common/ui/icon-button-mui/IconButton';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import * as styles from './buttonIcons.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 export const ButtonIcons = () => {
   const [displayScrollBtn, setDisplayScrollBtn] = useState(false);
   const { user } = useAuthentication();
-  const { groupId } = useSchedule(useShallow(state => ({ groupId: state.groupId })));
+  const { groupId } = useSchedule(
+    useShallow(state => ({ groupId: state.groupId })),
+  );
 
   const validPrivilege =
     user &&

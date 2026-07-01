@@ -14,21 +14,15 @@ import * as styles from './PersonalSubjectTeacherTabs.styles';
 
 const CommentTab = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/comment-tab'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/comment-tab'),
 );
 const GeneralTab = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/general-tab'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/general-tab'),
 );
 const PollButtons = dynamic(
   () =>
-    import(
-      '@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/poll-buttons'
-    ),
+    import('@/app/(main)/(search-pages)/teachers/[teacherId]/personal-teacher-tabs/components/poll-buttons'),
 );
 
 interface PersonalSubjectTeacherProps {

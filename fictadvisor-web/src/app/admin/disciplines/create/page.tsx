@@ -59,15 +59,13 @@ const AdminSubjectCreate = () => {
     return <LoadPage />;
   }
 
-  if (
-    !(
-      groupsOptions &&
-      semesterOptions &&
-      subjectOptions &&
-      teachersOptions &&
-      rolesOptions
-    )
-  )
+  if (!(
+    groupsOptions &&
+    semesterOptions &&
+    subjectOptions &&
+    teachersOptions &&
+    rolesOptions
+  ))
     throw new Error('an error has occured while fetching data');
 
   const deleteTeacher = (id: string) => {

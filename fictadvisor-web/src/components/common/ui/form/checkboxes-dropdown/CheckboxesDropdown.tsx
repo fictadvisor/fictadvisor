@@ -45,7 +45,9 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
           return selectedSubjects.map(option => option.label).join(', ');
         }}
         MenuProps={{
-          slotProps: { paper: { sx: MergeSx(styles.paperProps(width), menuSx) } },
+          slotProps: {
+            paper: { sx: MergeSx(styles.paperProps(width), menuSx) },
+          },
         }}
         SelectDisplayProps={{
           style: styles.selectedItems(size, width),

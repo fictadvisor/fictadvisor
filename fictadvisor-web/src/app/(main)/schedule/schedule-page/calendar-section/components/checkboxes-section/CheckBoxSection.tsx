@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { Stack } from '@mui/system';
+import { useShallow } from 'zustand/react/shallow';
 
 import Checkbox from '@/components/common/ui/form/checkbox';
 import { CheckboxColor } from '@/components/common/ui/form/checkbox/types';
@@ -7,14 +8,15 @@ import { useAuthentication } from '@/hooks/use-authentication/useAuthentication'
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import * as styles from './CheckBoxSection.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 export const CheckBoxSection = () => {
-  const [groupId, checkboxes, updateCheckboxes] = useSchedule(useShallow(state => [
-    state.groupId,
-    state.checkboxes,
-    state.updateCheckboxes,
-  ]));
+  const [groupId, checkboxes, updateCheckboxes] = useSchedule(
+    useShallow(state => [
+      state.groupId,
+      state.checkboxes,
+      state.updateCheckboxes,
+    ]),
+  );
 
   const { user } = useAuthentication();
 

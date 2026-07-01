@@ -35,7 +35,7 @@ export class GroupProfile extends AutomapperProfile {
           mapWith(SpecialityResponse, DbSpeciality, (dto) => dto.educationalProgram?.speciality ?? {})),
 
         forMember((response) => response.cathedra,
-          nullSubstitution({}))
+          nullSubstitution({})),
       );
     };
   }
@@ -43,7 +43,7 @@ export class GroupProfile extends AutomapperProfile {
   private findCaptain (students: DbStudent[]) {
     return students.find(
       (student) => student.roles.some(
-        ({ role }) => role.name === RoleName.CAPTAIN
+        ({ role }) => role.name === RoleName.CAPTAIN,
       ));
   }
 }

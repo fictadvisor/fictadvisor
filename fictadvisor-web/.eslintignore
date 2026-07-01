@@ -1,8 +1,0 @@
-node_modules
-.husky
-.github
-.next
-
-# generated css files
-*.css
-*.css.map

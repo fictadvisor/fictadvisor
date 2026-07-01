@@ -11,7 +11,7 @@ export class PaginationUtil {
   static async paginate<T extends TModels<Prisma.TypeMap>, Dto> (
     repository: RepositoryInterface<Dto, TWhere<Prisma.TypeMap, T>>,
     pageDTO: PageDTO,
-    args: PaginateArgs<T>
+    args: PaginateArgs<T>,
   ): Promise<PaginatedData<Dto>> {
     return DatabaseUtils.generalPaginate(repository, pageDTO, args);
   }

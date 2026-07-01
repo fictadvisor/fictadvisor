@@ -66,7 +66,7 @@ export class DatabaseUtils {
   static async generalPaginate<Map extends TypeMap, T extends TModels<Map>, Dto> (
     repository: RepositoryInterface<Dto, TWhere<Map, T>>,
     { page = 0, pageSize }: PageDTO,
-    args: PaginateArgs<Map, T>
+    args: PaginateArgs<Map, T>,
   ): Promise<PaginatedData<Dto>> {
     page = +page;
     pageSize = +pageSize;

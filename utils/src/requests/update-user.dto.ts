@@ -16,7 +16,7 @@ export class UpdateUserDTO {
     @MaxLength(40, validationOptionsMsg('Username is too long (max: 40)'))
     @Matches(
       createRegex(ENG_REGEX, NUM_REGEX, '_'),
-      validationOptionsMsg('Username is not correct (a-zA-Z0-9_)')
+      validationOptionsMsg('Username is not correct (a-zA-Z0-9_)'),
     )
     @IsOptional()
       username?: string;

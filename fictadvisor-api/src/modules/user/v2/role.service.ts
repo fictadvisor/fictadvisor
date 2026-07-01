@@ -124,7 +124,7 @@ export class RoleService {
     return grant;
   }
 
-  async updateGrant (roleId: string, grantId: string, body: UpdateGrantDTO,) {
+  async updateGrant (roleId: string, grantId: string, body: UpdateGrantDTO) {
     await this.checkGrantBelonging(roleId, grantId);
     const grant = await this.grantRepository.updateById(grantId, body);
 

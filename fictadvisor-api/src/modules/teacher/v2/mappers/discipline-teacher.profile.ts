@@ -36,12 +36,12 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacherAndSubjectResponse,
         forMember((response) => response.subjectName,
-          mapFrom((dto) => dto.discipline.subject.name)
+          mapFrom((dto) => dto.discipline.subject.name),
         ));
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacherExtendedResponse,
         forMember((response) => response.disciplineTypes,
-          mapFrom((dto) => this.getDisciplineTypes(dto))
+          mapFrom((dto) => this.getDisciplineTypes(dto)),
         ));
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacherResponse,
@@ -57,7 +57,7 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
 
         forMember((response) => response.cathedras,
           mapWith(CathedraResponse, DbCathedra,
-            ({ teacher }) => extractField(teacher.cathedras, 'cathedra')
+            ({ teacher }) => extractField(teacher.cathedras, 'cathedra'),
           )),
 
         ...forMembers<DbDisciplineTeacher, DisciplineTeacherResponse>({
@@ -69,7 +69,7 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacherFullResponse,
         extend(DbDisciplineTeacher, DisciplineTeacherResponse),
         forMember((response) => response.subject,
-          mapWith(SubjectResponse, DbSubject, (dto) => dto.discipline.subject)
+          mapWith(SubjectResponse, DbSubject, (dto) => dto.discipline.subject),
         ));
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacher);

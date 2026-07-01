@@ -11,11 +11,11 @@ import {
 import Link from 'next/link';
 
 import Tooltip from '@/components/common/ui/tooltip';
+import { defaultLecturerAvatarPath } from '@/lib/constants/image';
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 import theme from '@/styles/theme';
 
 import * as styles from './TeacherHeaderCard.styles';
-import { defaultLecturerAvatarPath } from '@/lib/constants/image';
 
 type TeacherHeaderCardProps = {
   name: string;

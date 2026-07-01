@@ -5,7 +5,7 @@ import {
   createRegex,
   UKR_REGEX,
   UKRSPEC_REGEX,
-  validationOptionsMsg
+  validationOptionsMsg,
 } from '../validation.util';
 
 export class UpdateTeacherDTO {

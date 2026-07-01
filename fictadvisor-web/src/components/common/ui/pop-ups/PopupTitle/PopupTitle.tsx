@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { IconButton } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import { SxProps, Theme } from '@mui/material/styles';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 

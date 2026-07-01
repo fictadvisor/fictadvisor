@@ -22,7 +22,7 @@ export class TelegramAPI {
       (res) => res,
       (error: AxiosError) => {
         throw new HttpException(error.response.statusText, error.response.status);
-      }
+      },
     );
   }
 

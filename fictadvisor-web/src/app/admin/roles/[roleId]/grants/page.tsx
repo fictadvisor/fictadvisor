@@ -31,13 +31,7 @@ const AdminGrantsEdit: FC<AdminGrantsEditProps> = ({ params }) => {
   const { displayError } = useToastError();
 
   const { data, isLoading, refetch, error } = useQuery({
-    queryKey: [
-      'allGrantsByRoleId',
-      currPage,
-      pageSize,
-      queryObj,
-      roleId,
-    ],
+    queryKey: ['allGrantsByRoleId', currPage, pageSize, queryObj, roleId],
 
     queryFn: () =>
       GrantsAPI.getAllByRoleId(roleId, {

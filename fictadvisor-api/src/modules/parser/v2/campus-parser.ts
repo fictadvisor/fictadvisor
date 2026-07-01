@@ -20,7 +20,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
 
   async parseGroups (groupNames: string[] = []): Promise<CampusParserGroup[]> {
     const { data } = await axios.get(
-      'https://api.campus.kpi.ua/schedule/groups'
+      'https://api.campus.kpi.ua/schedule/groups',
     );
 
     let filtered: CampusParserGroup[] = data

@@ -19,7 +19,7 @@ export class UpdateSubjectDTO {
   @IsNotEmpty(validationOptionsMsg('Name cannot be empty'))
   @Matches(
     createRegex(UKR_REGEX, ENG_REGEX, NUM_REGEX, PUNCTUAL_REGEX),
-    validationOptionsMsg('Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-\' )(/+.,")')
+    validationOptionsMsg('Name is incorrect (a-zA-Z0-9A-Я(укр.)\\-\' )(/+.,")'),
   )
     name: string;
 }

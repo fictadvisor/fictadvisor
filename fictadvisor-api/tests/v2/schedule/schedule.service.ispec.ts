@@ -599,7 +599,7 @@ describe('ScheduleService', () => {
     it('should throw DataNotFoundException because semester wasn\'t found', async () => {
       jest.useFakeTimers().setSystemTime(new Date('1488-02-05T00:01:00'));
       await expect(
-        scheduleService.getGeneralGroupEvents('group', 1)
+        scheduleService.getGeneralGroupEvents('group', 1),
       ).rejects.toThrow(DataNotFoundException);
     });
 
@@ -618,7 +618,7 @@ describe('ScheduleService', () => {
         (event) => event.lessons.every(
           (lesson) => lesson.disciplineType.name === DisciplineTypeEnum.LECTURE ||
                       lesson.disciplineType.name === DisciplineTypeEnum.PRACTICE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.LABORATORY)
+                      lesson.disciplineType.name === DisciplineTypeEnum.LABORATORY),
       )).toBe(true);
     });
   });
@@ -721,14 +721,14 @@ describe('ScheduleService', () => {
     it('should throw DataNotFoundException if semester wasn\'t found', async () => {
       jest.useFakeTimers().setSystemTime(new Date('1488-01-01T00:00:00'));
       await expect(
-        scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1)
+        scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1),
       ).rejects.toThrow(DataNotFoundException);
     });
 
     it('should throw InvalidWeekException because specified week doesn\'t contain the event', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       await expect(
-        scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1)
+        scheduleService.getEvent('practice-event-1st-semester-every-week-09-12', 1),
       ).rejects.toThrow(InvalidWeekException);
     });
   });
@@ -757,9 +757,9 @@ describe('ScheduleService', () => {
       expect(
         events.every((event) =>
           event.lessons.every(
-            (lesson) => !generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum)
-          )
-        )
+            (lesson) => !generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum),
+          ),
+        ),
       ).toBe(true);
     });
 
@@ -784,7 +784,7 @@ describe('ScheduleService', () => {
         showOwnSelective: true,
       }, 'user', 2);
       const event = events.find(
-        (event) => event.id === 'nonselected-lecture-event-1st-semester-every-week-09-05'
+        (event) => event.id === 'nonselected-lecture-event-1st-semester-every-week-09-05',
       );
       expect(event).toBeUndefined();
     });
@@ -800,8 +800,8 @@ describe('ScheduleService', () => {
 
       expect(events.every(
         (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum)
-        )
+          (lesson) => generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum),
+        ),
       )).toBe(true);
     });
 
@@ -819,8 +819,8 @@ describe('ScheduleService', () => {
         (event) => event.lessons.every(
           (lesson) => lesson.disciplineType.name !== DisciplineTypeEnum.LECTURE &&
                       lesson.disciplineType.name !== DisciplineTypeEnum.PRACTICE &&
-                      lesson.disciplineType.name !== DisciplineTypeEnum.LABORATORY
-        ))
+                      lesson.disciplineType.name !== DisciplineTypeEnum.LABORATORY,
+        )),
       ).toBe(true);
     });
   });
@@ -1166,7 +1166,7 @@ describe('ScheduleService', () => {
       };
 
       await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
-        new ObjectIsRequiredException('startTime')
+        new ObjectIsRequiredException('startTime'),
       );
 
       data = {
@@ -1175,7 +1175,7 @@ describe('ScheduleService', () => {
       };
 
       await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
-        new ObjectIsRequiredException('endTime')
+        new ObjectIsRequiredException('endTime'),
       );
     });
 
@@ -1308,7 +1308,7 @@ describe('ScheduleService', () => {
       };
 
       await expect(scheduleService.updateEvent(eventId, data)).rejects.toThrow(
-        new ObjectIsRequiredException('disciplineType')
+        new ObjectIsRequiredException('disciplineType'),
       );
     });
 

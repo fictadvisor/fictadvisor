@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useShallow } from 'zustand/react/shallow';
 
 import ScheduleColumn from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-column/ScheduleColumn';
 import { ScheduleLineVariant } from '@/app/(main)/schedule/schedule-page/schedule-section/components/schedule/components/schedule-line/types';
@@ -14,7 +15,6 @@ import { useSchedule } from '@/store/schedule/useSchedule';
 import { calculateTop } from './components/schedule-column/components/schedule-card/utils/calculateTop';
 import ScheduleLine from './components/schedule-line/ScheduleLine';
 import * as styles from './Schedule.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 const Schedule = () => {
   const { user } = useAuthentication();
@@ -26,15 +26,17 @@ const Schedule = () => {
     loading,
     currentTime,
     updateCheckboxes,
-  } = useSchedule(useShallow(state => ({
-    events: state.eventsBody,
-    checkboxes: state.checkboxes,
-    week: state.week,
-    disciplines: state.eventTypes,
-    loading: state.isLoading,
-    currentTime: state.currentTime.toISOString(),
-    updateCheckboxes: state.updateCheckboxes,
-  })));
+  } = useSchedule(
+    useShallow(state => ({
+      events: state.eventsBody,
+      checkboxes: state.checkboxes,
+      week: state.week,
+      disciplines: state.eventTypes,
+      loading: state.isLoading,
+      currentTime: state.currentTime.toISOString(),
+      updateCheckboxes: state.updateCheckboxes,
+    })),
+  );
 
   const eventsPerWeek = useMemo(() => {
     if (!events[week - 1]) return null;

@@ -2,20 +2,22 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import moment from 'moment';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useSchedule } from '@/store/schedule/useSchedule';
 
 import 'moment/locale/uk';
 
 import * as styles from './DatePicker.styles';
-import { useShallow } from 'zustand/react/shallow';
 
 export const DatePicker = () => {
-  const { chosenDay, setChosenDay, semester } = useSchedule(useShallow(state => ({
-    chosenDay: state.chosenDay,
-    setChosenDay: state.setChosenDay,
-    semester: state.semester,
-  })));
+  const { chosenDay, setChosenDay, semester } = useSchedule(
+    useShallow(state => ({
+      chosenDay: state.chosenDay,
+      setChosenDay: state.setChosenDay,
+      semester: state.semester,
+    })),
+  );
 
   if (!chosenDay) return <></>;
 

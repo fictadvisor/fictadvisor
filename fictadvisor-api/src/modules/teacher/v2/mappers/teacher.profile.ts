@@ -27,17 +27,17 @@ export class TeacherProfile extends AutomapperProfile {
 
       createMap(mapper, DbTeacher, TeacherResponse,
         forMember((response) => response.rating,
-          mapFrom((dto) => dto.rating.toNumber())
+          mapFrom((dto) => dto.rating.toNumber()),
         ));
 
       createMap(mapper, DbTeacher, TeacherWithRolesAndCathedrasResponse,
         extend(DbTeacher, TeacherResponse),
 
         forMember((response) => response.cathedras,
-          mapWith(CathedraResponse, DbCathedra, (dto) => extractField(dto.cathedras, 'cathedra'))
+          mapWith(CathedraResponse, DbCathedra, (dto) => extractField(dto.cathedras, 'cathedra')),
         ),
         forMember((response) => response.disciplineTypes,
-          mapFrom((dto) => TeacherProfile.getTeacherRoles(dto.disciplineTeachers)))
+          mapFrom((dto) => TeacherProfile.getTeacherRoles(dto.disciplineTeachers))),
       );
     };
   }

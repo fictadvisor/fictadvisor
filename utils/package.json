@@ -25,12 +25,19 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "@eslint/js": "^10.0.0",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.4.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.0"
   },
   "dependencies": {
     "@automapper/classes": "^8.8.1",

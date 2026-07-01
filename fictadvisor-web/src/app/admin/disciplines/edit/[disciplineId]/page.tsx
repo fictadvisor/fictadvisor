@@ -29,7 +29,7 @@ interface AdminDisciplineEditProps {
 }
 
 const DisciplinesAdminEdit: FC<AdminDisciplineEditProps> = ({ params }) => {
-  const {disciplineId} = use(params);
+  const { disciplineId } = use(params);
 
   const {
     data: discipline,

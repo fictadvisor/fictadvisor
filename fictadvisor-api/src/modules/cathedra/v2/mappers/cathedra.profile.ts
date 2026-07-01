@@ -21,14 +21,14 @@ export class CathedraProfile extends AutomapperProfile {
 
       createMap(mapper, DbCathedra, CathedraWithNumberOfTeachersResponse,
         forMember((response) => response.teachers,
-          mapFrom((dto) => dto.teachers.length)
+          mapFrom((dto) => dto.teachers.length),
         ),
       );
 
       createMap(mapper, DbCathedra, CathedraWithTeachersResponse,
         forMember((response) => response.teachers,
-          mapWith(TeacherResponse, DbTeacher, (dto) => extractField(dto.teachers, 'teacher'))
-        )
+          mapWith(TeacherResponse, DbTeacher, (dto) => extractField(dto.teachers, 'teacher')),
+        ),
       );
     };
   }

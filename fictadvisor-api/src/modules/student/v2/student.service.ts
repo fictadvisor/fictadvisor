@@ -183,7 +183,7 @@ export class StudentService {
       student.groupId,
       selectiveDisciplines,
       connectedSelectives,
-      disconnectedSelectives
+      disconnectedSelectives,
     );
 
     return this.studentRepository.updateById(userId, {
@@ -240,7 +240,7 @@ export class StudentService {
   }
   private async checkDisconnectedSelectives (
     selectedSelectives: SelectiveDiscipline[],
-    disconnectedSelectives: string[]
+    disconnectedSelectives: string[],
   ) {
     disconnectedSelectives.forEach((disciplineId) => {
       if (!selectedSelectives.some((selective) => selective.disciplineId === disciplineId)) {
@@ -252,7 +252,7 @@ export class StudentService {
   private async checkConnectedSelectives (
     groupId: string,
     connectedSelectives: string[],
-    studentSelectives: DbDiscipline[]
+    studentSelectives: DbDiscipline[],
   ) {
     const groupSelectives = await this.disciplineRepository.findMany({
       groupId,

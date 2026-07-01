@@ -36,17 +36,18 @@ const PageLayout: React.FC<PageLayoutProps> = ({
           name="google-site-verification"
           content="M93dY9EuPcQ5AzSYwxc6_el0GwZp_XlDHBhphP6z-7g"
         />
-        <Script
-          dangerouslySetInnerHTML={{
-            __html: `
+      </Head>
+      <Script
+        id="gtag-init"
+        dangerouslySetInnerHTML={{
+          __html: `
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
                   gtag('config', 'G-GXYG7SJKYT');
                 `,
-          }}
-        />
-      </Head>
+        }}
+      />
 
       <div className={styles['page'] + ' ' + className}>
         {hasHeader && (
