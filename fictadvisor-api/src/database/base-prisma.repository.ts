@@ -24,7 +24,7 @@ export abstract class BasePrismaRepository<
   CreateType = TCreate<TTypeMap, Model>,
   UpdateType = TUpdate<TTypeMap, Model>,
   WhereUniqueType = TWhereUnique<TTypeMap, Model>,
-  BatchPayloadType = TBatchPayload<TTypeMap, Model>
+  BatchPayloadType = TBatchPayload<TTypeMap, Model>,
 > implements RepositoryInterface<Dto, WhereType, SortType, IncludeType> {
   protected constructor (
     readonly model: TPrismaClient[Model],
@@ -51,47 +51,60 @@ export abstract class BasePrismaRepository<
     });
   }
 
-  async findOne (where: WhereType): Promise<Dto> {
+  async findOne (where: WhereType, include?: IncludeType): Promise<Dto> {
     return (this.model as any).findFirst({
       where,
-      include: this.repositoryInclude,
+      include: include ?? this.repositoryInclude,
     });
   }
 
-  async create (data: CreateType): Promise<Dto> {
+  async create (data: CreateType, include?: IncludeType): Promise<Dto> {
     return (this.model as any).create({
       data,
-      include: this.repositoryInclude,
+      include: include ?? this.repositoryInclude,
     });
   }
 
-  async createMany (data: CreateType[]): Promise<BatchPayloadType> {
+  async createMany (
+    data: CreateType[],
+    include?: IncludeType,
+  ): Promise<BatchPayloadType> {
     return (this.model as any).createMany({ data });
   }
 
-  async update (where: WhereType, data: UpdateType): Promise<BatchPayloadType> {
+  async update (
+    where: WhereType,
+    data: UpdateType,
+    include?: IncludeType,
+  ): Promise<BatchPayloadType> {
     return (this.model as any).updateMany({
       where,
       data,
     });
   }
 
-  async updateById (id: string, data: UpdateType): Promise<Dto> {
+  async updateById (
+    id: string,
+    data: UpdateType,
+    include?: IncludeType,
+  ): Promise<Dto> {
     return (this.model as any).update({
       where: { id },
       data,
-      include: this.repositoryInclude,
+      include: include ?? this.repositoryInclude,
     });
   }
 
-  async delete (where: WhereType): Promise<BatchPayloadType> {
+  async delete (
+    where: WhereType,
+  ): Promise<BatchPayloadType> {
     return (this.model as any).deleteMany({ where });
   }
 
-  async deleteById (id: string): Promise<Dto> {
+  async deleteById (id: string, include?: IncludeType): Promise<Dto> {
     return (this.model as any).delete({
       where: { id },
-      include: this.repositoryInclude,
+      include: include ?? this.repositoryInclude,
     });
   }
 
@@ -99,7 +112,11 @@ export abstract class BasePrismaRepository<
     return (this.model as any).count({ where });
   }
 
-  async upsert (where: WhereUniqueType, create: CreateType, update: UpdateType): Promise<Dto[]> {
+  async upsert (
+    where: WhereUniqueType,
+    create: CreateType,
+    update: UpdateType,
+  ): Promise<Dto[]> {
     return (this.model as any).upsert({
       where,
       update,

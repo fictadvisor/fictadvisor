@@ -8,7 +8,7 @@ export class EventByIdPipe implements PipeTransform<string, Promise<string>> {
     private eventRepository: EventRepository,
   ) {}
   async transform (id: string) {
-    const event = await this.eventRepository.findOne({ id });
+    const event = await this.eventRepository.findOne({ id }, {});
     if (!event) {
       throw new InvalidEntityIdException('Event');
     }

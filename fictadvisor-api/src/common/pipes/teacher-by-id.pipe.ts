@@ -9,7 +9,7 @@ export class TeacherByIdPipe implements PipeTransform<string, Promise<string>> {
   ) {}
 
   async transform (id: string): Promise<string> {
-    const teacher = await this.teacherRepository.findOne({ id });
+    const teacher = await this.teacherRepository.findOne({ id }, {});
     if (!teacher) {
       throw new InvalidEntityIdException('Teacher');
     }
