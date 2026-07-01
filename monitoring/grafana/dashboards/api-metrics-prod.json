@@ -4,7 +4,7 @@
   },
   "editable": true,
   "graphTooltip": 0,
-  "title": "FICT Advisor API — prod",
+  "title": "FICT Advisor API \u2014 prod",
   "uid": "fictadvisor-api-prod",
   "tags": [
     "fictadvisor",
@@ -831,6 +831,77 @@
             "uid": "prometheus"
           },
           "expr": "http_unique_visitors{job=\"fictadvisor-api\",window=\"24h\"}"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Visitors by IP (last 24h)",
+      "description": "Distinct client IPs seen in the last 24h with their GeoIP country and request count. Bounded to 5000 IPs; source is the first hop of X-Forwarded-For.",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 72
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "filterable": true
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "displayName": "requests",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sort_desc(http_visitor_requests{job=\"fictadvisor-api\"})",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "job": true,
+              "instance": true,
+              "app": true
+            },
+            "renameByName": {
+              "Value": "requests",
+              "ip": "IP",
+              "country": "country"
+            },
+            "indexByName": {
+              "ip": 0,
+              "country": 1,
+              "Value": 2
+            }
+          }
         }
       ]
     }
