@@ -67,15 +67,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
     const { method, path } = req;
     const environment = process.env.NODE_ENV?.toUpperCase();
-    const version = path.match(/\/v(.)\//)[1];
-    const project = version === '1' ? 'COHORTA' : 'FICTADVISOR';
     const params = nonEmptyObject(req.params);
     const query = nonEmptyObject(req.query);
     const body = nonEmptyObject(req.body);
     const userId: string = (req.user as any)?.id;
 
     let errorMsg = '';
-    errorMsg += `🚨🚨🚨 ${project} ERROR 🚨🚨🚨\n`;
+    errorMsg += '🚨🚨🚨 FICTADVISOR ERROR 🚨🚨🚨\n';
     errorMsg += `⚙️ Environment: ${environment}\n`;
     errorMsg += `🌐 ${method} ${path}\n`;
     if (userId) errorMsg += `🆔 User ID: ${userId}\n`;

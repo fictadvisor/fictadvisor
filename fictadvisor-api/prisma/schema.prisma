@@ -3,7 +3,7 @@
 
 generator client {
   provider            = "prisma-client"
-  output              = "../../../node_modules/@prisma-client/fictadvisor"
+  output              = "../../node_modules/@prisma-client/fictadvisor"
   moduleFormat        = "cjs"
   runtime             = "nodejs"
   importFileExtension = ""
