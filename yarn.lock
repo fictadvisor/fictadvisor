@@ -6998,6 +6998,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/geoip-lite@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "@types/geoip-lite@npm:1.4.4"
+  checksum: 10c0/20d8c9b556d53360651ff20747c3912be4863e53c7fb1c35b9aa4d5e8b0818bb5d0d328de723ce399e6412597c961b60d199df637bf7fb74329872b8823cc40a
+  languageName: node
+  linkType: hard
+
 "@types/hoist-non-react-statics@npm:^3.3.1":
   version: 3.3.7
   resolution: "@types/hoist-non-react-statics@npm:3.3.7"
@@ -9661,6 +9668,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chalk@npm:4.1 - 4.1.2, chalk@npm:^4.1.0, chalk@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: "npm:^4.1.0"
+    supports-color: "npm:^7.1.0"
+  checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^3.0.0":
   version: 3.0.0
   resolution: "chalk@npm:3.0.0"
@@ -9668,16 +9685,6 @@ __metadata:
     ansi-styles: "npm:^4.1.0"
     supports-color: "npm:^7.1.0"
   checksum: 10c0/ee650b0a065b3d7a6fda258e75d3a86fc8e4effa55871da730a9e42ccb035bf5fd203525e5a1ef45ec2582ecc4f65b47eb11357c526b84dd29a14fb162c414d2
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.1.0, chalk@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: "npm:^4.1.0"
-    supports-color: "npm:^7.1.0"
-  checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
   languageName: node
   linkType: hard
 
@@ -12383,6 +12390,7 @@ __metadata:
     "@types/cron": "npm:^2.4.3"
     "@types/dateformat": "npm:^5.0.3"
     "@types/express": "npm:^5.0.6"
+    "@types/geoip-lite": "npm:^1.4.4"
     "@types/jest": "npm:^30.0.0"
     "@types/jsdom": "npm:^28.0.3"
     "@types/multer": "npm:^2.1.0"
@@ -12406,6 +12414,7 @@ __metadata:
     eslint: "npm:^10.6.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-import: "npm:^2.32.0"
+    geoip-lite: "npm:^2.0.3"
     globals: "npm:^16.4.0"
     handlebars: "npm:^4.7.9"
     jest: "npm:^30.4.2"
@@ -12824,6 +12833,19 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 10c0/782aba6cba65b1bb5af3b095d96249d20edbe8df32dbf4696fd49be2583faf676173bf4809386588828e4dd76a3354fcbeb577bab1c833ccd9fc4577f26103f8
+  languageName: node
+  linkType: hard
+
+"geoip-lite@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "geoip-lite@npm:2.0.3"
+  dependencies:
+    chalk: "npm:4.1 - 4.1.2"
+    iconv-lite: "npm:0.4.13 - 0.6.3"
+    ip-address: "npm:^10.2.0"
+    lazy: "npm:1.0.11"
+    yauzl: "npm:^3.3.1"
+  checksum: 10c0/2ee506b2ca4dc4a44930708af2e3fcffa87d6a174e6fc71766962c03a02f9acabfd94aa90061fe36790d91d4ec20829876cdd0c9123fe1f8591db995e089db64
   languageName: node
   linkType: hard
 
@@ -13468,7 +13490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
+"iconv-lite@npm:0.4.13 - 0.6.3, iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -13614,6 +13636,13 @@ __metadata:
   version: 10.1.0
   resolution: "ip-address@npm:10.1.0"
   checksum: 10c0/0103516cfa93f6433b3bd7333fa876eb21263912329bfa47010af5e16934eeeff86f3d2ae700a3744a137839ddfad62b900c7a445607884a49b5d1e32a3d7566
+  languageName: node
+  linkType: hard
+
+"ip-address@npm:^10.2.0":
+  version: 10.2.0
+  resolution: "ip-address@npm:10.2.0"
+  checksum: 10c0/5a00aada6e922c9c69dfc800ed5d0fa3348675ebdeed0e1575f503f27ca385b5f534363c9af7ad1daf64c1f1409388cdd3cc2e9b9b0fe1c924a431378d55075a
   languageName: node
   linkType: hard
 
@@ -14879,6 +14908,13 @@ __metadata:
   dependencies:
     language-subtag-registry: "npm:^0.3.20"
   checksum: 10c0/9ab911213c4bd8bd583c850201c17794e52cb0660d1ab6e32558aadc8324abebf6844e46f92b80a5d600d0fbba7eface2c207bfaf270a1c7fd539e4c3a880bff
+  languageName: node
+  linkType: hard
+
+"lazy@npm:1.0.11":
+  version: 1.0.11
+  resolution: "lazy@npm:1.0.11"
+  checksum: 10c0/9adcf3fc0071e89da712177a29988b830ac05ac857690d7616f319a970704b38269f67cfedb07e22fe5f0b544b37ab62721df828fd085bc052404dde7fbbec75
   languageName: node
   linkType: hard
 
@@ -17141,6 +17177,13 @@ __metadata:
   version: 0.10.0
   resolution: "peberminta@npm:0.10.0"
   checksum: 10c0/348ddd5779b1406399c0cb59e8b004720f5a7c48dd1a66c0df105607f7480e16e6d999084dfb5990a4c89424fbd49b40e000ff2ecf391f2f21330b2285b606f0
+  languageName: node
+  linkType: hard
+
+"pend@npm:~1.2.0":
+  version: 1.2.0
+  resolution: "pend@npm:1.2.0"
+  checksum: 10c0/8a87e63f7a4afcfb0f9f77b39bb92374afc723418b9cb716ee4257689224171002e07768eeade4ecd0e86f1fa3d8f022994219fb45634f2dbd78c6803e452458
   languageName: node
   linkType: hard
 
@@ -21788,6 +21831,15 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^21.1.1"
   checksum: 10c0/ccd7e723e61ad5965fffbb791366db689572b80cca80e0f96aad968dfff4156cd7cd1ad18607afe1046d8241e6fb2d6c08bf7fa7bfb5eaec818735d8feac8f05
+  languageName: node
+  linkType: hard
+
+"yauzl@npm:^3.3.1":
+  version: 3.4.0
+  resolution: "yauzl@npm:3.4.0"
+  dependencies:
+    pend: "npm:~1.2.0"
+  checksum: 10c0/17a98c42c0065e8af429eb8a61f7a0e4562181ed54080366b838f34f741b6829f167f804787c86b7646bb042707f35871739f053de0548285e405a2eae4da025
   languageName: node
   linkType: hard
 

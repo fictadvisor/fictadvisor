@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
+import geoip from 'geoip-lite';
 import { collectDefaultMetrics, Counter, Gauge, Histogram, Registry } from 'prom-client';
 
 // Rolling windows over which distinct visitors are counted. Ordered so the
@@ -11,6 +12,21 @@ const VISITOR_WINDOWS: ReadonlyArray<{ label: string; ms: number }> = [
 ];
 const VISITOR_RETENTION_MS = VISITOR_WINDOWS[VISITOR_WINDOWS.length - 1].ms;
 
+// Upper bound on distinct client IPs tracked at once for the per-IP breakdown.
+// Unlike the hashed unique-visitor count, this metric carries the raw IP as a
+// Prometheus label, so its cardinality must be capped: a scanner or botnet
+// could otherwise spray thousands of unique source IPs and blow up the series
+// count on both the app and Prometheus. Once full, new IPs are dropped (known
+// IPs keep updating) until the retention sweep frees space.
+const MAX_TRACKED_IPS = 5000;
+const UNKNOWN_COUNTRY = 'unknown';
+
+interface VisitorHit {
+  count: number;
+  lastSeen: number;
+  country: string;
+}
+
 @Injectable()
 export class MetricsService {
   readonly registry = new Registry();
@@ -19,11 +35,17 @@ export class MetricsService {
   readonly prismaQueryDuration: Histogram<string>;
   readonly prismaQueriesTotal: Counter<string>;
   readonly uniqueVisitors: Gauge<string>;
+  readonly visitorRequests: Gauge<string>;
 
   // Hashed client id -> last-seen epoch ms. Prometheus can't count uniques via
   // labels (cardinality blows up), so we keep the set here and expose only its
   // size per window as a gauge. Pruned on every scrape, bounded by retention.
   private readonly visitorLastSeen = new Map<string, number>();
+
+  // Raw client IP -> request count / last-seen / resolved country, for the
+  // per-IP breakdown table. Bounded by MAX_TRACKED_IPS and by the retention
+  // sweep in the gauge's collect() hook.
+  private readonly visitorHits = new Map<string, VisitorHit>();
 
   constructor () {
     this.registry.setDefaultLabels({ app: 'fictadvisor-api' });
@@ -89,13 +111,49 @@ export class MetricsService {
         }
       },
     });
+
+    // Per-IP request counts within the retention window, labelled with the raw
+    // client IP and its GeoIP-resolved country. Recomputed from `visitorHits`
+    // at scrape time; the map is fully re-emitted each collect so pruned IPs
+    // drop out of the exposition instead of lingering as stale series.
+    this.visitorRequests = new Gauge({
+      name: 'http_visitor_requests',
+      help: 'Requests per distinct client IP within the retention window, labelled by IP and country',
+      labelNames: ['ip', 'country'],
+      registers: [this.registry],
+      collect: () => {
+        const now = Date.now();
+        this.visitorRequests.reset();
+        for (const [ip, hit] of this.visitorHits) {
+          if (now - hit.lastSeen > VISITOR_RETENTION_MS) {
+            this.visitorHits.delete(ip);
+            continue;
+          }
+          this.visitorRequests.set({ ip, country: hit.country }, hit.count);
+        }
+      },
+    });
   }
 
-  // Records one hit from a client identifier (its IP). The value is hashed so
-  // raw IPs are never retained in memory or exposed on the metrics endpoint.
+  // Records one hit from a client identifier (its IP). Feeds two metrics:
+  //  - the hashed unique-visitor counts (raw IP never retained there), and
+  //  - the per-IP breakdown, which intentionally keeps the raw IP + country.
   recordVisitor (clientId: string | undefined): void {
     if (!clientId) return;
+
     const hash = createHash('sha256').update(clientId).digest('hex').slice(0, 16);
     this.visitorLastSeen.set(hash, Date.now());
+
+    const existing = this.visitorHits.get(clientId);
+    if (existing) {
+      existing.count += 1;
+      existing.lastSeen = Date.now();
+    } else if (this.visitorHits.size < MAX_TRACKED_IPS) {
+      this.visitorHits.set(clientId, {
+        count: 1,
+        lastSeen: Date.now(),
+        country: geoip.lookup(clientId)?.country || UNKNOWN_COUNTRY,
+      });
+    }
   }
 }
