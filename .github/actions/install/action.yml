@@ -25,9 +25,6 @@ runs:
     - name: Install dependencies
       shell: bash
       run: yarn workspaces focus --all
-    - name: Generate FictAdvisor Prisma
+    - name: Generate Prisma client
       shell: bash
-      run: yarn generate:fictadvisor
-    - name: Generate Cohorta Prisma
-      shell: bash
-      run: yarn generate:cohorta
+      run: npx turbo generate

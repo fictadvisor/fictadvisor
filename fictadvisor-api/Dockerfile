@@ -3,7 +3,7 @@ RUN apk update && apk add --no-cache libc6-compat openssl
 
 FROM alpine AS base
 RUN npm install turbo --global
-RUN corepack enable && corepack prepare yarn@4.4.1
+RUN corepack enable
 
 FROM base AS pruner
 WORKDIR /app
@@ -24,7 +24,7 @@ RUN npm rebuild --build-from-source
 
 COPY --from=pruner /app/out/full/ .
 
-RUN yarn generate:full
+RUN yarn workspace fictadvisor-api generate
 RUN turbo build --filter=fictadvisor-api
 RUN yarn workspaces focus --all --production
 
