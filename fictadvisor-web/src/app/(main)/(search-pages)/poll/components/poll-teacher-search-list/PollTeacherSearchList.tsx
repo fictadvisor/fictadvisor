@@ -15,6 +15,7 @@ import PollSearchForm from '../poll-search-form';
 import * as styles from './PollTeacherSearchList.styles';
 
 import style from './PollTeacherSearchList.module.scss';
+import { defaultAvatarPath } from '@/lib/constants/image';
 
 interface PollTeacherSearchListProps {
   data: PollDisciplineTeachersResponse;
@@ -81,7 +82,7 @@ const PollTeacherSearchList: FC<PollTeacherSearchListProps> = ({
               <PollTeacherCard
                 key={teacher.disciplineTeacherId}
                 description={teacher.subject.name}
-                avatar={teacher.avatar}
+                avatar={teacher.avatar || defaultAvatarPath}
                 name={`${teacher.lastName} ${teacher.firstName} ${teacher.middleName}`}
                 disciplineTypes={teacher.disciplineTypes}
                 href={`/poll/${teacher.disciplineTeacherId}`}
