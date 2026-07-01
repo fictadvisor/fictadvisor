@@ -378,7 +378,7 @@
     {
       "type": "table",
       "title": "Top queries by execution time (pg_stat_statements)",
-      "description": "Real application SQL statements from pg_stat_statements (monitoring/admin queries excluded), ordered by mean execution time. Cumulative since the last stats reset — pg_stat_statements has no per-time data, so this table is not filtered by the dashboard time range. total_ms / mean_ms are milliseconds.",
+      "description": "Real application SQL from pg_stat_statements, captured every 5 min into pgss_snapshots and shown as per-range DELTAS over the dashboard time range ($__timeFrom/$__timeTo). IN-list variants are collapsed into one row. Granularity ~5 min, so ranges shorter than ~10 min may show nothing. total_ms / mean_ms are milliseconds.",
       "gridPos": {
         "h": 12,
         "w": 24,
@@ -490,7 +490,7 @@
           },
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  regexp_replace(query, 'IN \\(\\$\\d+(, ?\\$\\d+)*\\)', 'IN (...)', 'g') AS query,\n  round(mean_exec_time::numeric, 2) AS mean_ms,\n  calls,\n  rows,\n  round(total_exec_time::numeric, 1) AS total_ms\nFROM pg_stat_statements\nWHERE dbid IN (SELECT oid FROM pg_database WHERE datname = current_database())\n  AND query LIKE '%\"public\".\"%'\nORDER BY mean_exec_time DESC\nLIMIT 25"
+          "rawSql": "SELECT\n  regexp_replace(regexp_replace(q.query, 'IN \\(\\$\\d+(, ?\\$\\d+)*\\)', 'IN (...)', 'g'), '\\$\\d+', '$', 'g') AS query,\n  round((sum(p.d_total) / NULLIF(sum(p.d_calls), 0))::numeric, 2) AS mean_ms,\n  sum(p.d_calls) AS calls,\n  sum(p.d_rows) AS rows,\n  round(sum(p.d_total)::numeric, 1) AS total_ms\nFROM (\n  SELECT s.queryid,\n    GREATEST(max(s.total_exec_time) - min(s.total_exec_time), 0) AS d_total,\n    GREATEST(max(s.calls) - min(s.calls), 0) AS d_calls,\n    GREATEST(max(s.rows) - min(s.rows), 0) AS d_rows\n  FROM pgss_snapshots s\n  WHERE s.captured_at BETWEEN $__timeFrom() AND $__timeTo()\n  GROUP BY s.queryid\n) p\nJOIN pgss_query q USING (queryid)\nWHERE q.query LIKE '%\"public\".\"%'\n  AND p.d_calls > 0\nGROUP BY regexp_replace(regexp_replace(q.query, 'IN \\(\\$\\d+(, ?\\$\\d+)*\\)', 'IN (...)', 'g'), '\\$\\d+', '$', 'g')\nORDER BY mean_ms DESC NULLS LAST\nLIMIT 25"
         }
       ]
     }
