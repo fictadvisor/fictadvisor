@@ -297,13 +297,6 @@ export class PollService {
         semester: s.semester,
         year: s.year,
         isSelective: false,
-        group: {
-          students: {
-            some: {
-              userId,
-            },
-          },
-        },
       };
 
       disciplineWhere.push({ ...part });
@@ -337,6 +330,16 @@ export class PollService {
       ...roleFilter,
       discipline: {
         is: {
+          // group membership is identical across every OR branch, so it is hoisted
+          // here as a single filter — otherwise Prisma emits one redundant `groups`
+          // join per branch (~18), turning this into a ~3s query.
+          group: {
+            students: {
+              some: {
+                userId,
+              },
+            },
+          },
           OR: disciplineWhere,
         },
       },
