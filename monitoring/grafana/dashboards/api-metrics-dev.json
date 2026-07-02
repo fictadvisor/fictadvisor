@@ -756,8 +756,8 @@
     },
     {
       "type": "timeseries",
-      "title": "Unique visitors (by IP)",
-      "description": "Distinct client IPs seen within each rolling window. The windows are fixed server-side (5m / 1h / 24h) and do not follow the dashboard time range.",
+      "title": "Unique visitors (users + anon IPs)",
+      "description": "Distinct visitors seen within each rolling window: logged-in users (deduplicated by user id) plus anonymous clients (by IP). The windows are fixed server-side (5m / 1h / 24h) and do not follow the dashboard time range.",
       "gridPos": {
         "h": 8,
         "w": 16,
@@ -781,7 +781,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"5m\"}",
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"5m\"})",
           "legendFormat": "last 5m"
         },
         {
@@ -790,7 +790,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\"}",
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\"})",
           "legendFormat": "last 1h"
         },
         {
@@ -799,7 +799,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"}",
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"})",
           "legendFormat": "last 24h"
         }
       ]
@@ -830,19 +830,89 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"}"
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"})"
         }
       ]
     },
     {
       "type": "table",
-      "title": "Visitors by IP (last 24h)",
-      "description": "Distinct client IPs seen in the last 24h with their GeoIP country and request count. Bounded to 5000 IPs; source is the first hop of X-Forwarded-For.",
+      "title": "Requests by user (last 24h)",
+      "description": "Requests per logged-in user in the last 24h, identified by a signature-verified JWT (deduplicated across devices/IPs). Bounded to 5000 users. Anonymous traffic appears in the IP table below.",
       "gridPos": {
         "h": 10,
         "w": 24,
         "x": 0,
         "y": 72
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "filterable": true
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "displayName": "requests",
+            "desc": true
+          }
+        ]
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sort_desc(http_user_requests{job=\"fictadvisor-api-dev\"})",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "job": true,
+              "instance": true,
+              "app": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "Value": "requests",
+              "user": "user"
+            },
+            "indexByName": {
+              "user": 0,
+              "Value": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Anonymous visitors by IP (last 24h)",
+      "description": "Distinct anonymous client IPs seen in the last 24h with their GeoIP country and request count (logged-in users are in the user table above). Bounded to 5000 IPs; source is the first hop of X-Forwarded-For.",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 82
       },
       "datasource": {
         "type": "prometheus",
