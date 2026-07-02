@@ -63,7 +63,12 @@ export class HttpMetricsInterceptor implements NestInterceptor {
     const token = this.bearerToken(req);
     if (!token) return {};
     try {
-      const payload = this.jwt.verify(token, { ignoreExpiration: true });
+      // Same secret as the auth strategy (config `security.secret`). Read from
+      // env at request time so this doesn't need @nestjs/config wiring.
+      const payload = this.jwt.verify(token, {
+        secret: process.env.SECRET ?? '42',
+        ignoreExpiration: true,
+      });
       if (payload?.sub) {
         return { userId: payload.sub, username: payload.username };
       }
