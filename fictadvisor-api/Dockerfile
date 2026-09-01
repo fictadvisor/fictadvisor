@@ -2,7 +2,7 @@ FROM node:24-alpine AS alpine
 RUN apk update && apk add --no-cache libc6-compat openssl
 
 FROM alpine AS base
-RUN npm install turbo --global
+RUN npm install turbo@2.10.0 --global
 RUN corepack enable
 
 FROM base AS pruner
