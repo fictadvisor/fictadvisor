@@ -45,13 +45,17 @@ export class DateService {
 
   constructor (private prisma: PrismaService) {}
 
-  async getSemester (period: StudyingSemester) {
-    const semester = await this.prisma.semesterDate.findUnique({
+  /** Returns null when the semester has no row — `getSemester` throws instead. */
+  async findSemester (period: StudyingSemester) {
+    return this.prisma.semesterDate.findUnique({
       where: {
         year_semester: period,
       },
     });
+  }
 
+  async getSemester (period: StudyingSemester) {
+    const semester = await this.findSemester(period);
 
     if (!semester) {
       throw new DataNotFoundException();
