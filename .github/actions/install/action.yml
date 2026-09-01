@@ -27,4 +27,4 @@ runs:
       run: yarn workspaces focus --all
     - name: Generate Prisma client
       shell: bash
-      run: npx turbo generate
+      run: npx turbo run generate
