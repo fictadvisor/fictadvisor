@@ -181,7 +181,7 @@ export class GroupController {
   @Get('/:groupId/disciplineTeachers')
   async getDisciplineTeachers (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Query() query?: QuerySemesterDTO,
+    @Query() query: QuerySemesterDTO,
   ): Promise<ExtendedDisciplinesTeachersResponse> {
     const disciplines = await this.groupService.getDisciplineTeachers(groupId, query);
     return {
@@ -197,7 +197,7 @@ export class GroupController {
   @Get('/:groupId/disciplines')
   async getDisciplines (
     @Param('groupId', GroupByIdPipe) groupId: string,
-    @Query() query?: QuerySemesterDTO,
+    @Query() query: QuerySemesterDTO,
   ): Promise<ShortDisciplinesResponse> {
     const disciplines = await this.groupService.getDisciplineTeachers(groupId, query);
     return {

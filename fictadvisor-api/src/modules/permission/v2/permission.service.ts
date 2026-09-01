@@ -55,7 +55,7 @@ export class PermissionService {
     }
   }
 
-  private findGrantMatchesPermission (permission: string, grants: Grant[]): Grant {
+  private findGrantMatchesPermission (permission: string, grants: Grant[]): Grant | undefined {
     return grants
       .filter((grant) => grant.permission)
       .find(({ permission: grant }) => this.isGrantMatchesPermission(permission, grant));

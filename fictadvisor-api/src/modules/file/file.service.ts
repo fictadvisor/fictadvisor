@@ -66,7 +66,7 @@ export class FileService {
     return `${this.publicBase}/${key}`;
   }
 
-  isStorageLink (link: string): boolean {
+  isStorageLink (link: string | null | undefined): link is string {
     return link?.startsWith(`${this.publicBase}/`) ?? false;
   }
 
@@ -101,7 +101,7 @@ export class FileService {
     const key = this.formatLink(join(isPrivate ? 'private' : 'static', path));
     const { Body } = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: key }));
 
-    return Body.transformToString(encoding);
+    return Body!.transformToString(encoding);
   }
 
   private getSignedReadUrl (key: string, expiresInMs: number): Promise<string> {

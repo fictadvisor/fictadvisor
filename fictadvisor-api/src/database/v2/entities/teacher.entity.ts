@@ -4,28 +4,31 @@ import {
   Position,
   Prisma,
 } from '@prisma-client/fictadvisor';
-import { DbDisciplineTeacher } from './discipline-teacher.entity';
-import { DbComplaint } from './complaint.entity';
-import { DbTeachersOnCathedras } from './teachers-on-cathedras.entity';
+import {
+  DbDisciplineTeacherWithDisciplineAndRoles,
+  DbDisciplineTeacherWithRoles,
+  DbDisciplineTeacherWithRolesAndAnswers,
+} from './discipline-teacher.entity';
+import { DbTeachersOnCathedrasWithCathedra } from './teachers-on-cathedras.entity';
 import { AutoMap } from '@automapper/classes';
 
-export class DbTeacher {
+export class DbBaseTeacher {
   @AutoMap()
     id: string;
 
   @AutoMap()
     firstName: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     middleName: string | null;
 
   @AutoMap()
     lastName: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     description: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
     avatar: string | null;
 
   @AutoMap(() => String)
@@ -40,15 +43,30 @@ export class DbTeacher {
   @AutoMap(() => Number)
     rating: Prisma.Decimal;
 
-  @AutoMap(() => [DbTeachersOnCathedras])
-    cathedras?: DbTeachersOnCathedras[];
-
-  @AutoMap(() => [DbComplaint])
-    complaints?: DbComplaint[];
-
-  @AutoMap(() => [DbDisciplineTeacher])
-    disciplineTeachers?: DbDisciplineTeacher[];
-
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** DisciplineRepository, DisciplineTeacherRepository: `teacher: { cathedras: { cathedra: true } }` */
+export class DbTeacherWithCathedras extends DbBaseTeacher {
+  @AutoMap(() => [DbTeachersOnCathedrasWithCathedra])
+    cathedras: DbTeachersOnCathedrasWithCathedra[];
+}
+
+/** Cathedras plus role-bearing discipline teachers — what TeacherWithRolesAndCathedrasResponse reads. */
+export class DbTeacherWithRoles extends DbTeacherWithCathedras {
+  @AutoMap(() => [DbDisciplineTeacherWithRoles])
+    disciplineTeachers: DbDisciplineTeacherWithRoles[];
+}
+
+/** TeacherRepository */
+export class DbTeacher extends DbTeacherWithRoles {
+  @AutoMap(() => [DbDisciplineTeacherWithDisciplineAndRoles])
+    disciplineTeachers: DbDisciplineTeacherWithDisciplineAndRoles[];
+}
+
+/** SubjectService.getTeachers: overrides `disciplineTeachers` with `roles` + `questionAnswers` */
+export class DbTeacherWithAnswers extends DbTeacherWithRoles {
+  @AutoMap(() => [DbDisciplineTeacherWithRolesAndAnswers])
+    disciplineTeachers: DbDisciplineTeacherWithRolesAndAnswers[];
 }

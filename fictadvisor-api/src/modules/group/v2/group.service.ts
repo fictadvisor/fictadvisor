@@ -21,10 +21,11 @@ import { DateService } from '../../date/v2/date.service';
 import { Prisma, RoleName, State, User } from '@prisma-client/fictadvisor';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { DbGroup } from '../../../database/v2/entities/group.entity';
+import { DbGroup, DbGroupWithCathedra, DbGroupWithStudents } from '../../../database/v2/entities/group.entity';
+import { StudentWithContactsData } from '../../file/types/student-with-contacts.data';
 import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { DbStudent } from '../../../database/v2/entities/student.entity';
-import { DbUser } from '../../../database/v2/entities/user.entity';
+import { DbBaseUser, DbUser } from '../../../database/v2/entities/user.entity';
 import { GroupRepository } from '../../../database/v2/repositories/group.repository';
 import { StudentRepository } from '../../../database/v2/repositories/student.repository';
 import { DisciplineRepository } from '../../../database/v2/repositories/discipline.repository';
@@ -123,7 +124,7 @@ export class GroupService {
     return group;
   }
 
-  async getAll (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroup>> {
+  async getAll (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroupWithStudents>> {
     if (query.sort === SortQAGroupsParam.CAPTAIN) {
       return this.getAllByCaptain(query);
     }
@@ -142,7 +143,7 @@ export class GroupService {
     return PaginationUtil.paginate<'group', DbGroup>(this.groupRepository, query, data);
   }
 
-  private async getAllByCaptain (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroup>> {
+  private async getAllByCaptain (query: QueryAllGroupsDTO): Promise<PaginatedData<DbGroupWithStudents>> {
     const data: PaginateArgs<'student'> = {
       where: {
         group: {
@@ -167,12 +168,11 @@ export class GroupService {
     };
 
     const captains = await PaginationUtil.paginate<'student', DbStudent>(this.studentRepository, query, data);
-    const groups = captains.data.map((captain) => {
-      const group = captain.group;
-      delete captain.group;
-      group.students = [captain];
-      return group;
-    });
+    // A captain always has a group here — the query filters on it.
+    const groups = captains.data.map(({ group, ...captain }) => ({
+      ...group as DbGroupWithCathedra,
+      students: [captain],
+    }));
 
     return {
       data: groups,
@@ -181,8 +181,8 @@ export class GroupService {
   }
 
   private GroupSearching = {
-    code: (search: string) => DatabaseUtils.getSearch({ search }, 'code'),
-    specialities: (specialities: string[]) => {
+    code: (search?: string) => DatabaseUtils.getSearch({ search }, 'code'),
+    specialities: (specialities?: string[]) => {
       if (!specialities?.length) return {};
       return {
         educationalProgram: {
@@ -194,7 +194,7 @@ export class GroupService {
         },
       };
     },
-    cathedras: (cathedras: string[]) => {
+    cathedras: (cathedras?: string[]) => {
       if (!cathedras?.length) return {};
       return {
         cathedra: {
@@ -204,7 +204,7 @@ export class GroupService {
         },
       };
     },
-    courses: (courses: number[]) => {
+    courses: (courses?: number[]) => {
       if (!courses?.length) return {};
 
       const courseDate = new Date();
@@ -248,7 +248,7 @@ export class GroupService {
   }
 
   getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesWithAmountResponse[] {
-    const result = [];
+    const result: SelectiveDisciplinesWithAmountResponse[] = [];
 
     disciplines.forEach((discipline) => {
       if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
@@ -262,7 +262,7 @@ export class GroupService {
   }
 
   async addUnregistered (groupId: string, body: EmailDTO): Promise<DbUser[]> {
-    const users = [];
+    const users: DbUser[] = [];
     for (const email of body.emails) {
       const user = await this.userRepository.findOne({ email });
       if (user) throw new AlreadyRegisteredException();
@@ -330,7 +330,7 @@ export class GroupService {
     }
   }
 
-  async findCaptain (groupId: string): Promise<DbUser> {
+  async findCaptain (groupId: string): Promise<DbBaseUser | undefined> {
     const captain = await this.studentRepository.findOne({
       groupId,
       roles: {
@@ -389,7 +389,7 @@ export class GroupService {
       await this.switchCaptain(groupId, captainId);
     }
 
-    if (moderatorIds?.length > 0) {
+    if (moderatorIds?.length) {
       await this.switchModerators(groupId, moderatorIds);
     }
 
@@ -492,7 +492,7 @@ export class GroupService {
       { middleName: 'asc' },
     ]);
 
-    const students = [];
+    const students: StudentWithContactsData[] = [];
 
     for (const dbStudent of dbStudents) {
       students.push({

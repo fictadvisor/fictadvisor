@@ -25,16 +25,16 @@ export class DatabaseUtils {
     };
   }
 
-  static getStrictSearch (search: string | number, field: string) {
+  static getStrictSearch (search: string | number | undefined, field: string) {
     if (!search) return {};
     return {
       [field]: search,
     };
   }
 
-  static getSearchByArray (searches: string[] | object[], ...fields: string[]) {
+  static getSearchByArray (searches: string[] | object[] | undefined, ...fields: string[]) {
     if (!searches) return {};
-    const OR = [];
+    const OR: Record<string, unknown>[] = [];
 
     for (const search of searches) {
       const element = {};
@@ -47,9 +47,9 @@ export class DatabaseUtils {
     return { OR };
   }
 
-  protected static getPage ({ page = 0, pageSize }: PageDTO): Page {
-    page = +page;
-    pageSize = +pageSize;
+  protected static getPage ({ page = 0, pageSize }: PageDTO): Page | undefined {
+    page = Number(page);
+    pageSize = Number(pageSize);
     if (!pageSize) return;
     if (page === 0) {
       return {
@@ -68,8 +68,8 @@ export class DatabaseUtils {
     { page = 0, pageSize }: PageDTO,
     args: PaginateArgs<Map, T>,
   ): Promise<PaginatedData<Dto>> {
-    page = +page;
-    pageSize = +pageSize;
+    page = Number(page);
+    pageSize = Number(pageSize);
 
     const result = await repository.findMany({
       ...args.where,

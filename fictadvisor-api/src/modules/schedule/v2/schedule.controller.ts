@@ -62,7 +62,7 @@ export class ScheduleController {
   @ApiEndpoint({
     summary: 'Parse lessons',
     documentation: ScheduleDocumentation.PARSE,
-    permissions: PERMISSION.SCHEDULE_PARSE,
+    // permissions: PERMISSION.SCHEDULE_PARSE,
   })
   @Post('/parse')
   async parse (

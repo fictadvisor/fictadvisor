@@ -6,10 +6,10 @@ export enum CampusParserPairTag {
   prac,
 }
 
-export class CampusParserPair {
+export type CampusParserPair = {
   lecturer: {
     name: string;
-  };
+  } | null;
   type: string;
   time: string;
   name: string;
@@ -18,18 +18,18 @@ export class CampusParserPair {
   dates: string[];
 }
 
-export class CampusParserTeacher {
+export type CampusParserTeacher = {
   lastName: string;
   firstName: string;
   middleName: string;
 }
 
-export class CampusParserDay {
+export type CampusParserDay = {
   day: string;
   pairs: CampusParserPair[];
 }
 
-export class CampusParserGroup extends BaseGroup {
+export type CampusParserGroup = BaseGroup & {
   id: string;
   faculty: string;
 }

@@ -54,6 +54,25 @@ export const AVATARS = [
   'https://i.imgur.com/6ogcyVF.png',
 ];
 
+/**
+ * `UserDTO` describes an incoming request; these flows run on rows read back
+ * from the database, where the optional columns come back as `null`.
+ */
+type StoredUser = Omit<UserDTO, 'avatar' | 'telegramId'> & {
+  avatar: string | null;
+  telegramId?: bigint | null;
+};
+
+type StoredStudent = Omit<StudentDTO, 'middleName'> & {
+  middleName?: string | null;
+};
+
+/** `verify` also runs on Student rows, where every name column is nullable. */
+type VerifiableStudent = Omit<StoredStudent, 'firstName' | 'lastName'> & {
+  firstName: string | null;
+  lastName: string | null;
+};
+
 @Injectable()
 export class AuthService {
 
@@ -92,7 +111,7 @@ export class AuthService {
       throw new UnauthorizedException('The password is incorrect');
     }
 
-    delete user.password;
+    delete (user as Partial<User>).password;
     return user;
   }
 
@@ -151,13 +170,15 @@ export class AuthService {
     await this.requestEmailVerification(tokenBody);
   }
 
-  async verify (body: { id: string, telegramId: bigint }, { groupId, isCaptain, middleName, ...student }: StudentDTO) {
+  async verify (body: { id: string, telegramId: bigint | null }, { groupId, isCaptain, middleName, ...student }: VerifiableStudent) {
     const group = await this.groupRepository.findOne({ id: groupId });
     const data = {
       id: body.id,
       telegramId: body?.telegramId ? body.telegramId : undefined,
-      middleName: middleName || '',
       ...student,
+      firstName: student.firstName || '',
+      lastName: student.lastName || '',
+      middleName: middleName || '',
       groupCode: group.code,
     };
     if (isCaptain) {
@@ -222,7 +243,7 @@ export class AuthService {
   }
 
   async updatePassword ({ oldPassword, newPassword }: UpdatePasswordDTO, user: User): Promise<TokensDTO> {
-    await this.validateUser(user.username, oldPassword);
+    await this.validateUser(user.email, oldPassword);
 
     if (oldPassword === newPassword) {
       throw new PasswordRepeatException();
@@ -291,7 +312,7 @@ export class AuthService {
     await this.requestEmailVerification(token);
   }
 
-  async requestEmailVerification (user: UserDTO & StudentDTO) {
+  async requestEmailVerification (user: StoredUser & StoredStudent) {
     const repo = this.prisma.verifyEmailToken;
 
     let token = await repo.findFirst({ where: { email: user.email } });
@@ -425,7 +446,7 @@ export class AuthService {
     return (user != null && user.password == null);
   }
 
-  async trulyRegister (user: UserDTO, isCaptain: boolean, createStudent: Omit<StudentDTO, 'isCaptain'>) {
+  async trulyRegister (user: StoredUser, isCaptain: boolean, createStudent: Omit<StoredStudent, 'isCaptain'>) {
     const dbUser = await this.userRepository.create({
       ...user,
       lastPasswordChanged: new Date(),
@@ -444,7 +465,7 @@ export class AuthService {
     return dbUser;
   }
 
-  async pseudoRegister (user: UserDTO, createStudent: Omit<StudentDTO, 'isCaptain'>) {
+  async pseudoRegister (user: StoredUser, createStudent: Omit<StoredStudent, 'isCaptain'>) {
     await this.userRepository.update(
       { email: user.email }, {
         ...user,

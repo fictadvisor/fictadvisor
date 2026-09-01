@@ -1,5 +1,5 @@
 import { QuestionDisplay, QuestionType } from '@prisma-client/fictadvisor';
-import { DbQuestionAnswer } from './question-answer.entity';
+import { DbBaseQuestionAnswer } from './question-answer.entity';
 import { AutoMap } from '@automapper/classes';
 
 export class DbQuestion {
@@ -15,7 +15,7 @@ export class DbQuestion {
   @AutoMap()
     order: number;
 
-  @AutoMap()
+  @AutoMap(() => String)
     description: string | null;
 
   @AutoMap()
@@ -24,7 +24,7 @@ export class DbQuestion {
   @AutoMap()
     isRequired: boolean;
 
-  @AutoMap()
+  @AutoMap(() => String)
     criteria: string | null;
 
   @AutoMap(() => String)
@@ -33,9 +33,30 @@ export class DbQuestion {
   @AutoMap(() => String)
     display: QuestionDisplay;
 
-  @AutoMap(() => [DbQuestionAnswer])
-    questionAnswers?: DbQuestionAnswer[];
-
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** PollService.getQuestionWithMarks: `questionAnswers: { where: ... }` */
+export class DbQuestionWithAnswers extends DbQuestion {
+  @AutoMap(() => [DbBaseQuestionAnswer])
+    questionAnswers: DbBaseQuestionAnswer[];
+}
+
+/**
+ * All a mark needs: the question's display/type and the raw answer values.
+ * `DbQuestionWithAnswers` satisfies it, and SubjectService builds it by hand
+ * while regrouping answers across discipline teachers.
+ */
+export class DbQuestionMark {
+  @AutoMap()
+    name: string;
+
+  @AutoMap(() => String)
+    type: QuestionType;
+
+  @AutoMap(() => String)
+    display: QuestionDisplay;
+
+  questionAnswers: { value: string }[];
 }

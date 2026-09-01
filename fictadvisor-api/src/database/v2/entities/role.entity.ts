@@ -1,10 +1,8 @@
-import { DbGroupRole } from './group-role.entity';
 import { DbGrant } from './grant.entity';
-import { DbUserRole } from './user-role.entity';
 import { RoleName } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
-export class DbRole {
+export class DbBaseRole {
   @AutoMap()
     id: string;
 
@@ -14,27 +12,18 @@ export class DbRole {
   @AutoMap()
     weight: number;
 
-  @AutoMap()
+  @AutoMap(() => String)
     parentId: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
     displayName: string | null;
 
-  @AutoMap(() => DbRole)
-    parent?: DbRole;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}
 
-  @AutoMap(() => [DbRole])
-    children: DbRole[];
-
+/** RoleRepository: `grants: true` */
+export class DbRole extends DbBaseRole {
   @AutoMap(() => [DbGrant])
-    grants?: DbGrant[];
-
-  @AutoMap(() => DbUserRole)
-    userRole?: DbUserRole;
-
-  @AutoMap(() => [DbGroupRole])
-    groupRoles?: DbGroupRole[];
-
-  createdAt?: Date | null;
-  updatedAt?: Date | null;
+    grants: DbGrant[];
 }

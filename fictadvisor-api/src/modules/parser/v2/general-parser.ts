@@ -64,8 +64,8 @@ export class GeneralParser {
     [ParserTypeEnum.CAMPUS]: this.campusParser,
   };
 
-  static parseTeacherNames (...teacherNames: string[]): ParsedScheduleTeacher[] {
-    const result = [];
+  static parseTeacherNames (...teacherNames: (string | null)[]): ParsedScheduleTeacher[] {
+    const result: ParsedScheduleTeacher[] = [];
 
     for (const teacherName of teacherNames) {
       const parsed = this.parseTeacherName(teacherName);
@@ -132,7 +132,7 @@ export class GeneralParser {
     return [...new Set(names)];
   }
 
-  private static parseTeacherName (teacherName: string): ParsedScheduleTeacher {
+  static parseTeacherName (teacherName: string | null | undefined): ParsedScheduleTeacher | undefined {
     if (!teacherName) return;
     const [middleName, firstName, lastName] = teacherName.split(' ').reverse();
 
@@ -496,7 +496,7 @@ export class GeneralParser {
 
     const DbDisciplineType = discipline.disciplineTypes.find(
       (type) => type.name === disciplineType.name,
-    );
+    )!;
 
     const event = {
       groupId,
@@ -581,7 +581,7 @@ export class GeneralParser {
     };
 
     if (
-      !discipline.disciplineTypes.some(
+      !discipline.disciplineTypes?.some(
         (type) => type.name === disciplineTypeName,
       )
     ) {
@@ -641,7 +641,7 @@ export class GeneralParser {
 
     if (
       !disciplineTeacher.roles.some(
-        (role) => role.disciplineType.name === disciplineType.name,
+        (role) => role.disciplineType?.name === disciplineType.name,
       )
     ) {
       await Promise.all([
@@ -716,7 +716,7 @@ export class GeneralParser {
     return pairs.filter((pair) =>
       new Array(dates).flat().some(({ startTime }) => {
         const { gte, lte } = startTime as Prisma.DateTimeFilter;
-        return gte <= pair.startTime && pair.startTime < lte;
+        return gte! <= pair.startTime && pair.startTime < lte!;
       }),
     );
   }
@@ -786,6 +786,9 @@ export class GeneralParser {
           extraArgs: () => ({ discipline }),
         });
 
+      // The query above only matches events whose lesson has a discipline type.
+      const disciplineType = event.lessons[0].disciplineType as DbDisciplineType;
+
       return {
         id,
         name,
@@ -799,8 +802,8 @@ export class GeneralParser {
         isRecurring: period !== Period.NO_PERIOD,
         eventsAmount: event.eventsAmount,
         disciplineType: {
-          name: event.lessons[0]?.disciplineType.name,
-          id: event.lessons[0]?.disciplineType.id,
+          name: disciplineType.name,
+          id: disciplineType.id,
         },
       };
     });

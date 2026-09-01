@@ -84,6 +84,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     errorMsg += exception.stack;
 
     console.error(errorMsg);
-    await this.telegramApi.error(errorMsg);
+
+    // Reporting must never outlive the request: an unreachable bot API used to
+    // reject here and take the process down with an unhandled rejection.
+    try {
+      await this.telegramApi.error(errorMsg);
+    } catch (reportError) {
+      console.error('Failed to report the error to Telegram', reportError);
+    }
   }
 }

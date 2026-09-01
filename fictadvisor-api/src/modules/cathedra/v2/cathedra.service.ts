@@ -76,14 +76,14 @@ export class CathedraService {
   }
 
   private getCathedraSearch = {
-    name: (search: string) => DatabaseUtils.getSearch({ search }, 'name'),
-    abbreviation: (search: string) => DatabaseUtils.getSearch({ search }, 'abbreviation'),
-    divisions: (divisions: string[]) => DatabaseUtils.getSearchByArray(divisions, 'division'),
+    name: (search?: string) => DatabaseUtils.getSearch({ search }, 'name'),
+    abbreviation: (search?: string) => DatabaseUtils.getSearch({ search }, 'abbreviation'),
+    divisions: (divisions?: string[]) => DatabaseUtils.getSearchByArray(divisions, 'division'),
   };
 
   async getAllDivisions () {
     const cathedras = await this.cathedraRepository.findMany({});
-    return { divisions: makeUnique(cathedras.map((cathedra) => cathedra.division)) };
+    return { divisions: makeUnique(cathedras.map((cathedra) => cathedra.division).filter((division) => division !== null)) };
   }
 
   async getById (cathedraId: string) {

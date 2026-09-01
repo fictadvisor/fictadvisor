@@ -16,7 +16,7 @@ import { PollService } from '../../../src/modules/poll/v2/poll.service';
 import { DbQuestion } from '../../../src/database/v2/entities/question.entity';
 import { Cathedra, EntityType, Prisma, QuestionDisplay } from '@prisma-client/fictadvisor';
 import { TeacherRepository } from '../../../src/database/v2/repositories/teacher.repository';
-import { DbTeacher } from '../../../src/database/v2/entities/teacher.entity';
+import { DbTeacher, DbTeacherWithCathedras } from '../../../src/database/v2/entities/teacher.entity';
 import { ContactRepository } from '../../../src/database/v2/repositories/contact.repository';
 import { CreateContactData } from './datas/create-contact.data';
 import { GroupRepository } from '../../../src/database/v2/repositories/group.repository';
@@ -27,8 +27,8 @@ import { DisciplineTeacherRepository } from '../../../src/database/v2/repositori
 import { DisciplineTeacherService } from '../../../src/modules/teacher/v2/discipline-teacher.service';
 import { DateService } from '../../../src/modules/date/v2/date.service';
 import { AccessModule } from '../../../src/modules/access/access.module';
-import { DbTeachersOnCathedras } from '../../../src/database/v2/entities/teachers-on-cathedras.entity';
-import { DbCathedra } from '../../../src/database/v2/entities/cathedra.entity';
+import { DbTeachersOnCathedrasWithCathedra } from '../../../src/database/v2/entities/teachers-on-cathedras.entity';
+import { DbBaseCathedra } from '../../../src/database/v2/entities/cathedra.entity';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 
@@ -498,7 +498,7 @@ describe('TeacherService', () => {
   });
 
   describe('update', () => {
-    let teachers: DbTeacher[] = [];
+    let teachers: DbTeacherWithCathedras[] = [];
 
     beforeAll(() => {
       jest.spyOn(teacherRepository, 'updateById').mockImplementation(async (id, input: Prisma.TeacherUncheckedUpdateInput) =>
@@ -519,11 +519,11 @@ describe('TeacherService', () => {
   });
 
   describe('delete', () => {
-    let teachers: DbTeacher[] = [];
+    let teachers: DbTeacherWithCathedras[] = [];
 
     beforeAll(() => {
       jest.spyOn(teacherRepository, 'deleteById').mockImplementation(async (id) => {
-        const teacherToDelete: DbTeacher = teachers.find((t) => t.id === id);
+        const teacherToDelete: DbTeacherWithCathedras = teachers.find((t) => t.id === id);
         teachers = teachers.filter((t) => t.id !== id);
         return teacherToDelete;
       });
@@ -853,7 +853,7 @@ const cathedra2: Cathedra = {
   updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
-export const cathedra3: DbCathedra = {
+export const cathedra3: DbBaseCathedra = {
   id: 'f4b3b3b4-3b3b-4b3b-3b3b-3b3b3b3b3b3b',
   name: 'ІПІ',
   abbreviation: 'ІПІ',
@@ -1049,7 +1049,7 @@ const getTeacherSubjectResult = {
   ],
 };
 
-const teacher2: DbTeacher = {
+const teacher2: DbTeacherWithCathedras = {
   id: 'f4b3b3b4-3b3b-4b3b-3b3b-3b3b3b3b3b3b',
   firstName: 'Порфирій',
   lastName: 'Іванов',
@@ -1081,7 +1081,7 @@ const teacher2Contact = {
   updatedAt: new Date('2022-02-22T14:00:00.000Z'),
 };
 
-const teacherOnCathedra1: DbTeachersOnCathedras = {
+const teacherOnCathedra1: DbTeachersOnCathedrasWithCathedra = {
   cathedraId: cathedra3.id,
   teacherId: teacher1.id,
   createdAt: new Date('2024-02-22T14:00:00.000Z'),
@@ -1226,7 +1226,7 @@ function createTeacher (input : Prisma.TeacherUncheckedCreateInput) : DbTeacher 
         teacherId: input.id,
         createdAt: new Date('2022-02-22T14:00:00.000Z'),
         updatedAt: new Date('2022-02-22T14:00:00.000Z'),
-        cathedra: cathedras.find((cathedra) => cathedra.id === '1aa4ce9f-85c9-4ca8-b374-c00e7860c4a5'),
+        cathedra: cathedras.find((cathedra) => cathedra.id === '1aa4ce9f-85c9-4ca8-b374-c00e7860c4a5') as DbBaseCathedra,
       },
     ],
     disciplineTeachers: [
@@ -1267,8 +1267,8 @@ function createTeacher (input : Prisma.TeacherUncheckedCreateInput) : DbTeacher 
   };
 }
 
-function updateTeacher (id: string, input: Prisma.TeacherUncheckedUpdateInput, teachers: DbTeacher[]) : DbTeacher {
-  const teacherToUpdate : DbTeacher = teachers.find((teacher) => teacher.id === id);
+function updateTeacher (id: string, input: Prisma.TeacherUncheckedUpdateInput, teachers: DbTeacherWithCathedras[]) : DbTeacherWithCathedras {
+  const teacherToUpdate : DbTeacherWithCathedras = teachers.find((teacher) => teacher.id === id);
 
   if (!teacherToUpdate)
     return null;

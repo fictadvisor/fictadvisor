@@ -7,7 +7,7 @@ export class DbPageText {
   @AutoMap()
     value: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     link: string | null;
 
   @AutoMap()

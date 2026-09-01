@@ -4,7 +4,7 @@ import {
   TeacherResponse,
   CathedraWithNumberOfTeachersResponse,
 } from '@fictadvisor/utils/responses';
-import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
+import { DbBaseCathedra, DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, mapFrom, Mapper, mapWith } from '@automapper/core';
 import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
@@ -17,7 +17,9 @@ export class CathedraProfile extends AutomapperProfile {
 
   get profile () {
     return (mapper: Mapper) => {
-      createMap(mapper, DbCathedra, CathedraResponse);
+      // Nested `cathedra` members carry only the base columns, and that is the
+      // token their @AutoMap declares — register the map on it.
+      createMap(mapper, DbBaseCathedra, CathedraResponse);
 
       createMap(mapper, DbCathedra, CathedraWithNumberOfTeachersResponse,
         forMember((response) => response.teachers,

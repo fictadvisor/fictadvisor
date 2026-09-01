@@ -34,7 +34,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
 import { SubjectResponse } from '@fictadvisor/utils';
-import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
+import { DbTeacherWithRoles } from '../../../database/v2/entities/teacher.entity';
 import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
 import { QuestionCommentData } from '../../poll/v2/types/question-comment.data';
 
@@ -61,7 +61,7 @@ export class TeacherController {
   ): Promise<PaginatedTeachersResponse> {
     const teachers = await this.teacherService.getAll(query);
     return {
-      teachers: this.mapper.mapArray(teachers.data, DbTeacher, TeacherWithRolesAndCathedrasResponse),
+      teachers: this.mapper.mapArray(teachers.data, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse),
       pagination: teachers.pagination,
     };
   }
@@ -130,7 +130,7 @@ export class TeacherController {
   ): Promise<TeacherWithContactsResponse> {
     const { dbTeacher, contacts } = await this.teacherService.getTeacher(teacherId);
     return {
-      ...this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse),
+      ...this.mapper.map(dbTeacher, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse),
       contacts,
     };
   }
@@ -145,7 +145,7 @@ export class TeacherController {
     @Body() body: CreateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.create(body);
-    return this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse);
+    return this.mapper.map(dbTeacher, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse);
   }
 
   @ApiEndpoint({
@@ -159,7 +159,7 @@ export class TeacherController {
     @Body() body: UpdateTeacherDTO,
   ) {
     const dbTeacher = await this.teacherService.update(teacherId, body);
-    return this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse);
+    return this.mapper.map(dbTeacher, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse);
   }
 
   @ApiEndpoint({

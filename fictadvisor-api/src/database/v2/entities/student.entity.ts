@@ -1,25 +1,21 @@
-import { DbUser } from './user.entity';
-import { DbGroup } from './group.entity';
+import { DbBaseUser } from './user.entity';
+import { DbBaseGroup, DbGroupWithCathedra } from './group.entity';
 import { DbUserRole } from './user-role.entity';
 import { DbSelectiveDiscipline } from './selective-discipline.entity';
-import { DbRemovedDisciplineTeacher } from './removed-discipline-teacher.entity';
 import { State } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
-export class DbStudent {
-  @AutoMap(() => DbUser)
-    user?: DbUser;
-
+export class DbBaseStudent {
   @AutoMap()
     userId: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     firstName: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
     middleName: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
     lastName: string | null;
 
   @AutoMap()
@@ -28,21 +24,33 @@ export class DbStudent {
   @AutoMap(() => String)
     state: State;
 
-  @AutoMap(() => DbGroup)
-    group?: DbGroup;
-
-  @AutoMap()
+  @AutoMap(() => String)
     groupId: string | null;
-
-  @AutoMap(() => [DbUserRole])
-    roles?: DbUserRole[];
-
-  @AutoMap(() => [DbSelectiveDiscipline])
-    selectiveDisciplines?: DbSelectiveDiscipline[];
-
-  @AutoMap(() => [DbRemovedDisciplineTeacher])
-    removedDisciplineTeachers?: DbRemovedDisciplineTeacher[];
 
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** GroupRepository: `students: { roles: { role: true } }` */
+export class DbStudentWithRoles extends DbBaseStudent {
+  @AutoMap(() => [DbUserRole])
+    roles: DbUserRole[];
+}
+
+/** UserRepository: `student: { group: true }` */
+export class DbStudentWithGroup extends DbBaseStudent {
+  @AutoMap(() => DbBaseGroup)
+    group: DbBaseGroup | null;
+}
+
+/** StudentRepository */
+export class DbStudent extends DbStudentWithRoles {
+  @AutoMap(() => DbBaseUser)
+    user: DbBaseUser;
+
+  @AutoMap(() => DbGroupWithCathedra)
+    group: DbGroupWithCathedra | null;
+
+  @AutoMap(() => [DbSelectiveDiscipline])
+    selectiveDisciplines: DbSelectiveDiscipline[];
 }

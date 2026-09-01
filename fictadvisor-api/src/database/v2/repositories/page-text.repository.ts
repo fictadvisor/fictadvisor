@@ -10,16 +10,16 @@ export class PageTextRepository extends PrismaRepository<'pageText', DbPageText>
     super(prisma.pageText);
   }
 
-  updateById (key: string, data: Prisma.PageTextUpdateInput): Promise<DbPageText> {
+  updateById<T = DbPageText> (key: string, data: Prisma.PageTextUpdateInput): Promise<T> {
     return this.prisma.pageText.update({
       where: { key },
       data,
-    });
+    }) as unknown as Promise<T>;
   }
 
-  deleteById (key: string): Promise<DbPageText> {
+  deleteById<T = DbPageText> (key: string): Promise<T> {
     return this.prisma.pageText.delete({
       where: { key },
-    });
+    }) as unknown as Promise<T>;
   }
 }

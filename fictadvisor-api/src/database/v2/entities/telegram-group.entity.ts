@@ -1,18 +1,17 @@
-import { DbGroup } from './group.entity';
+import { DbBaseGroup } from './group.entity';
 import { TelegramSource } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
-export class DbTelegramGroup {
-  @AutoMap(() => DbGroup)
-    group?: DbGroup;
-
+export class DbBaseTelegramGroup {
   @AutoMap()
     groupId: string;
 
   @AutoMap()
     telegramId: bigint;
 
-  @AutoMap()
+  // The token only keeps `emitDecoratorMetadata` from collapsing the union to
+  // `Object`, which automapper silently skips; the bigint passes through as is.
+  @AutoMap(() => Number)
     threadId: bigint | null;
 
   @AutoMap(() => String)
@@ -23,4 +22,10 @@ export class DbTelegramGroup {
 
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** TelegramGroupRepository: `group: true` */
+export class DbTelegramGroup extends DbBaseTelegramGroup {
+  @AutoMap(() => DbBaseGroup)
+    group: DbBaseGroup;
 }

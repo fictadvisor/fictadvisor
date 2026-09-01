@@ -1,48 +1,15 @@
 import { PaginatedData } from '../../../../database/types/paginated.data';
-import { AutoMap } from '@automapper/classes';
-import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
+import { DbQuestion } from '../../../../database/v2/entities/question.entity';
+import { DbQuestionAnswerWithDiscipline } from '../../../../database/v2/entities/question-answer.entity';
 
-export class CommentData {
-  @AutoMap()
-    disciplineTeacherId: string;
+/**
+ * The answer shape PollService.getQuestionWithText loads. It carries no extra
+ * fields — it exists so automapper has a token distinct from the entity's own
+ * maps for the `Comment` mapping.
+ */
+export class CommentData extends DbQuestionAnswerWithDiscipline {}
 
-  @AutoMap()
-    questionId: string;
-
-  @AutoMap()
-    userId: string;
-
-  @AutoMap()
-    value: string;
-
-  @AutoMap(() => DbDisciplineTeacher)
-    disciplineTeacher: DbDisciplineTeacher;
-}
-
-export class QuestionCommentData {
-  @AutoMap()
-    id: string;
-
-  @AutoMap()
-    category: string;
-
-  @AutoMap()
-    name: string;
-
-  @AutoMap()
-    order: number;
-
-  @AutoMap()
-    description?: string;
-
-  @AutoMap()
-    text: string;
-
-  @AutoMap()
-    isRequired: boolean;
-
-  @AutoMap()
-    criteria?: string;
-
+/** A text question with its paginated comments, as returned by getQuestionWithText. */
+export class QuestionCommentData extends DbQuestion {
   comments: PaginatedData<CommentData>;
 }

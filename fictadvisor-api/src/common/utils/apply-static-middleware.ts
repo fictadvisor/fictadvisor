@@ -9,7 +9,7 @@ export const applyStaticMiddleware = (app: NestExpressApplication) => {
     require('express'),
   );
   const config = app.get<ConfigService>(ConfigService);
-  const staticDir = config.get<string>('static.dir');
+  const staticDir = config.getOrThrow<string>('static.dir');
 
   if (!existsSync) {
     mkdirSync(staticDir, { recursive: true });

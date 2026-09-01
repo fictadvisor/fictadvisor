@@ -8,10 +8,10 @@ import {
   ShortTeacherResponse,
 } from '@fictadvisor/utils/responses';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { DbTeacher } from '../../../../database/v2/entities/teacher.entity';
-import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
+import { DbTeacher, DbTeacherWithRoles } from '../../../../database/v2/entities/teacher.entity';
+import { DbBaseCathedra } from '../../../../database/v2/entities/cathedra.entity';
 import { extractField, makeUnique } from '../../../../common/utils/array.utils';
-import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
+import { DbDisciplineTeacherWithRoles } from '../../../../database/v2/entities/discipline-teacher.entity';
 import { MapperOmitType } from '@automapper/classes/mapped-types';
 
 @Injectable()
@@ -30,11 +30,11 @@ export class TeacherProfile extends AutomapperProfile {
           mapFrom((dto) => dto.rating.toNumber()),
         ));
 
-      createMap(mapper, DbTeacher, TeacherWithRolesAndCathedrasResponse,
+      createMap(mapper, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse,
         extend(DbTeacher, TeacherResponse),
 
         forMember((response) => response.cathedras,
-          mapWith(CathedraResponse, DbCathedra, (dto) => extractField(dto.cathedras, 'cathedra')),
+          mapWith(CathedraResponse, DbBaseCathedra, (dto) => extractField(dto.cathedras, 'cathedra')),
         ),
         forMember((response) => response.disciplineTypes,
           mapFrom((dto) => TeacherProfile.getTeacherRoles(dto.disciplineTeachers))),
@@ -42,11 +42,11 @@ export class TeacherProfile extends AutomapperProfile {
     };
   }
 
-  static getTeacherRoles (disciplineTeachers: DbDisciplineTeacher[]): DisciplineTypeEnum[] {
+  static getTeacherRoles (disciplineTeachers: DbDisciplineTeacherWithRoles[]): DisciplineTypeEnum[] {
     const disciplineTypes: DisciplineTypeEnum[] = [];
     for (const { roles } of disciplineTeachers) {
       disciplineTypes.push(
-        ...extractField(extractField(roles, 'disciplineType'), 'name') as DisciplineTypeEnum[]);
+        ...roles.map(({ disciplineType }) => disciplineType?.name) as DisciplineTypeEnum[]);
     }
 
     return makeUnique(disciplineTypes);

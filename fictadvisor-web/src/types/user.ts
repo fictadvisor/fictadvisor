@@ -1,9 +1,9 @@
 import { RoleName, State } from '@fictadvisor/utils/enums';
 
 export interface UserGroup {
-  id: string;
-  code: string;
-  role?: RoleName;
+  id: string | null;
+  code: string | null;
+  role?: RoleName | null;
   state: State;
 }
 

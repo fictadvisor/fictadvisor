@@ -15,7 +15,7 @@ import {
 import { CommentsSortBy, DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { isArrayUnique } from '../../../common/utils/array.utils';
-import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
+import { DbBaseDiscipline, DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { DbQuestionAnswer } from '../../../database/v2/entities/question-answer.entity';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
@@ -90,7 +90,7 @@ export class DisciplineTeacherService {
     }
 
     for (const answer of answers) {
-      const { type } = questions.find((q) => q.id === answer.questionId);
+      const { type } = questions.find((q) => q.id === answer.questionId)!;
       if (type === QuestionType.TEXT) {
         await this.telegramApi.verifyResponse({
           disciplineTeacherId,
@@ -129,11 +129,11 @@ export class DisciplineTeacherService {
   }
 
   sortByCategories (questions: DbQuestion[]) {
-    const results = [];
+    const results: { name: string; count: number; questions: QuestionWithCategoryResponse[] }[] = [];
     for (const q of questions) {
       const question = this.mapper.map(q, DbQuestion, QuestionWithCategoryResponse);
       const name = question.category;
-      delete question.category;
+      delete (question as Partial<QuestionWithCategoryResponse>).category;
       const category = results.find((c) => (c.name === name));
       if (!category) {
         results.push({
@@ -159,13 +159,13 @@ export class DisciplineTeacherService {
     });
 
     const teacherRoles = disciplineTeachers
-      .find((disciplineTeacher) => disciplineTeacher.id === id)
-      .roles.map(({ disciplineType }) => disciplineType.name as DisciplineTypeEnum);
+      .find((disciplineTeacher) => disciplineTeacher.id === id)!
+      .roles.map(({ disciplineType }) => disciplineType?.name as DisciplineTypeEnum);
 
     const disciplineTypes = new Set<DisciplineTypeEnum>();
     for (const { roles } of disciplineTeachers) {
       for (const { disciplineType } of roles) {
-        disciplineTypes.add(disciplineType.name as DisciplineTypeEnum);
+        disciplineTypes.add(disciplineType?.name as DisciplineTypeEnum);
       }
     }
 
@@ -296,7 +296,7 @@ export class DisciplineTeacherService {
   }
 
   private async getDbRoles (discipline: DbDiscipline, disciplineTypes: DisciplineTypeEnum[]) {
-    const dbRoles = [];
+    const dbRoles: { disciplineTypeId: string }[] = [];
     for (const disciplineType of disciplineTypes) {
       if (!discipline.disciplineTypes.some((type) => type.name === disciplineType)) {
         discipline = await this.disciplineRepository.updateById(discipline.id, {
@@ -308,7 +308,7 @@ export class DisciplineTeacherService {
         });
       }
 
-      const { id } = discipline.disciplineTypes.find((dt) => dt.name === disciplineType);
+      const { id } = discipline.disciplineTypes.find((dt) => dt.name === disciplineType)!;
 
       dbRoles.push({
         disciplineTypeId: id,
@@ -341,7 +341,7 @@ export class DisciplineTeacherService {
     await this.disciplineTeacherRepository.deleteById(disciplineTeacher.id);
   }
 
-  async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: DbDiscipline) {
+  async isNotSelectedByUser (userId: string, { id, year, semester, isSelective }: DbBaseDiscipline) {
     if (!isSelective) return false;
 
     const { selectiveDisciplines } = await this.studentRepository.findOne({ userId });
@@ -396,10 +396,10 @@ export class DisciplineTeacherService {
   }
 
   private CommentsSearching = {
-    semesters: (semesters: QuerySemesterDTO[]) => ({
+    semesters: (semesters?: QuerySemesterDTO[]) => ({
       disciplineTeacher: { discipline: DatabaseUtils.getSearchByArray(semesters, 'year', 'semester') },
     }),
-    comment: (comment: string) => (DatabaseUtils.getSearch({ search: comment }, 'value')),
+    comment: (comment?: string) => (DatabaseUtils.getSearch({ search: comment }, 'value')),
   };
 
   private CommentsSorting = {

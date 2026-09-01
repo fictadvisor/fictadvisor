@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { UpdateGroupDTO } from '@fictadvisor/utils';
 import { CathedraByIdPipe } from './cathedra-by-id.pipe';
 import { EduProgramByIdPipe } from './edu-program-by-id.pipe';
@@ -13,10 +13,10 @@ export class UpdateGroupPipe implements PipeTransform<UpdateGroupDTO, Promise<Up
   ) {}
 
   async transform (body: UpdateGroupDTO): Promise<UpdateGroupDTO> {
-    const promises = [];
+    const promises: Promise<unknown>[] = [];
 
     const addTransformIfPresent = (value: any, pipe: PipeTransform) => {
-      if (value) promises.push(pipe.transform(value, null));
+      if (value) promises.push(pipe.transform(value, null as unknown as ArgumentMetadata));
     };
 
     addTransformIfPresent(body.cathedraId, this.cathedraByIdPipe);

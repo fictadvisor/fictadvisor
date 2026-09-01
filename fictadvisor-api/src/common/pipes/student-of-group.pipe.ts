@@ -23,7 +23,7 @@ export class StudentOfGroupPipe implements PipeTransform<StudentOfGroupDTO, Prom
       throw new InvalidEntityIdException('Group');
     }
 
-    if (user.student.groupId !== group.id) {
+    if (user.student?.groupId !== group.id) {
       throw new InvalidEntityIdException('User');
     }
 

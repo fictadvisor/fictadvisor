@@ -1,8 +1,7 @@
-import { DbTeachersOnCathedras } from './teachers-on-cathedras.entity';
-import { DbGroup } from './group.entity';
+import { DbTeachersOnCathedrasWithTeacher } from './teachers-on-cathedras.entity';
 import { AutoMap } from '@automapper/classes';
 
-export class DbCathedra {
+export class DbBaseCathedra {
   @AutoMap()
     id: string;
 
@@ -12,15 +11,15 @@ export class DbCathedra {
   @AutoMap()
     abbreviation: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     division: string | null;
-
-  @AutoMap(() => [DbGroup])
-    groups?: DbGroup[];
-
-  @AutoMap(() => [DbTeachersOnCathedras])
-    teachers?: DbTeachersOnCathedras[];
 
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** CathedraRepository: `teachers: { teacher: true }` */
+export class DbCathedra extends DbBaseCathedra {
+  @AutoMap(() => [DbTeachersOnCathedrasWithTeacher])
+    teachers: DbTeachersOnCathedrasWithTeacher[];
 }

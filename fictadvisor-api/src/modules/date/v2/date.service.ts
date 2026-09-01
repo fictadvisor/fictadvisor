@@ -40,29 +40,35 @@ const FINISHED_SEMESTER_CACHE_TTL = 10 * MINUTE;
 
 @Injectable()
 export class DateService {
-  private currentSemesterCache: { row: SemesterDate; expires: number } | null = null;
+  private currentSemesterCache: { row: SemesterDate; expires: number } | null =
+    null;
 
-  constructor (
-    private prisma: PrismaService,
-  ) {}
+  constructor (private prisma: PrismaService) {}
 
-  getSemester (period: StudyingSemester) {
-    return this.prisma.semesterDate.findFirst({
+  async getSemester (period: StudyingSemester) {
+    const semester = await this.prisma.semesterDate.findUnique({
       where: {
-        semester: period.semester,
-        year: period.year,
+        year_semester: period,
       },
     });
+
+
+    if (!semester) {
+      throw new DataNotFoundException();
+    }
+
+    return semester;
   }
 
   async getCurrentSemester (): Promise<CurrentSemester> {
     const now = new Date();
 
-    let semester = this.currentSemesterCache &&
+    let semester =
+      this.currentSemesterCache &&
       this.currentSemesterCache.expires > now.getTime() &&
       this.currentSemesterCache.row.startDate <= now
-      ? this.currentSemesterCache.row
-      : null;
+        ? this.currentSemesterCache.row
+        : null;
 
     if (!semester) {
       semester = await this.prisma.semesterDate.findFirst({
@@ -134,11 +140,11 @@ export class DateService {
   }
 
   async getDateVar (name: string): Promise<Date> {
-    const { date } = await this.prisma.dateVar.findFirst({
+    const { date } = (await this.prisma.dateVar.findFirst({
       where: {
         name,
       },
-    });
+    }))!;
     return date;
   }
 
@@ -158,9 +164,11 @@ export class DateService {
   }
 
   async getCurrentWeek (semester?: StudyingSemester) {
-    const { startDate } = semester ?
-      await this.getSemester(semester) :
-      await this.getCurrentSemester();
+    const { startDate } = (
+      semester
+        ? await this.getSemester(semester)
+        : await this.getCurrentSemester()
+    )!;
 
     const difference = new Date().getTime() - startDate.getTime();
     return Math.ceil(difference / WEEK);
@@ -181,8 +189,12 @@ export class DateService {
     const { startOfWeek, endOfWeek } = this.getDatesOfCurrentWeek();
 
     return {
-      startOfWeek: DateTime.fromJSDate(startOfWeek).plus({ week: difference }).toJSDate(),
-      endOfWeek: DateTime.fromJSDate(endOfWeek).plus({ week: difference }).toJSDate(),
+      startOfWeek: DateTime.fromJSDate(startOfWeek)
+        .plus({ week: difference })
+        .toJSDate(),
+      endOfWeek: DateTime.fromJSDate(endOfWeek)
+        .plus({ week: difference })
+        .toJSDate(),
     };
   }
 
@@ -214,18 +226,16 @@ export class DateService {
     };
   }
 
-  checkYearAndSemester (year: number, semester: number) {
+  checkYearAndSemester (year?: number, semester?: number) {
     if ((year && !semester) || (!year && semester)) {
       throw new DataMissingException();
     }
   }
 
   getWeekDates (semesterStartDate: Date, week: number) {
-    const startOfWeek = DateTime.fromJSDate(semesterStartDate)
-      .startOf('week');
+    const startOfWeek = DateTime.fromJSDate(semesterStartDate).startOf('week');
 
-    const endOfWeek = DateTime.fromJSDate(semesterStartDate)
-      .endOf('week');
+    const endOfWeek = DateTime.fromJSDate(semesterStartDate).endOf('week');
 
     return {
       startOfWeek: startOfWeek.plus({ week: week - 1 }).toJSDate(),
@@ -233,13 +243,24 @@ export class DateService {
     };
   }
 
-  getParserEventTime (startOfSemester: Date, week: number, day: ScheduleDayNumber, time: string) {
-    const [hours, minutes] = time
-      .split(':')
-      .map((number) => +number);
+  getParserEventTime (
+    startOfSemester: Date,
+    week: number,
+    day: ScheduleDayNumber,
+    time: string,
+  ) {
+    const [hours, minutes] = time.split(':').map((number) => +number);
     const minutesAfterHour = 35;
-    const startOfEvent = new Date(startOfSemester.getTime() + week * WEEK + (day - 1) * DAY + hours * HOUR + minutes * MINUTE);
-    const endOfEvent = new Date(startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE);
+    const startOfEvent = new Date(
+      startOfSemester.getTime() +
+        week * WEEK +
+        (day - 1) * DAY +
+        hours * HOUR +
+        minutes * MINUTE,
+    );
+    const endOfEvent = new Date(
+      startOfEvent.getTime() + HOUR + minutesAfterHour * MINUTE,
+    );
 
     return { startOfEvent, endOfEvent };
   }

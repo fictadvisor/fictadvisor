@@ -1,19 +1,19 @@
 import { DbDisciplineType } from './discipline-type.entity';
-import { DbEvent } from './event.entity';
 import { AutoMap } from '@automapper/classes';
 
+/** EventRepository: `lessons: { disciplineType: true }` */
 export class DbLesson {
-  @AutoMap(() => DbEvent)
-    event?: DbEvent;
+  @AutoMap()
+    id: string;
 
   @AutoMap()
     eventId: string;
 
-  @AutoMap(() => DbDisciplineType)
-    disciplineType?: DbDisciplineType;
+  @AutoMap(() => String)
+    disciplineTypeId: string | null;
 
-  @AutoMap()
-    disciplineTypeId: string;
+  @AutoMap(() => DbDisciplineType)
+    disciplineType: DbDisciplineType | null;
 
   createdAt: Date | null;
   updatedAt: Date | null;

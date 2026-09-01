@@ -11,7 +11,7 @@ import {
   QueryAllUsersDTO,
   UpdateStudentDTO,
 } from '@fictadvisor/utils/requests';
-import { RemainingSelectivesResponse, SelectiveDisciplinesResponse, SortedDisciplinesByPeriodResponse } from '@fictadvisor/utils/responses';
+import { RemainingSelectivesResponse, SelectiveDisciplinesResponse } from '@fictadvisor/utils/responses';
 import { isArrayUnique } from '../../../common/utils/array.utils';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
@@ -39,6 +39,7 @@ import { NotSelectedDisciplineException } from '../../../common/exceptions/not-s
 import { AlreadySentGroupRequestException } from '../../../common/exceptions/already-sent-group-request.exception';
 import { EntityType, RoleName, State } from '@prisma-client/fictadvisor';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of-captain.exception';
+import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-required.exception';
 import { CaptainAlreadyRegisteredException } from '../../../common/exceptions/captain-already-registered.exception';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
@@ -330,12 +331,13 @@ export class UserService {
   async addGroupRole (userId: string, isCaptain: boolean) {
     const roleName = isCaptain ? RoleName.CAPTAIN : RoleName.STUDENT;
     const { group } = await this.studentRepository.findOne({ userId });
+    if (!group) throw new ObjectIsRequiredException('group');
     await this.groupService.addGroupRole(group.id, userId, roleName);
   }
 
   async getUser (userId: string) {
-    const student = await this.studentRepository.findOne({ userId });
-    if (student) return this.mapper.map(student, DbStudent, OrdinaryStudentResponse,
+    const student = await this.studentRepository.getUnique({ userId });
+    return this.mapper.map(student, DbStudent, OrdinaryStudentResponse,
       { extraArgs: () => ({ hasGroup: !!student.group }) });
   }
 
@@ -367,11 +369,12 @@ export class UserService {
 
   async verifyStudent (userId: string, isCaptain: boolean, state: State) {
     const user = await this.userRepository.findOne({ id: userId });
-    if (user.student.state !== State.PENDING) return this.studentRepository.findOne({ userId });
+    if (user.student?.state !== State.PENDING) return this.studentRepository.findOne({ userId });
     const student = await this.updateStudent(userId, { state } as UpdateStudentDTO);
 
     if (state === State.APPROVED) {
       if (isCaptain) {
+        if (!user.student.group) throw new ObjectIsRequiredException('group');
         const captain = await this.groupService.findCaptain(user.student.group.id);
 
         if (captain) {
@@ -386,10 +389,12 @@ export class UserService {
   }
 
   async putSelective (studentId: string) {
-    const { firstName, lastName, group: { code } } = await this.studentRepository.findOne({ userId: studentId });
+    const { firstName, lastName, group } = await this.studentRepository.findOne({ userId: studentId });
+    if (!group) throw new ObjectIsRequiredException('group');
+    const { code } = group;
     const name = `${lastName} ${firstName}`;
     const years = await this.dateService.getYears();
-    const missingDisciplines = [];
+    const missingDisciplines: string[] = [];
     for (const year of years) {
       const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
       selectiveFile.replaceAll(';', ',');
@@ -477,12 +482,14 @@ export class UserService {
     }
 
     const remainingSelectives = await this.getRemainingSelectives(userId);
-    const result = remainingSelectives.find(({ year, semester }) => year === query.year && semester === query.semester);
+    const result = remainingSelectives.find(({ year, semester }) => year === query.year && semester === query.semester)!;
     return result.availableSelectiveAmount > 0 ? result : {};
   }
 
   async getRemainingSelectives (userId: string): Promise<RemainingSelectivesResponse[]> {
-    const user = await this.getUser(userId);
+    const user = (await this.getUser(userId))!;
+    if (!user.group.id) throw new ObjectIsRequiredException('group');
+
     const group = await this.groupService.get(user.group.id);
 
     const selective = await this.getSelectiveDisciplines(user.id);
@@ -526,7 +533,7 @@ export class UserService {
   }
 
   getUniqueSemesters (selective: DbDiscipline[]) {
-    const allSemesters = [];
+    const allSemesters: { semester: number; year: number }[] = [];
     selective.forEach((discipline) => {
       if (!allSemesters.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
         allSemesters.push({ semester: discipline.semester, year: discipline.year });
@@ -556,7 +563,7 @@ export class UserService {
   }
 
   getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesResponse[] {
-    const result = [];
+    const result: SelectiveDisciplinesResponse[] = [];
 
     disciplines.forEach((discipline) => {
       if (!result.some(({ semester, year }) => semester === discipline.semester && year === discipline.year)) {
@@ -587,7 +594,7 @@ export class UserService {
           },
         },
       });
-      const { amount } = selectiveAmounts.find((s) => s.year === year && s.semester === semester);
+      const { amount } = selectiveAmounts.find((s) => s.year === year && s.semester === semester)!;
       if (pendingAmount + selectedAmount > amount) {
         throw new ExcessiveSelectiveDisciplinesException();
       }
@@ -657,8 +664,8 @@ export class UserService {
     await this.attachSelectiveDisciplines(userId, body.disciplines);
   }
 
-  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]): SortedDisciplinesByPeriodResponse[] {
-    const periods = [];
+  getSortedDisciplinesByPeriod (disciplines: DbDiscipline[]): SortedDisciplines[] {
+    const periods: SortedDisciplines[] = [];
     disciplines.map((discipline) => {
       const period = periods.find(
         (p) => p.semester === discipline.semester && p.year === discipline.year,

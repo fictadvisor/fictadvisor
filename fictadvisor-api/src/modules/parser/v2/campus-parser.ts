@@ -73,7 +73,15 @@ export class CampusParser implements Parser<CampusParserGroup> {
   ) {
     const parsedPairs: ParsedSchedulePair[] = [];
 
-    for (const { name, time, tag, lecturer: { name: teacherName }, dates } of pairs) {
+    for (const pair of pairs) {
+      const {
+        name,
+        time,
+        tag,
+        lecturer,
+        dates,
+      } = pair;
+
       const isSelective = pairs.some(
         ({ name: nameSome, time: timeSome }) =>
           name !== nameSome && time === timeSome,
@@ -95,13 +103,16 @@ export class CampusParser implements Parser<CampusParserGroup> {
         .setZone('Europe/Kyiv', { keepLocalTime: true })
         .toJSDate();
 
+      const teacherName = lecturer?.name ?? '';
+      const parsedTeacherName = GeneralParser.parseTeacherName(teacherName);
+
       const pairInfo: Omit<
         ParsedSchedulePair,
         'startTime' | 'endTime' | 'isRecurring'
       > = {
         name,
         isSelective,
-        teachers: GeneralParser.parseTeacherNames(teacherName),
+        teachers: parsedTeacherName ? [parsedTeacherName] : [],
         disciplineType: {
           name: CAMPUS_PARSER_DISCIPLINE_TYPE[tag],
         },

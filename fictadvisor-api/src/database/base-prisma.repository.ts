@@ -31,12 +31,12 @@ export abstract class BasePrismaRepository<
     readonly repositoryInclude?: IncludeType,
   ) {}
 
-  async findMany (
+  async findMany<T = Dto> (
     where: WhereType,
     include?: IncludeType,
     page?: { take: number; skip: number },
     orderBy?: SortType,
-  ): Promise<Dto[]> {
+  ): Promise<T[]> {
     const methodInclude = {
       ...this.repositoryInclude,
       ...include,
@@ -51,14 +51,24 @@ export abstract class BasePrismaRepository<
     });
   }
 
-  async findOne (where: WhereType, include?: IncludeType): Promise<Dto> {
+  async findOne<T = Dto> (where: WhereType, include?: IncludeType): Promise<T> {
     return (this.model as any).findFirst({
       where,
       include: include ?? this.repositoryInclude,
     });
   }
 
-  async create (data: CreateType, include?: IncludeType): Promise<Dto> {
+  async getUnique<T = Dto> (
+    where: WhereUniqueType,
+    include?: IncludeType,
+  ): Promise<T> {
+    return (this.model as any).findUnique({
+      where,
+      include: include ?? this.repositoryInclude,
+    });
+  }
+
+  async create<T = Dto> (data: CreateType, include?: IncludeType): Promise<T> {
     return (this.model as any).create({
       data,
       include: include ?? this.repositoryInclude,
@@ -83,11 +93,11 @@ export abstract class BasePrismaRepository<
     });
   }
 
-  async updateById (
+  async updateById<T = Dto> (
     id: string,
     data: UpdateType,
     include?: IncludeType,
-  ): Promise<Dto> {
+  ): Promise<T> {
     return (this.model as any).update({
       where: { id },
       data,
@@ -95,13 +105,11 @@ export abstract class BasePrismaRepository<
     });
   }
 
-  async delete (
-    where: WhereType,
-  ): Promise<BatchPayloadType> {
+  async delete (where: WhereType): Promise<BatchPayloadType> {
     return (this.model as any).deleteMany({ where });
   }
 
-  async deleteById (id: string, include?: IncludeType): Promise<Dto> {
+  async deleteById<T = Dto> (id: string, include?: IncludeType): Promise<T> {
     return (this.model as any).delete({
       where: { id },
       include: include ?? this.repositoryInclude,
@@ -112,11 +120,11 @@ export abstract class BasePrismaRepository<
     return (this.model as any).count({ where });
   }
 
-  async upsert (
+  async upsert<T = Dto> (
     where: WhereUniqueType,
     create: CreateType,
     update: UpdateType,
-  ): Promise<Dto[]> {
+  ): Promise<T[]> {
     return (this.model as any).upsert({
       where,
       update,

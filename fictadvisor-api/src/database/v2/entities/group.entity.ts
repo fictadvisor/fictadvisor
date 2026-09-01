@@ -1,15 +1,11 @@
-import { DbStudent } from './student.entity';
-import { DbEducationalProgram } from './educational-program.entity';
-import { DbCathedra } from './cathedra.entity';
-import { DbTelegramGroup } from './telegram-group.entity';
+import { DbStudentWithRoles } from './student.entity';
+import { DbEducationalProgramWithSpeciality } from './educational-program.entity';
+import { DbBaseCathedra } from './cathedra.entity';
+import { DbBaseTelegramGroup } from './telegram-group.entity';
 import { DbSelectiveAmount } from './selective-amount.entity';
-import { DbEvent } from './event.entity';
-import { DbGroupRole } from './group-role.entity';
-import { DbDiscipline } from './discipline.entity';
-import { DbComplaint } from './complaint.entity';
 import { AutoMap } from '@automapper/classes';
 
-export class DbGroup {
+export class DbBaseGroup {
   @AutoMap()
     id: string;
 
@@ -19,40 +15,42 @@ export class DbGroup {
   @AutoMap()
     admissionYear: number;
 
-  @AutoMap(() => DbCathedra)
-    cathedra?: DbCathedra;
-
-  @AutoMap()
+  @AutoMap(() => String)
     cathedraId: string | null;
 
-  @AutoMap(() => DbEducationalProgram)
-    educationalProgram?: DbEducationalProgram;
-
-  @AutoMap()
+  @AutoMap(() => String)
     educationalProgramId: string | null;
-
-  @AutoMap(() => [DbEvent])
-    events?: DbEvent[];
-
-  @AutoMap(() => [DbStudent])
-    students?: DbStudent[];
-
-  @AutoMap(() => [DbGroupRole])
-    userRoles?: DbGroupRole[];
-
-  @AutoMap(() => [DbComplaint])
-    complaints?: DbComplaint[];
-
-  @AutoMap(() => [DbDiscipline])
-    disciplines?: DbDiscipline[];
-
-  @AutoMap(() => [DbTelegramGroup])
-    telegramGroups?: DbTelegramGroup[];
-
-  @AutoMap(() => [DbSelectiveAmount])
-    selectiveAmounts?: DbSelectiveAmount[];
 
   createdAt: Date | null;
   updatedAt: Date | null;
 }
 
+/** DisciplineRepository: `group: { selectiveAmounts: true }` */
+export class DbGroupWithSelectiveAmounts extends DbBaseGroup {
+  @AutoMap(() => [DbSelectiveAmount])
+    selectiveAmounts: DbSelectiveAmount[];
+}
+
+/** StudentRepository: `group: { cathedra: true, educationalProgram: { speciality } }` */
+export class DbGroupWithCathedra extends DbBaseGroup {
+  @AutoMap(() => DbBaseCathedra)
+    cathedra: DbBaseCathedra | null;
+
+  @AutoMap(() => DbEducationalProgramWithSpeciality)
+    educationalProgram: DbEducationalProgramWithSpeciality | null;
+}
+
+/** GroupRepository, and GroupService.getAllByCaptain with only the captain attached. */
+export class DbGroupWithStudents extends DbGroupWithCathedra {
+  @AutoMap(() => [DbStudentWithRoles])
+    students: DbStudentWithRoles[];
+}
+
+/** GroupRepository */
+export class DbGroup extends DbGroupWithStudents {
+  @AutoMap(() => [DbSelectiveAmount])
+    selectiveAmounts: DbSelectiveAmount[];
+
+  @AutoMap(() => [DbBaseTelegramGroup])
+    telegramGroups: DbBaseTelegramGroup[];
+}

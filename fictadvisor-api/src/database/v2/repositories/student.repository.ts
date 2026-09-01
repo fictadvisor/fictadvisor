@@ -6,7 +6,7 @@ import { Prisma } from '@prisma-client/fictadvisor';
 
 @Injectable()
 export class StudentRepository extends PrismaRepository<'student', DbStudent> {
-  private static include: Prisma.StudentInclude = {
+  private static include = {
     group: {
       include: {
         cathedra: true,
@@ -34,18 +34,18 @@ export class StudentRepository extends PrismaRepository<'student', DbStudent> {
     super(prisma.student, StudentRepository.include);
   }
 
-  updateById (userId: string, data: Prisma.StudentUpdateInput | Prisma.StudentUncheckedUpdateInput): Promise<DbStudent> {
+  updateById<T = DbStudent> (userId: string, data: Prisma.StudentUpdateInput | Prisma.StudentUncheckedUpdateInput): Promise<T> {
     return this.prisma.student.update({
       include: StudentRepository.include,
       where: { userId },
       data,
-    });
+    }) as unknown as Promise<T>;
   }
 
-  deleteById (userId: string): Promise<DbStudent> {
+  deleteById<T = DbStudent> (userId: string): Promise<T> {
     return this.prisma.student.delete({
       include: StudentRepository.include,
       where: { userId },
-    });
+    }) as unknown as Promise<T>;
   }
 }
