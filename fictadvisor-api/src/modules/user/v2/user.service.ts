@@ -476,7 +476,8 @@ export class UserService {
   }
 
   async getRemainingSelectivesForSemester (userId: string, query: RemainingSelectivesDTO) {
-    const semester = await this.dateService.getSemester({ year: query.year, semester: query.semester });
+    // An unknown semester is not an error here — the endpoint answers with {}.
+    const semester = await this.dateService.findSemester({ year: query.year, semester: query.semester });
     if (!semester) {
       return {};
     }
