@@ -7,7 +7,11 @@ import { PrismaRepository } from '../prisma.repository';
 export class GroupRepository extends PrismaRepository<'group', DbGroup> {
   constructor (prisma: PrismaService) {
     super(prisma.group, {
-      selectiveAmounts: true,
+      // getSelectivesBySemesters maps this straight into the response, so the
+      // order is user-visible; every other consumer only does a lookup.
+      selectiveAmounts: {
+        orderBy: [{ year: 'asc' }, { semester: 'asc' }],
+      },
       telegramGroups: true,
       cathedra: true,
       educationalProgram: {
