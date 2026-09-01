@@ -391,6 +391,10 @@ export class GeneralParser {
 
       for (const { id } of defendant) {
         await this.eventRepository.updateById(id, {
+          // eventsAmount is derived from the new period, so the period itself
+          // has to move with it — otherwise a pair that changed periodicity
+          // keeps the stale one and the two disagree.
+          period: pair.period,
           eventsAmount: await this.getEventsAmount(pair.period, currentSemester),
           startTime: pair.startTime,
           endTime: pair.endTime,
@@ -733,8 +737,13 @@ export class GeneralParser {
     const otherWeekIndex = (weekIndex + 1) % 2;
     const weekOffset = otherWeekIndex ? WEEK : -WEEK;
 
+    // Only a recurring pair in the other week makes this one weekly. A dated
+    // one-off is listed in whichever week its date falls into, so it can land
+    // on the very same weekday and time as the recurring pair — counting it
+    // here would turn a fortnightly pair into a weekly one.
     const otherWeekMatches = weeks[otherWeekIndex].find(
-      ({ name, startTime, endTime, disciplineType }: BaseGeneralParserPair) =>
+      ({ name, startTime, endTime, disciplineType, isRecurring }: BaseGeneralParserPair) =>
+        isRecurring &&
         currentWeekPair.name === name &&
         currentWeekPair.disciplineType.name === disciplineType.name &&
         currentWeekPair.startTime.getTime() + weekOffset ===
