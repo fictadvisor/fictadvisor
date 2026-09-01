@@ -13,6 +13,7 @@ import { createMap, forMember, Mapper, mapWith, nullSubstitution } from '@automa
 import {
   DbBaseGroup,
   DbGroup,
+  DbGroupWithCathedra,
   DbGroupWithSelectiveAmounts,
 } from '../../../../database/v2/entities/group.entity';
 import { DbStudent, DbStudentWithRoles } from '../../../../database/v2/entities/student.entity';
@@ -32,6 +33,9 @@ export class GroupProfile extends AutomapperProfile {
       createMap(mapper, DbGroupWithSelectiveAmounts, GroupResponse);
       createMap(mapper, DbGroup, GroupResponse);
       createMap(mapper, DbGroup, FullGroupResponse);
+      // DbStudent.group carries the cathedra and educational program.
+      createMap(mapper, DbGroupWithCathedra, GroupResponse);
+      createMap(mapper, DbGroupWithCathedra, FullGroupResponse);
 
       createMap(mapper, DbGroup, GroupWithTelegramGroupsResponse);
 
