@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbTelegramGroup } from '../../../../database/v2/entities/telegram-group.entity';
+import { DbBaseTelegramGroup, DbTelegramGroup } from '../../../../database/v2/entities/telegram-group.entity';
 import {
   TelegramGroupByTelegramIdResponse,
   TelegramGroupResponse,
@@ -16,6 +16,8 @@ export class TelegramGroupProfile extends AutomapperProfile {
 
   get profile (): MappingProfile {
     return (mapper: Mapper) => {
+      // DbGroup.telegramGroups carries only the base columns.
+      createMap(mapper, DbBaseTelegramGroup, TelegramGroups);
       createMap(mapper, DbTelegramGroup, TelegramGroups);
       createMap(mapper, DbTelegramGroup, TelegramGroupResponse);
       createMap(mapper, DbTelegramGroup, TelegramGroupByTelegramIdResponse);

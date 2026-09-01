@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DbDiscipline } from '../../../../database/v2/entities/discipline.entity';
+import {
+  DbDiscipline,
+  DbDisciplineWithGroupAndTypes,
+  DbDisciplineWithSubject,
+} from '../../../../database/v2/entities/discipline.entity';
 import {
   ExtendedDisciplineTeachersResponse,
   DisciplineAdminResponse,
@@ -29,6 +33,10 @@ export class DisciplineProfile extends AutomapperProfile {
   get profile () {
     return (mapper: Mapper) => {
       createMap(mapper, DbDiscipline, DisciplineResponse);
+      // DbDisciplineTeacher.discipline carries group + subject + types, nothing more.
+      createMap(mapper, DbDisciplineWithSubject, DisciplineResponse);
+      createMap(mapper, DbDisciplineWithGroupAndTypes, DisciplineResponse);
+      createMap(mapper, DbDisciplineWithGroupAndTypes, ExtendedDisciplineResponse);
       createMap(mapper, DbDiscipline, ExtendedDisciplineResponse);
       createMap(mapper, DbDiscipline, ShortDisciplineResponse);
 

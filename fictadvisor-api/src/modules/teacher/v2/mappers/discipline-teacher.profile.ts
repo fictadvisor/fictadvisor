@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DbDisciplineTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
+import { DbDisciplineTeacher, DbDisciplineTeacherWithDisciplineAndTeacher } from '../../../../database/v2/entities/discipline-teacher.entity';
 import {
   DisciplineTeacherAndSubjectResponse,
   DisciplineTeacherExtendedResponse,
@@ -73,6 +73,9 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
         ));
 
       createMap(mapper, DbDisciplineTeacher, DisciplineTeacher);
+
+      // DbQuestionAnswer.disciplineTeacher carries the discipline's subject and the teacher.
+      createMap(mapper, DbDisciplineTeacherWithDisciplineAndTeacher, DisciplineTeacher);
 
       createMap(mapper, DbQuestionAnswer, QuestionAnswerResponse);
     };

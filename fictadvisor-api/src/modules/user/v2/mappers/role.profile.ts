@@ -8,7 +8,7 @@ import {
 } from '@fictadvisor/utils/responses';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
-import { DbRole } from '../../../../database/v2/entities/role.entity';
+import { DbBaseRole, DbRole } from '../../../../database/v2/entities/role.entity';
 import { DbGrant } from '../../../../database/v2/entities/grant.entity';
 import { DbUserRole } from '../../../../database/v2/entities/user-role.entity';
 
@@ -23,6 +23,8 @@ export class RoleProfile extends AutomapperProfile {
       createMap(mapper, DbRole, BaseRoleResponse);
       createMap(mapper, DbRole, RoleResponse);
       createMap(mapper, DbRole, BaseRoleWithParentResponse);
+      // DbUserRole.role carries only the base columns — that is the token it declares.
+      createMap(mapper, DbBaseRole, BaseRoleWithParentResponse);
       createMap(mapper, DbUserRole, RoleWithStudentResponse);
       createMap(mapper, DbGrant, GrantResponse);
     };

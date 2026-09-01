@@ -8,7 +8,7 @@ import {
   ShortTeacherResponse,
 } from '@fictadvisor/utils/responses';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
-import { DbTeacher, DbTeacherWithRoles } from '../../../../database/v2/entities/teacher.entity';
+import { DbBaseTeacher, DbTeacher, DbTeacherWithCathedras, DbTeacherWithRoles } from '../../../../database/v2/entities/teacher.entity';
 import { DbBaseCathedra } from '../../../../database/v2/entities/cathedra.entity';
 import { extractField, makeUnique } from '../../../../common/utils/array.utils';
 import { DbDisciplineTeacherWithRoles } from '../../../../database/v2/entities/discipline-teacher.entity';
@@ -26,6 +26,17 @@ export class TeacherProfile extends AutomapperProfile {
       createMap(mapper, MapperOmitType(DbTeacher, ['rating']), MapperOmitType(TeacherResponse, ['rating']));
 
       createMap(mapper, DbTeacher, TeacherResponse,
+        forMember((response) => response.rating,
+          mapFrom((dto) => dto.rating.toNumber()),
+        ));
+
+      // Nested `teacher` members carry the cathedras, or nothing beyond the columns.
+      createMap(mapper, DbBaseTeacher, TeacherResponse,
+        forMember((response) => response.rating,
+          mapFrom((dto) => dto.rating.toNumber()),
+        ));
+
+      createMap(mapper, DbTeacherWithCathedras, TeacherResponse,
         forMember((response) => response.rating,
           mapFrom((dto) => dto.rating.toNumber()),
         ));
