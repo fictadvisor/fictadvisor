@@ -27,7 +27,7 @@ async function bootstrap () {
   app.enableShutdownHooks();
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
-  const port = configService.get<number>('port');
+  const port = configService.getOrThrow<number>('port');
 
   applyStaticMiddleware(app);
 

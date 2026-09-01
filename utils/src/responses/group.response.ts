@@ -16,7 +16,26 @@ export class GroupResponse {
     code: string;
 }
 
-export class ExtendedGroupResponse extends GroupResponse {
+/**
+ * The group a student belongs to. A student can be groupless, in which case
+ * every field but `state` comes back null — hence this does not extend
+ * `GroupResponse`, whose `id`/`code` are always present.
+ */
+export class ExtendedGroupResponse {
+  @ApiProperty({
+    description: 'Id of the group, null if the student has none',
+    nullable: true,
+  })
+  @AutoMap()
+    id: string | null;
+
+  @ApiProperty({
+    description: 'Group code string, null if the student has none',
+    nullable: true,
+  })
+  @AutoMap()
+    code: string | null;
+
   @ApiProperty({
     enum: State,
     enumName: 'State',
@@ -28,10 +47,11 @@ export class ExtendedGroupResponse extends GroupResponse {
   @ApiProperty({
     enum: RoleName,
     enumName: 'RoleName',
-    description: 'User\'s role in the group',
+    description: 'User\'s role in the group, null if the student has none',
+    nullable: true,
   })
   @AutoMap(() => String)
-    role: RoleName;
+    role: RoleName | null;
 }
 
 export class FullGroupResponse extends GroupResponse {

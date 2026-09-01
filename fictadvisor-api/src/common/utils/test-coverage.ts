@@ -50,7 +50,7 @@ export class TestCoverage {
         const { name } = dirent;
 
         const filePath = path.join(dirent.parentPath, name);
-        const extension = name.match(/[^.]*$/g)[0];
+        const extension = name.match(/[^.]*$/g)![0];
         const prefix = filePath.replace(/(index)?\.html$/, '');
 
         files.push({
@@ -69,14 +69,14 @@ export class TestCoverage {
     info: FileInfo,
   ) {
     const buffer = fs.readFileSync(info.path);
-    let text: string;
+    let text: string | undefined;
 
     if (info.extension !== 'png') {
       text = buffer.toString();
-    }
 
-    if (info.extension === 'html') {
-      text = text.replaceAll(/(index)?\.html/g, '');
+      if (info.extension === 'html') {
+        text = text.replaceAll(/(index)?\.html/g, '');
+      }
     }
 
     server.get(info.prefix.replaceAll('\\', '/'), (req: Request, res: Response) => {

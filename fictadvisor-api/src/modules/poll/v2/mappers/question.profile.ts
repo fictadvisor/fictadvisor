@@ -11,7 +11,7 @@ import {
   QuestionRole,
   ShortTeacherResponse,
 } from '@fictadvisor/utils/responses';
-import { DbQuestion } from '../../../../database/v2/entities/question.entity';
+import { DbQuestion, DbQuestionMark } from '../../../../database/v2/entities/question.entity';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, forMember, forSelf, mapFrom, Mapper, mapWith } from '@automapper/core';
 import { DbQuestionWithRoles } from '../../../../database/v2/entities/question-with-roles.entity';
@@ -36,8 +36,8 @@ export class QuestionProfile extends AutomapperProfile {
         forMember((response) => response.roles,
           mapWith(QuestionRole, DbQuestionRole, (dto) => dto.questionRoles)));
 
-      createMap(mapper, DbQuestion, MarkResponse,
-        ...forMembers<DbQuestion, MarkResponse>({
+      createMap(mapper, DbQuestionMark, MarkResponse,
+        ...forMembers<DbQuestionMark, MarkResponse>({
           type: ({ display }) => display,
           mark: (dto) => TeacherService.getRightMarkFormat(dto),
           amount: ({ questionAnswers }) => questionAnswers.length,

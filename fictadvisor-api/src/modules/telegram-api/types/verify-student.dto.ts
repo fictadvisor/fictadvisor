@@ -1,6 +1,6 @@
 export class VerifyStudentDTO {
   id: string;
-  telegramId: bigint;
+  telegramId?: bigint;
   firstName: string;
   middleName: string;
   lastName: string;

@@ -500,8 +500,8 @@ describe('UserService', () => {
       const { group, roles } = await userService.changeGroup(studentId, groupId);
 
       expect({ group: {
-        id: group.id,
-        code: group.code,
+        id: group?.id,
+        code: group?.code,
       }, roles: roles.map((r) => ({
         studentId: r.studentId,
         roleId: r.roleId,

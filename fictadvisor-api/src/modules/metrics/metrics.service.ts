@@ -149,14 +149,14 @@ export class MetricsService {
           for (const w of VISITOR_WINDOWS) {
             if (age <= w.ms) {
               const key = `${w.label}|${entry.kind}`;
-              counts.set(key, counts.get(key) + 1);
+              counts.set(key, counts.get(key)! + 1);
             }
           }
         }
         this.uniqueVisitors.reset();
         for (const w of VISITOR_WINDOWS) {
           for (const k of kinds) {
-            this.uniqueVisitors.set({ window: w.label, kind: k }, counts.get(`${w.label}|${k}`));
+            this.uniqueVisitors.set({ window: w.label, kind: k }, counts.get(`${w.label}|${k}`)!);
           }
         }
       },

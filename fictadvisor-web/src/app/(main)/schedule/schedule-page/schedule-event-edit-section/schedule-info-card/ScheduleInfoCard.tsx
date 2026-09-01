@@ -78,7 +78,7 @@ const ScheduleInfoCard = ({
       PermissionApi.check({
         permissions: [...requiredPermissions],
         values: {
-          groupId: user?.group?.id,
+          groupId: user?.group?.id ?? undefined,
         },
       }),
     retry: false,

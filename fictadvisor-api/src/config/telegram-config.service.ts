@@ -8,10 +8,10 @@ export class TelegramConfigService {
   ) {}
 
   get botToken () {
-    return this.configService.get<string>('telegram.botToken');
+    return this.configService.get<string>('telegram.botToken')!;
   }
 
   get apiUrl () {
-    return this.configService.get<string>('telegram.apiUrl');
+    return this.configService.get<string>('telegram.apiUrl')!;
   }
 }

@@ -30,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    delete user.password;
+    delete (user as Partial<User>).password;
 
     if (user.lastPasswordChanged.getTime() > payload.createdAt) {
       throw new UnauthorizedException('Token is expired');

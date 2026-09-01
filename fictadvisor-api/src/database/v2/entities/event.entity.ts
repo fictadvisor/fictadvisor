@@ -1,9 +1,10 @@
 import { Period } from '@fictadvisor/utils/enums';
 import { DbLesson } from './lesson.entity';
-import { DbGroup } from './group.entity';
+import { DbBaseGroup } from './group.entity';
 import { DbEventInfo } from './event-info.entity';
 import { AutoMap } from '@automapper/classes';
 
+/** EventRepository: `group: true, eventInfo: true, lessons: { disciplineType: true }` */
 export class DbEvent {
   @AutoMap()
     id: string;
@@ -23,26 +24,26 @@ export class DbEvent {
   @AutoMap(() => String)
     period: Period;
 
-  @AutoMap()
+  @AutoMap(() => String)
     url: string | null;
-
-  @AutoMap(() => DbGroup)
-    group?: DbGroup;
 
   @AutoMap()
     groupId: string;
-
-  @AutoMap(() => [DbEventInfo])
-    eventInfo?: DbEventInfo[];
-
-  @AutoMap(() => [DbLesson])
-    lessons?: DbLesson[];
 
   @AutoMap()
     eventsAmount: number;
 
   @AutoMap()
     teacherForceChanges: boolean;
+
+  @AutoMap(() => DbBaseGroup)
+    group: DbBaseGroup;
+
+  @AutoMap(() => [DbEventInfo])
+    eventInfo: DbEventInfo[];
+
+  @AutoMap(() => [DbLesson])
+    lessons: DbLesson[];
 
   createdAt: Date | null;
   updatedAt: Date | null;

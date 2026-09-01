@@ -29,7 +29,7 @@ export function getDocumentationDecorators (summary: string, description: string
   decorators.push(
     ...responseTypes
       .filter((responseType) => documentation?.[responseType.key])
-      .map((responseType) => responseType.decorator(documentation[responseType.key])),
+      .map((responseType) => responseType.decorator(documentation![responseType.key])),
   );
 
   if (documentation?.params) {

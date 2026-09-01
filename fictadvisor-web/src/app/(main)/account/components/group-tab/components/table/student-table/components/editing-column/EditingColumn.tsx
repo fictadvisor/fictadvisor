@@ -65,7 +65,8 @@ const EditingColumn: FC<EditingColumnProps> = ({
     try {
       setDeletePopupOpen(false);
 
-      if (user.group) await GroupAPI.removeStudent(user.group.id, student.id);
+      if (user.group?.id)
+        await GroupAPI.removeStudent(user.group.id, student.id);
 
       await refetch();
     } catch (error) {
@@ -75,8 +76,8 @@ const EditingColumn: FC<EditingColumnProps> = ({
   const handleChangeStatus = async () => {
     try {
       setChangePopupOpen(false);
-      if (user.group)
-        await GroupAPI.updateStudentRole(user?.group?.id, student.id, {
+      if (user.group?.id)
+        await GroupAPI.updateStudentRole(user.group.id, student.id, {
           roleName:
             student.role === GroupRoles.MODERATOR
               ? GroupRoles.STUDENT
@@ -91,8 +92,8 @@ const EditingColumn: FC<EditingColumnProps> = ({
   const handleChangeCaptain = async () => {
     try {
       setTransferCaptainPopupOpen(false);
-      if (user.group)
-        await GroupAPI.updateCaptain(user?.group?.id, {
+      if (user.group?.id)
+        await GroupAPI.updateCaptain(user.group.id, {
           studentId: newCaptain,
         });
       setNewCaptain('');

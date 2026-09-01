@@ -29,17 +29,17 @@ export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionA
     });
   }
 
-  find (where: Prisma.QuestionAnswerWhereInput): Promise<DbQuestionAnswer> {
+  find (where: Prisma.QuestionAnswerWhereInput): Promise<DbQuestionAnswer | null> {
     return this.prisma.questionAnswer.findFirst({
       where,
       include: this.include,
     });
   }
 
-  findMany (where: Where<'questionAnswer'>,
+  findMany<T = DbQuestionAnswer> (where: Where<'questionAnswer'>,
     include?: Include<'questionAnswer'>,
     page?: { take: number; skip: number },
-    sort?: Sort<'questionAnswer'>): Promise<DbQuestionAnswer[]> {
+    sort?: Sort<'questionAnswer'>): Promise<T[]> {
     const methodInclude = {
       ...this.include,
       ...include,
@@ -50,8 +50,8 @@ export class QuestionAnswerRepository implements RepositoryInterface<DbQuestionA
       orderBy: sort,
       take: page?.take,
       skip: page?.skip,
-      include: Object.keys(methodInclude).length ? methodInclude : undefined,
-    });
+      include: methodInclude,
+    }) as unknown as Promise<T[]>;
   }
 
   count (where: Where<'questionAnswer'>): Promise<number> {

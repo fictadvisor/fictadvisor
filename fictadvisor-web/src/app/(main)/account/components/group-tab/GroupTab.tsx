@@ -64,7 +64,7 @@ const GroupTab = () => {
   };
 
   const handleGroupLeave = async () => {
-    if (user?.group) {
+    if (user?.group?.id) {
       await groupAPI.leaveGroup(user.group.id);
     }
     refresh();

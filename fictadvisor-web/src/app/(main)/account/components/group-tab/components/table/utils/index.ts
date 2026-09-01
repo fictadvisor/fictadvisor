@@ -1,7 +1,5 @@
 import { OrdinaryStudentResponse } from '@fictadvisor/utils/responses';
 
-import { PendingStudent } from '@/types/student';
-
 import { RequestsTableItem, StudentsTableItem } from '../types';
 
 export const transformStudentsData = (
@@ -19,7 +17,7 @@ export const transformStudentsData = (
   );
 
 export const transformRequestsData = (
-  data: PendingStudent[],
+  data: OrdinaryStudentResponse[],
 ): RequestsTableItem[] =>
   data.map(dataItem => ({
     imgSrc: dataItem.avatar,

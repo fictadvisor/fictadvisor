@@ -1,39 +1,38 @@
-import { DbQuestionAnswer } from './question-answer.entity';
-import { DbStudent } from './student.entity';
+import { DbStudentWithGroup } from './student.entity';
 import { State } from '@prisma-client/fictadvisor';
 import { AutoMap } from '@automapper/classes';
 
-export class DbUser {
+export class DbBaseUser {
   @AutoMap()
     id: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     username: string | null;
 
   @AutoMap()
     email: string;
 
-  @AutoMap()
+  @AutoMap(() => Number)
     telegramId: bigint | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
     avatar: string | null;
 
   @AutoMap()
     state: State;
 
-  @AutoMap()
+  @AutoMap(() => String)
     password: string | null;
 
   @AutoMap()
     lastPasswordChanged: Date;
 
-  @AutoMap(() => DbStudent)
-    student?: DbStudent;
-
-  @AutoMap(() => [DbQuestionAnswer])
-    questionAnswers?: DbQuestionAnswer[];
-
   createdAt: Date | null;
   updatedAt: Date | null;
+}
+
+/** UserRepository: `student: { group: true }` */
+export class DbUser extends DbBaseUser {
+  @AutoMap(() => DbStudentWithGroup)
+    student: DbStudentWithGroup | null;
 }

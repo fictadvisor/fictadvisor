@@ -1,22 +1,14 @@
-import { DbGroup } from './group.entity';
-import { DbTeacher } from './teacher.entity';
 import { AutoMap } from '@automapper/classes';
 
 export class DbComplaint {
   @AutoMap()
     id: string;
 
-  @AutoMap()
+  @AutoMap(() => String)
     fullName: string | null;
 
-  @AutoMap(() => DbGroup)
-    group?: DbGroup;
-
-  @AutoMap()
+  @AutoMap(() => String)
     groupId: string | null;
-
-  @AutoMap(() => DbTeacher)
-    teacher: DbTeacher;
 
   @AutoMap()
     teacherId: string;

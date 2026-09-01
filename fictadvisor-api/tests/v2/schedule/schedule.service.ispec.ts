@@ -616,9 +616,9 @@ describe('ScheduleService', () => {
       const { events } = await scheduleService.getGeneralGroupEvents('group', 1);
       expect(events.every(
         (event) => event.lessons.every(
-          (lesson) => lesson.disciplineType.name === DisciplineTypeEnum.LECTURE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.PRACTICE ||
-                      lesson.disciplineType.name === DisciplineTypeEnum.LABORATORY),
+          (lesson) => lesson.disciplineType?.name === DisciplineTypeEnum.LECTURE ||
+                      lesson.disciplineType?.name === DisciplineTypeEnum.PRACTICE ||
+                      lesson.disciplineType?.name === DisciplineTypeEnum.LABORATORY),
       )).toBe(true);
     });
   });
@@ -628,7 +628,7 @@ describe('ScheduleService', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', {});
       const containsOnlyGeneral = events.every((event) => {
-        return generalTypes.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+        return generalTypes.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
       });
       expect(containsOnlyGeneral).toBe(true);
     });
@@ -649,7 +649,7 @@ describe('ScheduleService', () => {
 
         const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', filter);
         const filterWorks = events.every((event) => {
-          return query.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+          return query.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
         });
 
         expect(filterWorks).toBe(true);
@@ -757,7 +757,7 @@ describe('ScheduleService', () => {
       expect(
         events.every((event) =>
           event.lessons.every(
-            (lesson) => !generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum),
+            (lesson) => !generalTypes.includes(lesson.disciplineType?.name as DisciplineTypeEnum),
           ),
         ),
       ).toBe(true);
@@ -800,7 +800,7 @@ describe('ScheduleService', () => {
 
       expect(events.every(
         (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => generalTypes.includes(lesson.disciplineType.name as DisciplineTypeEnum),
+          (lesson) => generalTypes.includes(lesson.disciplineType?.name as DisciplineTypeEnum),
         ),
       )).toBe(true);
     });
@@ -817,9 +817,9 @@ describe('ScheduleService', () => {
 
       expect(events.every(
         (event) => event.lessons.every(
-          (lesson) => lesson.disciplineType.name !== DisciplineTypeEnum.LECTURE &&
-                      lesson.disciplineType.name !== DisciplineTypeEnum.PRACTICE &&
-                      lesson.disciplineType.name !== DisciplineTypeEnum.LABORATORY,
+          (lesson) => lesson.disciplineType?.name !== DisciplineTypeEnum.LECTURE &&
+                      lesson.disciplineType?.name !== DisciplineTypeEnum.PRACTICE &&
+                      lesson.disciplineType?.name !== DisciplineTypeEnum.LABORATORY,
         )),
       ).toBe(true);
     });
@@ -877,7 +877,7 @@ describe('ScheduleService', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const events = await scheduleService.getGroupEventsForTelegram('group', 1);
       const areAllPublic = events.every((event) => {
-        return generalTypes.includes(event.lessons[0]?.disciplineType.name as unknown as EventTypeEnum);
+        return generalTypes.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
       });
       expect(areAllPublic).toBe(true);
     });

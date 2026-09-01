@@ -8,7 +8,7 @@ import {
 import { DisciplineTeacherService } from '../../teacher/v2/discipline-teacher.service';
 import { DisciplineRepository } from '../../../database/v2/repositories/discipline.repository';
 import { DisciplineTeacherRepository } from '../../../database/v2/repositories/discipline-teacher.repository';
-import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
+import { DbDiscipline, DbShortDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { PaginatedData } from '../../../database/types/paginated.data';
 import { DisciplineTypeEnum } from '@fictadvisor/utils/enums';
 import { Prisma } from '@prisma-client/fictadvisor';
@@ -24,21 +24,21 @@ export class DisciplineService {
   ) {}
 
   private DisciplineSearching = {
-    name: (search: string) => ({
+    name: (search?: string) => ({
       subject: DatabaseUtils.getSearch({ search }, 'name'),
     }),
-    groups: (ids: string[]) => ({
+    groups: (ids?: string[]) => ({
       group: {
         OR: ids?.map((id) => DatabaseUtils.getStrictSearch(id, 'id')),
       },
     }),
-    semesters: (semesters: QuerySemesterDTO[]) => ({
+    semesters: (semesters?: QuerySemesterDTO[]) => ({
       OR: semesters?.map(({ semester, year }) => ({
         ...DatabaseUtils.getStrictSearch(semester, 'semester'),
         ...DatabaseUtils.getStrictSearch(year, 'year'),
       })),
     }),
-    teachers: (ids: string[]) => ({
+    teachers: (ids?: string[]) => ({
       disciplineTeachers: {
         some: {
           OR: ids?.map((id) => DatabaseUtils.getStrictSearch(id, 'teacherId')),
@@ -83,7 +83,7 @@ export class DisciplineService {
     return this.disciplineRepository.findOne({ id });
   }
 
-  async getAll (body: QueryAllDisciplinesDTO): Promise<PaginatedData<DbDiscipline>> {
+  async getAll (body: QueryAllDisciplinesDTO): Promise<PaginatedData<DbShortDiscipline>> {
     const {
       sort: sortBy = 'name',
       search: name,
@@ -120,7 +120,7 @@ export class DisciplineService {
       },
       orderBy: sort,
     };
-    return PaginationUtil.paginate<'discipline', DbDiscipline>(this.disciplineRepository, body, data);
+    return PaginationUtil.paginate<'discipline', DbShortDiscipline>(this.disciplineRepository, body, data);
   }
 
   async getTeachers (disciplineId: string, disciplineType: DisciplineTypeEnum) {

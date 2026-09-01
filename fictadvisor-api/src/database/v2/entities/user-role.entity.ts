@@ -1,19 +1,16 @@
-import { DbRole } from './role.entity';
-import { DbStudent } from './student.entity';
+import { DbBaseRole } from './role.entity';
 import { AutoMap } from '@automapper/classes';
 
+/** GroupRepository and StudentRepository both load roles as `roles: { role: true }`. */
 export class DbUserRole {
-  @AutoMap(() => DbStudent)
-    student?: DbStudent;
-
   @AutoMap()
     studentId: string;
 
-  @AutoMap(() => DbRole)
-    role?: DbRole;
-
   @AutoMap()
     roleId: string;
+
+  @AutoMap(() => DbBaseRole)
+    role: DbBaseRole;
 
   createdAt: Date | null;
   updatedAt: Date | null;

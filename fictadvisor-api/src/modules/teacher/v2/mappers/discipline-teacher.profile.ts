@@ -21,7 +21,7 @@ import { forMembers } from '../../../../common/utils/mapper.utils';
 import { DbSubject } from '../../../../database/v2/entities/subject.entity';
 import { DbDisciplineType } from '../../../../database/v2/entities/discipline-type.entity';
 import { MapperOmitType } from '@automapper/classes/mapped-types';
-import { DbCathedra } from '../../../../database/v2/entities/cathedra.entity';
+import { DbBaseCathedra } from '../../../../database/v2/entities/cathedra.entity';
 import { TeacherProfile } from './teacher.profile';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
           ))),
 
         forMember((response) => response.cathedras,
-          mapWith(CathedraResponse, DbCathedra,
+          mapWith(CathedraResponse, DbBaseCathedra,
             ({ teacher }) => extractField(teacher.cathedras, 'cathedra'),
           )),
 
@@ -79,7 +79,7 @@ export class DisciplineTeacherProfile extends AutomapperProfile {
   }
 
   private getDisciplineTypes (disciplineTeacher: DbDisciplineTeacher) {
-    const disciplineTypeNames = extractField(extractField(disciplineTeacher.roles, 'disciplineType'), 'name') as DisciplineTypeEnum[];
+    const disciplineTypeNames = disciplineTeacher.roles.map(({ disciplineType }) => disciplineType?.name) as DisciplineTypeEnum[];
     return makeUnique(disciplineTypeNames);
   }
 }

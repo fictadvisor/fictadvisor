@@ -9,7 +9,7 @@ import { RepositoryInterface } from '../../interfaces/repository.interface';
 export class TelegramGroupRepository implements RepositoryInterface<DbTelegramGroup, Prisma.TelegramGroupWhereInput> {
   constructor (private prisma: PrismaService) {}
 
-  private include= {
+  private include = {
     group: true,
   };
 
@@ -72,10 +72,10 @@ export class TelegramGroupRepository implements RepositoryInterface<DbTelegramGr
     }) as any as DbTelegramGroup[];
   }
 
-  findMany (where: Where<'telegramGroup'>,
+  findMany<T = DbTelegramGroup> (where: Where<'telegramGroup'>,
     include?: Include<'telegramGroup'>,
     page?: { take: number; skip: number },
-    sort?: Sort<'telegramGroup'>): Promise<DbTelegramGroup[]> {
+    sort?: Sort<'telegramGroup'>): Promise<T[]> {
     const methodInclude = {
       ...this.include,
       ...include,
@@ -86,8 +86,8 @@ export class TelegramGroupRepository implements RepositoryInterface<DbTelegramGr
       orderBy: sort,
       take: page?.take,
       skip: page?.skip,
-      include: Object.keys(methodInclude).length ? methodInclude : undefined,
-    });
+      include: methodInclude,
+    }) as unknown as Promise<T[]>;
   }
 
   count (where: Where<'telegramGroup'>): Promise<number> {

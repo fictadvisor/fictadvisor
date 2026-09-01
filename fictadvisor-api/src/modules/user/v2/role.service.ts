@@ -170,7 +170,7 @@ export class RoleService {
   }
 
   private async checkRole (userRoles: DbRole[], role: CreateRoleWithGrantsDTO) {
-    const canCreateGrants = await this.canCreateGrants(userRoles, role.grants);
+    const canCreateGrants = await this.canCreateGrants(userRoles, role.grants!);
     if (!canCreateGrants) {
       throw new NoPermissionException();
     }

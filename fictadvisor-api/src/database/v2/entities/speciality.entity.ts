@@ -1,8 +1,8 @@
 import { AbbreviationOfSpeciality } from '@fictadvisor/utils/enums';
-import { DbEducationalProgram } from './educational-program.entity';
+import { DbBaseEducationalProgram } from './educational-program.entity';
 import { AutoMap } from '@automapper/classes';
 
-export class DbSpeciality {
+export class DbBaseSpeciality {
   @AutoMap()
     id: string;
 
@@ -12,12 +12,15 @@ export class DbSpeciality {
   @AutoMap(() => String)
     abbreviation: AbbreviationOfSpeciality;
 
-  @AutoMap()
+  @AutoMap(() => String)
     name: string | null;
-
-  @AutoMap(() => [DbEducationalProgram])
-    educationalPrograms?: DbEducationalProgram[];
 
   createdAt: Date;
   updatedAt: Date;
+}
+
+/** SpecialityRepository: `educationalPrograms: true` */
+export class DbSpeciality extends DbBaseSpeciality {
+  @AutoMap(() => [DbBaseEducationalProgram])
+    educationalPrograms: DbBaseEducationalProgram[];
 }

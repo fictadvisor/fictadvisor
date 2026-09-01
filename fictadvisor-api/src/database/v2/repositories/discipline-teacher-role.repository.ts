@@ -11,7 +11,7 @@ export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDi
     private prisma: PrismaService,
   ) {}
 
-  private include: Prisma.DisciplineTeacherRoleInclude = {
+  private include = {
     disciplineType: true,
   };
 
@@ -41,10 +41,10 @@ export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDi
     return this.prisma.disciplineTeacherRole.deleteMany({ where });
   }
 
-  findMany (where: Where<'disciplineTeacherRole'>,
+  findMany<T = DbDisciplineTeacherRole> (where: Where<'disciplineTeacherRole'>,
     include?: Include<'disciplineTeacherRole'>,
     page?: { take: number; skip: number },
-    sort?: Sort<'disciplineTeacherRole'>): Promise<DbDisciplineTeacherRole[]> {
+    sort?: Sort<'disciplineTeacherRole'>): Promise<T[]> {
     const methodInclude = {
       ...this.include,
       ...include,
@@ -55,8 +55,8 @@ export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDi
       orderBy: sort,
       take: page?.take,
       skip: page?.skip,
-      include: Object.keys(methodInclude).length ? methodInclude : undefined,
-    });
+      include: methodInclude,
+    }) as unknown as Promise<T[]>;
   }
 
   count (where: Where<'disciplineTeacherRole'>): Promise<number> {

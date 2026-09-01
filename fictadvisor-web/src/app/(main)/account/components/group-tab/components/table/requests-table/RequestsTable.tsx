@@ -25,7 +25,7 @@ const RequestsTable: FC<RequestsTableProps> = ({ rows, refetch }) => {
   const { displayError } = useToastError();
   const handleApprove = async (userId: string) => {
     try {
-      if (user.group)
+      if (user.group?.id)
         await GroupAPI.verifyStudent(user.group.id, userId, {
           state: State.APPROVED,
         });

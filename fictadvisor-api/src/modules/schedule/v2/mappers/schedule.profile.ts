@@ -53,7 +53,7 @@ export class ScheduleProfile extends AutomapperProfile {
   }
 
 
-  private getTeachers (disciplineTeachers: DbDisciplineTeacher[], disciplineType: DbDisciplineType) {
+  private getTeachers (disciplineTeachers: DbDisciplineTeacher[], disciplineType: DbDisciplineType | null) {
     if (!disciplineTeachers) return null;
 
     const eventType = this.getEventType(disciplineType);
@@ -67,7 +67,7 @@ export class ScheduleProfile extends AutomapperProfile {
     return this.mapper.mapArray(teachers, DbTeacher, ShortTeacherResponse);
   }
 
-  private getEventType (disciplineType: DbDisciplineType) {
+  private getEventType (disciplineType: DbDisciplineType | null) {
     return disciplineType?.name as unknown as EventTypeEnum ?? EventTypeEnum.OTHER;
   }
 }

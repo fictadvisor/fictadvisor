@@ -14,6 +14,7 @@ import {
   TeacherWithContactsFullResponse,
   TeacherWithRolesAndCathedrasResponse,
   MarkArray,
+  MarkResponse,
 } from '@fictadvisor/utils/responses';
 import {
   QuestionType,
@@ -23,13 +24,13 @@ import {
 } from '@fictadvisor/utils/enums';
 import { PaginationUtil, PaginateArgs } from '../../../database/v2/pagination.util';
 import { DatabaseUtils } from '../../../database/database.utils';
-import { extractField, filterAsync, makeUnique } from '../../../common/utils/array.utils';
+import { filterAsync, makeUnique } from '../../../common/utils/array.utils';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { PollService } from '../../poll/v2/poll.service';
 import { DateService } from '../../date/v2/date.service';
 import { DisciplineTeacherService } from './discipline-teacher.service';
-import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
-import { DbTeacher } from '../../../database/v2/entities/teacher.entity';
+import { DbDisciplineTeacher, DbDisciplineTeacherWithDisciplineAndRoles } from '../../../database/v2/entities/discipline-teacher.entity';
+import { DbTeacher, DbTeacherWithRoles } from '../../../database/v2/entities/teacher.entity';
 import { TeacherRepository } from '../../../database/v2/repositories/teacher.repository';
 import { DisciplineTeacherRepository } from '../../../database/v2/repositories/discipline-teacher.repository';
 import { SubjectRepository } from '../../../database/v2/repositories/subject.repository';
@@ -42,7 +43,7 @@ import * as process from 'process';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
-import { DbQuestion } from '../../../database/v2/entities/question.entity';
+import { DbQuestionMark } from '../../../database/v2/entities/question.entity';
 
 @Injectable()
 export class TeacherService {
@@ -95,7 +96,7 @@ export class TeacherService {
   }
 
   private getSearchForTeachers = {
-    fullName: (search: string) => (DatabaseUtils.getSearch({ search }, 'firstName', 'lastName', 'middleName')),
+    fullName: (search?: string) => (DatabaseUtils.getSearch({ search }, 'firstName', 'lastName', 'middleName')),
     group: (groupId: string) => ({
       disciplineTeachers: {
         some: {
@@ -103,7 +104,7 @@ export class TeacherService {
         },
       },
     }),
-    cathedras: (cathedrasId: string[]) => ({
+    cathedras: (cathedrasId?: string[]) => ({
       cathedras: {
         some: DatabaseUtils.getSearchByArray(cathedrasId, 'cathedraId'),
       },
@@ -233,7 +234,7 @@ export class TeacherService {
     const disciplineTypes: DisciplineTypeEnum[] = [];
     for (const { roles } of teacher.disciplineTeachers) {
       disciplineTypes.push(
-        ...extractField(extractField(roles, 'disciplineType'), 'name') as DisciplineTypeEnum[]);
+        ...roles.map(({ disciplineType }) => disciplineType?.name) as DisciplineTypeEnum[]);
     }
 
     return makeUnique(disciplineTypes);
@@ -291,7 +292,7 @@ export class TeacherService {
     if (data) {
       this.checkQueryDate(data);
     }
-    const marks = [];
+    const marks: MarkResponse[] = [];
     const questions = await this.pollService.getQuestionWithMarks(teacherId, data);
     for (const question of questions) {
       if (question.questionAnswers.length === 0) continue;
@@ -312,16 +313,19 @@ export class TeacherService {
     return parseFloat(((marksSum / divider) * 100).toFixed(2));
   }
 
-  static getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestion): number | MarkArray {
-    if (display === QuestionDisplay.RADAR || display === QuestionDisplay.CIRCLE) {
-      return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
-    } else if (display === QuestionDisplay.AMOUNT) {
+  // Only SCALE/TOGGLE questions reach this: both callers filter on `type`, and
+  // QuestionDisplay.TEXT belongs to TEXT questions. AMOUNT is the only display
+  // that answers with a table — every other one is a single numeric mark.
+  static getRightMarkFormat ({ display, type, questionAnswers: answers }: DbQuestionMark): number | MarkArray {
+    if (display === QuestionDisplay.AMOUNT) {
       const table = {};
       for (let i = 1; i <= 10; i++) {
         table[i] = answers.filter((a) => +a.value === i).length;
       }
       return table as MarkArray;
     }
+
+    return this.parseMark(type as QuestionType, answers.reduce((acc, answer) => acc + (+answer.value), 0), answers.length);
   }
 
   checkQueryDate ({ semester, year }: QueryMarksDTO) {
@@ -368,19 +372,19 @@ export class TeacherService {
     const contacts = await this.contactRepository.findMany({ entityId: teacherId });
 
     return {
-      ...this.mapper.map(dbTeacher, DbTeacher, TeacherWithRolesAndCathedrasResponse),
+      ...this.mapper.map(dbTeacher, DbTeacherWithRoles, TeacherWithRolesAndCathedrasResponse),
       subject: this.mapper.map(subject, DbSubject, SubjectResponse),
       disciplineTypes,
       contacts,
     };
   }
 
-  private getRolesBySubject (disciplineTeachers: DbDisciplineTeacher[], subjectId: string): DisciplineTypeEnum[] {
+  private getRolesBySubject (disciplineTeachers: DbDisciplineTeacherWithDisciplineAndRoles[], subjectId: string): DisciplineTypeEnum[] {
     const disciplineTypes = new Set<DisciplineTypeEnum>();
     for (const disciplineTeacher of disciplineTeachers) {
       if (disciplineTeacher.discipline.subjectId === subjectId) {
         for (const { disciplineType } of disciplineTeacher.roles) {
-          disciplineTypes.add(disciplineType.name as DisciplineTypeEnum);
+          disciplineTypes.add(disciplineType?.name as DisciplineTypeEnum);
         }
       }
     }

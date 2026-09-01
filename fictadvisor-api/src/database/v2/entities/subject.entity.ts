@@ -1,4 +1,3 @@
-import { DbDiscipline } from './discipline.entity';
 import { AutoMap } from '@automapper/classes';
 
 export class DbSubject {
@@ -7,9 +6,6 @@ export class DbSubject {
 
   @AutoMap()
     name: string;
-
-  @AutoMap(() => [DbDiscipline])
-    disciplines?: DbDiscipline[];
 
   createdAt: Date | null;
   updatedAt: Date | null;

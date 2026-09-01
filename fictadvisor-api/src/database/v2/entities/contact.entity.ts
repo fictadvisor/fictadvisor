@@ -12,7 +12,7 @@ export class DbContact {
     displayName: string;
 
   @AutoMap()
-    link: string | null;
+    link: string;
 
   @AutoMap(() => String)
     entityType: EntityType;

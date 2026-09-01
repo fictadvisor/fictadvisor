@@ -2,7 +2,7 @@ import process from 'process';
 
 export default () => ({
   logLevel: process.env.LOG_LEVEL ?? 'info',
-  port: parseInt(process.env.PORT) || 3000,
+  port: parseInt(process.env.PORT ?? '') || 3000,
   baseUrl: process.env.BASE_URL,
   frontBaseUrl: process.env.FRONT_BASE_URL,
   security: {
@@ -14,7 +14,7 @@ export default () => ({
   },
   email: {
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT),
+    port: parseInt(process.env.SMTP_PORT ?? ''),
     username: process.env.SMTP_USERNAME,
     password: process.env.SMTP_PASSWORD,
   },

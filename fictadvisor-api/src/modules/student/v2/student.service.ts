@@ -23,6 +23,7 @@ import { CaptainCanNotLeaveException } from '../../../common/exceptions/captain-
 import { NotBelongException } from '../../../common/exceptions/not-belong.exception';
 import { ExcessiveSelectiveDisciplinesException } from '../../../common/exceptions/excessive-selective-disciplines.exception';
 import { AlreadySelectedException } from '../../../common/exceptions/already-selected.exception';
+import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-required.exception';
 import { RoleName, SelectiveDiscipline, State } from '@prisma-client/fictadvisor';
 import { DbStudent } from '../../../database/v2/entities/student.entity';
 
@@ -62,10 +63,10 @@ export class StudentService {
   }
 
   private StudentSearching = {
-    fullName: (search: string) => (DatabaseUtils.getSearch({ search }, 'lastName', 'firstName', 'middleName')),
-    states: (states: string[]) => DatabaseUtils.getSearchByArray(states, 'state'),
-    groups: (groups: string[]) => ({ group: DatabaseUtils.getSearchByArray(groups, 'id') }),
-    roles: (roles: string[]) => ({ roles: { some: { role: DatabaseUtils.getSearchByArray(roles, 'name') } } }),
+    fullName: (search?: string) => (DatabaseUtils.getSearch({ search }, 'lastName', 'firstName', 'middleName')),
+    states: (states?: string[]) => DatabaseUtils.getSearchByArray(states, 'state'),
+    groups: (groups?: string[]) => ({ group: DatabaseUtils.getSearchByArray(groups, 'id') }),
+    roles: (roles?: string[]) => ({ roles: { some: { role: DatabaseUtils.getSearchByArray(roles, 'name') } } }),
   };
 
   async createStudent (body: CreateStudentWithRolesDTO) {
@@ -105,8 +106,16 @@ export class StudentService {
     const oldRoleName = role?.role.name ?? GroupRoles.STUDENT;
     const { roleName = oldRoleName, groupId, ...fullName } = body;
 
-    const changeGroup = groupId !== student.groupId ? this.changeGroup(groupId, userId, oldRoleName) : {};
-    const roles = await this.getSwitchRoles(userId, roleName, groupId ?? student.groupId);
+    // Only an actual move clears the student's selectives — a body without
+    // `groupId` leaves them in their current group.
+    const changeGroup = groupId && groupId !== student.groupId
+      ? this.changeGroup(groupId, userId, oldRoleName)
+      : {};
+
+    const newGroupId = groupId ?? student.groupId;
+    if (!newGroupId) throw new ObjectIsRequiredException('group');
+
+    const roles = await this.getSwitchRoles(userId, roleName, newGroupId);
 
     return this.studentRepository.updateById(userId, {
       ...fullName,
@@ -173,6 +182,8 @@ export class StudentService {
 
   async updateStudentSelectives (userId: string, body: UpdateStudentSelectivesDTO) {
     const student = await this.studentRepository.findOne({ userId });
+    if (!student.groupId) throw new ObjectIsRequiredException('group');
+
     const { connectedSelectives = [], disconnectedSelectives = [] } = body;
     const selectiveDisciplines = student.selectiveDisciplines
       .map((discipline) => discipline.discipline) as any as DbDiscipline[];
@@ -225,7 +236,7 @@ export class StudentService {
       const disconnectedAmount = this.getAmount(disconnectedSelectives, uniqueSemester);
       const studentAmount = this.getAmount(studentSelectives, uniqueSemester);
       const { amount } = group.selectiveAmounts
-        .find(({ year, semester }) => uniqueSemester.year === year && uniqueSemester.semester === semester);
+        .find(({ year, semester }) => uniqueSemester.year === year && uniqueSemester.semester === semester)!;
 
       if (amount < connectedAmount + studentAmount - disconnectedAmount) {
         throw new ExcessiveSelectiveDisciplinesException();

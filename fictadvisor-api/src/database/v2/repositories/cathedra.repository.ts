@@ -13,5 +13,8 @@ export class CathedraRepository extends PrismaRepository<'cathedra', DbCathedra>
         },
       },
     });
+    prisma.grant.findUnique({
+      where: { id: '' },
+    });
   }
 }

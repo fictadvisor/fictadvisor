@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { VerifyStudentDTO } from './types/verify-student.dto';
 import { VerifyCaptainDTO } from './types/verify-captain.dto';
@@ -21,7 +21,12 @@ export class TelegramAPI {
     this.client.interceptors.response.use(
       (res) => res,
       (error: AxiosError) => {
-        throw new HttpException(error.response.statusText, error.response.status);
+        // A network-level failure (refused, timeout, DNS) carries no `response`.
+        const { status, statusText } = error.response ?? {};
+        throw new HttpException(
+          statusText ?? error.message,
+          status ?? HttpStatus.BAD_GATEWAY,
+        );
       },
     );
   }

@@ -15,7 +15,7 @@ import { DateUtils } from '../../date/date.utils';
 import { every, everyAsync, find, some } from '../../../common/utils/array.utils';
 import { UserService } from '../../user/v2/user.service';
 import { DbEvent } from '../../../database/v2/entities/event.entity';
-import { DbDiscipline } from '../../../database/v2/entities/discipline.entity';
+import { DbBaseDiscipline, DbDiscipline } from '../../../database/v2/entities/discipline.entity';
 import { DbDisciplineType } from '../../../database/v2/entities/discipline-type.entity';
 import { EventRepository } from '../../../database/v2/repositories/event.repository';
 import { DisciplineRepository } from '../../../database/v2/repositories/discipline.repository';
@@ -29,7 +29,7 @@ import { NoPermissionException } from '../../../common/exceptions/no-permission.
 import { GroupRepository } from '../../../database/v2/repositories/group.repository';
 import { GeneralParser } from '../../parser/v2/general-parser';
 import { Cron } from '@nestjs/schedule';
-import { DbDisciplineTeacher } from '../../../database/v2/entities/discipline-teacher.entity';
+import { DbDisciplineTeacherWithRoles } from '../../../database/v2/entities/discipline-teacher.entity';
 import { ScheduleHelperService } from './schedule.helper-service';
 
 export const weeksPerEvent = {
@@ -201,8 +201,10 @@ export class ScheduleService {
   ): Promise<{ event: DbEvent; discipline: DbDiscipline }> {
     const { event, discipline, index } = await this.getEventInfos(id, week);
     if (index !== undefined) {
-      event.eventInfo[0] =
-        event.eventInfo.find((info) => info.number === index) ?? null;
+      const eventInfo = event.eventInfo.find((info) => info.number === index);
+      if (eventInfo) {
+        event.eventInfo[0] = eventInfo;
+      }
     }
     return { event, discipline };
   }
@@ -247,7 +249,7 @@ export class ScheduleService {
       });
     }
 
-    const { id } = find(discipline.disciplineTypes, 'name', data.eventType);
+    const { id } = find(discipline.disciplineTypes, 'name', data.eventType)!;
 
     for (const teacherId of data.teacherIds) {
       const teacher = { teacherId, disciplineId: discipline.id };
@@ -256,10 +258,8 @@ export class ScheduleService {
         (await this.disciplineTeacherRepository.create(teacher));
 
       if (
-        !some(
-          disciplineTeacher.roles.map(({ disciplineType }) => disciplineType),
-          'name',
-          data.eventType,
+        !disciplineTeacher.roles.some(
+          ({ disciplineType }) => disciplineType?.name === data.eventType,
         )
       ) {
         await this.disciplineTeacherRoleRepository.create({
@@ -286,7 +286,7 @@ export class ScheduleService {
 
   private async teacherHasDiscipline (
     teacherId: string,
-    disciplineId: string,
+    disciplineId?: string,
   ): Promise<boolean> {
     const disciplineTeacher = await this.disciplineTeacherRepository.findMany({
       teacherId,
@@ -297,7 +297,7 @@ export class ScheduleService {
 
   private async teachersHaveDiscipline (
     teacherIds: string[],
-    disciplineId: string,
+    disciplineId?: string,
   ): Promise<boolean> {
     return everyAsync(teacherIds, (id) =>
       this.teacherHasDiscipline(id, disciplineId),
@@ -362,7 +362,7 @@ export class ScheduleService {
     const currentSemester = await this.dateService.getCurrentSemester();
     await this.checkEventDates(body.startTime, body.endTime, currentSemester);
 
-    const eventInfo = [];
+    const eventInfo: { number: number; description: string }[] = [];
     if (body.eventInfo) {
       eventInfo.push({ number: 0, description: body.eventInfo });
     }
@@ -450,7 +450,7 @@ export class ScheduleService {
 
     if (userId) {
       const user = await this.userService.getUser(userId);
-      if (user.group.id !== groupId) {
+      if (user!.group.id !== groupId) {
         return await this.getGeneralGroupEvents(groupId, week);
       }
     }
@@ -473,7 +473,7 @@ export class ScheduleService {
     userId: string,
     events: DbEvent[],
   ): Promise<DbEvent[]> {
-    const disciplines = await this.disciplineRepository.findMany({
+    const disciplines = await this.disciplineRepository.findMany<DbBaseDiscipline>({
       groupId: groupId,
       OR: [
         {
@@ -500,14 +500,14 @@ export class ScheduleService {
     });
 
     return events.filter((event) => {
-      const disciplineId = event.lessons[0]?.disciplineType.disciplineId;
+      const disciplineId = event.lessons[0]?.disciplineType?.disciplineId;
       if (!disciplineId) return true;
       return some(disciplines, 'id', disciplineId);
     });
   }
 
   private async removeDisciplineTeachers (
-    disciplineTeachers: DbDisciplineTeacher[],
+    disciplineTeachers: DbDisciplineTeacherWithRoles[],
     disciplineTypeId: string,
   ): Promise<void> {
     for (const { id, roles } of disciplineTeachers) {
@@ -523,28 +523,29 @@ export class ScheduleService {
     const event = await this.eventRepository.deleteById(id);
     const lesson = event.lessons[0];
 
-    if (lesson) {
+    if (lesson?.disciplineType) {
+      const { disciplineType } = lesson;
       const target = await this.eventRepository.findOne({
         lessons: {
           some: {
-            disciplineTypeId: lesson.disciplineTypeId,
+            disciplineTypeId: disciplineType.id,
           },
         },
       });
 
       const discipline = await this.disciplineRepository.findOne({
-        id: lesson.disciplineType.disciplineId,
+        id: disciplineType.disciplineId,
       });
 
       if (!target) {
         await this.removeDisciplineTeachers(
           discipline.disciplineTeachers,
-          lesson.disciplineTypeId,
+          disciplineType.id,
         );
         await this.disciplineRepository.updateById(discipline.id, {
           disciplineTypes: {
             delete: {
-              id: lesson.disciplineTypeId,
+              id: disciplineType.id,
             },
           },
         });
@@ -598,7 +599,7 @@ export class ScheduleService {
   private async deleteEventInfo (
     eventId: string,
     index: number,
-  ): Promise<DbEvent> {
+  ): Promise<DbEvent | undefined> {
     const hasEventInfo = await this.checkEventInfo(eventId, index);
     if (hasEventInfo) {
       return this.eventRepository.updateById(eventId, {
@@ -669,7 +670,7 @@ export class ScheduleService {
 
     const discipline = await this.updateDiscipline(
       disciplineId,
-      lesson?.disciplineType.disciplineId,
+      lesson?.disciplineType?.disciplineId,
       eventType,
       lesson?.disciplineType,
       disciplineInfo,
@@ -685,8 +686,8 @@ export class ScheduleService {
           disciplineTypeId: find(
             discipline.disciplineTypes,
             'name',
-            eventType ?? lesson.disciplineType.name,
-          ).id,
+            eventType ?? lesson.disciplineType?.name,
+          )!.id,
         },
       },
     });
@@ -696,24 +697,24 @@ export class ScheduleService {
     newDisciplineId?: string,
     presentDisciplineId?: string,
     newEventType?: EventTypeEnum,
-    presentDisciplineType?: DbDisciplineType,
+    presentDisciplineType?: DbDisciplineType | null,
     disciplineInfo?: string,
     teachers: string[] = [],
   ): Promise<DbDiscipline> {
-    if (presentDisciplineId) {
+    if (presentDisciplineId && presentDisciplineType) {
       await this.clearDiscipline(presentDisciplineId, presentDisciplineType);
     }
 
     await this.prepareDiscipline(
-      newDisciplineId ?? presentDisciplineId,
+      (newDisciplineId ?? presentDisciplineId)!,
       newEventType ??
-        (presentDisciplineType.name as unknown as EventTypeEnum) ??
+        (presentDisciplineType?.name as unknown as EventTypeEnum) ??
         EventTypeEnum.OTHER,
       teachers,
     );
 
     return this.disciplineRepository.updateById(
-      newDisciplineId ?? presentDisciplineId,
+      (newDisciplineId ?? presentDisciplineId)!,
       {
         description: disciplineInfo,
       },
@@ -757,7 +758,7 @@ export class ScheduleService {
         disciplineId,
         roles,
       } of discipline.disciplineTeachers) {
-        if (roles.length === 1 && roles[0].disciplineType.name === type.name) {
+        if (roles.length === 1 && roles[0].disciplineType?.name === type.name) {
           update.disciplineTeachers.deleteMany.OR.push({
             teacherId,
             disciplineId,
@@ -787,7 +788,7 @@ export class ScheduleService {
           },
         },
       });
-      disciplineType = find(discipline.disciplineTypes, 'name', newType);
+      disciplineType = find(discipline.disciplineTypes, 'name', newType)!;
     }
 
     await this.disciplineRepository.updateById(disciplineId, {
@@ -817,10 +818,8 @@ export class ScheduleService {
         (await this.disciplineTeacherRepository.create(teacher));
 
       if (
-        !some(
-          disciplineTeacher.roles.map(({ disciplineType }) => disciplineType),
-          'id',
-          disciplineType.id,
+        !disciplineTeacher.roles.some(
+          ({ disciplineType: role }) => role?.id === disciplineType.id,
         )
       ) {
         await this.disciplineTeacherRoleRepository.create({
@@ -857,7 +856,7 @@ export class ScheduleService {
 
   async getGroupEventsForTelegram (
     groupId: string,
-    week: number,
+    week?: number,
     userId?: string,
     query?: EventFiltrationDTO,
   ): Promise<DbEvent[]> {

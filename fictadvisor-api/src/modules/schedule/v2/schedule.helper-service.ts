@@ -51,8 +51,8 @@ export class ScheduleHelperService {
     { startTime, endTime, ...events }: DbEvent,
     startOfSemester?: Date,
   ) {
-    startTime = this.addTimezone(startOfSemester, startTime);
-    endTime = this.addTimezone(startOfSemester, endTime);
+    startTime = this.addTimezone(startOfSemester!, startTime);
+    endTime = this.addTimezone(startOfSemester!, endTime);
 
     return { startTime, endTime, ...events };
   }
@@ -82,13 +82,13 @@ export class ScheduleHelperService {
 
   eventTypeFilter (
     event: DbEvent,
-    addLecture: boolean,
-    addLaboratory: boolean,
-    addPractice: boolean,
+    addLecture?: boolean,
+    addLaboratory?: boolean,
+    addPractice?: boolean,
     addOtherEvents?: boolean,
   ): boolean {
     if (!event.lessons.length) return !!addOtherEvents;
-    const typeFilter: Record<DisciplineTypeEnum, boolean> = {
+    const typeFilter: Record<DisciplineTypeEnum, boolean | undefined> = {
       [DisciplineTypeEnum.LECTURE]: addLecture,
       [DisciplineTypeEnum.PRACTICE]: addPractice,
       [DisciplineTypeEnum.LABORATORY]: addLaboratory,
@@ -97,7 +97,7 @@ export class ScheduleHelperService {
       [DisciplineTypeEnum.WORKOUT]: addOtherEvents,
     };
     return event.lessons.some(
-      (lesson) => typeFilter[lesson.disciplineType.name],
+      (lesson) => !!lesson.disciplineType && !!typeFilter[lesson.disciplineType.name],
     );
   }
 

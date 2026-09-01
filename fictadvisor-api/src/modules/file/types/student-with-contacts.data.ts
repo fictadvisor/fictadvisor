@@ -1,9 +1,9 @@
 import { Contact } from '@prisma-client/fictadvisor';
 
 export class StudentWithContactsData {
-  lastName: string;
-  firstName: string;
-  middleName: string;
+  lastName: string | null;
+  firstName: string | null;
+  middleName: string | null;
   email: string;
   contacts: Contact[];
 }

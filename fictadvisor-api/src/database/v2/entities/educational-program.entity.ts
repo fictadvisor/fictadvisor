@@ -1,14 +1,11 @@
 import { EducationProgram } from '@fictadvisor/utils/enums';
-import { DbSpeciality } from './speciality.entity';
-import { DbGroup } from './group.entity';
+import { DbBaseSpeciality } from './speciality.entity';
+import { DbBaseGroup } from './group.entity';
 import { AutoMap } from '@automapper/classes';
 
-export class DbEducationalProgram {
+export class DbBaseEducationalProgram {
   @AutoMap()
     id: string;
-
-  @AutoMap(() => DbSpeciality)
-    speciality?: DbSpeciality;
 
   @AutoMap()
     specialityId: string;
@@ -18,7 +15,16 @@ export class DbEducationalProgram {
 
   @AutoMap(() => String)
     abbreviation: EducationProgram;
+}
 
-  @AutoMap(() => [DbGroup])
-    groups?: DbGroup[];
+/** GroupRepository, StudentRepository: `educationalProgram: { speciality: true }` */
+export class DbEducationalProgramWithSpeciality extends DbBaseEducationalProgram {
+  @AutoMap(() => DbBaseSpeciality)
+    speciality: DbBaseSpeciality;
+}
+
+/** EduProgramRepository */
+export class DbEducationalProgram extends DbEducationalProgramWithSpeciality {
+  @AutoMap(() => [DbBaseGroup])
+    groups: DbBaseGroup[];
 }

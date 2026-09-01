@@ -100,7 +100,7 @@ export class RozParser implements Parser {
 
     const dom = new (loadJSDOM())(response.data);
     const form = dom.window.document.querySelector(SCHEDULE_SELECTION_FORM_SELECTOR);
-    return form.getAttribute('action').split('?g=')[1];
+    return form!.getAttribute('action')!.split('?g=')[1];
   }
 
   private async parseWeek (
@@ -123,7 +123,7 @@ export class RozParser implements Parser {
         if (td.innerHTML === '' || td.innerHTML === undefined) continue;
 
         const dayNumber = (j - 1) as ScheduleDayNumber;
-        const pairType = td.lastChild.textContent.split(' ')[1] as keyof typeof ROZ_PARSER_DISCIPLINE_TYPE;
+        const pairType = td.lastChild!.textContent!.split(' ')[1] as keyof typeof ROZ_PARSER_DISCIPLINE_TYPE;
         const span = td.childNodes[0];
 
         const tableCellPairs: ParsedSchedulePair[] = [];
@@ -234,7 +234,7 @@ export class RozParser implements Parser {
         );
 
       tableCellPairs.push({
-        name: childNode.textContent,
+        name: childNode.textContent!,
         isRecurring: false,
         startTime,
         endTime,
