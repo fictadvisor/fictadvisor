@@ -9,7 +9,9 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "generate": {},
+    "generate": {
+      "cache": false
+    },
     "migrate:test": {},
     "test:seed": {},
     "test:unit": {
