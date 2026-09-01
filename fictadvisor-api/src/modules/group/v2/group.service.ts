@@ -241,10 +241,15 @@ export class GroupService {
   }
 
   async getSelectiveDisciplines (groupId: string): Promise<DbDiscipline[]> {
-    return this.disciplineRepository.findMany({
-      groupId,
-      isSelective: true,
-    });
+    return this.disciplineRepository.findMany(
+      {
+        groupId,
+        isSelective: true,
+      },
+      undefined,
+      undefined,
+      [{ year: 'asc' }, { semester: 'asc' }],
+    );
   }
 
   getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesWithAmountResponse[] {

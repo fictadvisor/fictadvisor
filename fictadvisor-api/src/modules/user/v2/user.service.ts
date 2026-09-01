@@ -554,13 +554,18 @@ export class UserService {
   }
 
   async getSelectiveDisciplines (userId: string) {
-    return this.disciplineRepository.findMany({
-      selectiveDisciplines: {
-        some: {
-          studentId: userId,
+    return this.disciplineRepository.findMany(
+      {
+        selectiveDisciplines: {
+          some: {
+            studentId: userId,
+          },
         },
       },
-    });
+      undefined,
+      undefined,
+      [{ year: 'asc' }, { semester: 'asc' }],
+    );
   }
 
   getMappedSelectiveDisciplines (disciplines: DbDiscipline[]): SelectiveDisciplinesResponse[] {
