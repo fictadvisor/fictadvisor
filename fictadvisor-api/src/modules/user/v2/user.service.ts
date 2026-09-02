@@ -394,17 +394,18 @@ export class UserService {
     const years = await this.dateService.getYears();
     const missingDisciplines: string[] = [];
     for (const year of years) {
-      const selectivePath = `selective/${year}.csv`;
-
       // A year's selectives are uploaded some time after its semester starts, so
       // the newest year has no file yet every autumn. That is not a reason to
       // refuse the student — approving them used to fail outright with the S3
       // NoSuchKey behind a 500.
-      if (!await this.fileService.checkFileExist(selectivePath)) continue;
+      const selectiveFile = await this.fileService.findFileContent(`selective/${year}.csv`);
+      if (selectiveFile === undefined) continue;
 
-      const selectiveFile = await this.fileService.getFileContent(selectivePath);
-      selectiveFile.replaceAll(';', ',');
-      for (const parsedRow of selectiveFile.split('\n')) {
+      // The files are semicolon-separated. `replaceAll` returns a new string
+      // rather than editing in place, so its result used to be dropped and every
+      // row then split on a comma it did not contain — leaving every field
+      // undefined and quietly importing nothing, for any year.
+      for (const parsedRow of selectiveFile.replaceAll(';', ',').split('\n')) {
         const [, , subjectName, , semester, , , , , studentName] = parsedRow.split(',');
         if (!studentName?.startsWith(name)) continue;
         const discipline = await this.disciplineRepository.findOne({

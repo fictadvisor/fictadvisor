@@ -98,10 +98,27 @@ export class FileService {
   }
 
   async getFileContent (path: string, isPrivate = true, encoding: BufferEncoding = 'utf-8') {
-    const key = this.formatLink(join(isPrivate ? 'private' : 'static', path));
+    const key = this.resolveKey(path, isPrivate);
     const { Body } = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: key }));
 
     return Body!.transformToString(encoding);
+  }
+
+  /** Undefined when the object is absent, rather than an S3 NoSuchKey. */
+  async findFileContent (path: string, isPrivate = true, encoding: BufferEncoding = 'utf-8') {
+    // Resolved here rather than by the caller: `checkFileExist` takes a full key,
+    // while `getFileContent` takes a path it prefixes itself, and mixing the two
+    // up silently reports every file as missing.
+    const key = this.resolveKey(path, isPrivate);
+    if (!await this.checkFileExist(key)) return undefined;
+
+    const { Body } = await this.client.send(new GetObjectCommand({ Bucket: this.bucket, Key: key }));
+
+    return Body!.transformToString(encoding);
+  }
+
+  private resolveKey (path: string, isPrivate: boolean): string {
+    return this.formatLink(join(isPrivate ? 'private' : 'static', path));
   }
 
   private getSignedReadUrl (key: string, expiresInMs: number): Promise<string> {
