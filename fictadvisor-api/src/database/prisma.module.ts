@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { MetricsModule } from '../modules/metrics/metrics.module';
 import { PrismaService } from './v2/prisma.service';
+import { MetricsUserResolver } from './v2/metrics-user-resolver';
 import { DisciplineRepository } from './v2/repositories/discipline.repository';
 import { DisciplineTeacherRepository } from './v2/repositories/discipline-teacher.repository';
 import { TeacherRepository } from './v2/repositories/teacher.repository';
@@ -28,6 +29,7 @@ import { QuestionWithRolesRepository } from './v2/repositories/question-with-rol
   imports: [MetricsModule],
   providers: [
     PrismaService,
+    MetricsUserResolver,
     DisciplineRepository,
     DisciplineTeacherRepository,
     DisciplineTeacherRoleRepository,

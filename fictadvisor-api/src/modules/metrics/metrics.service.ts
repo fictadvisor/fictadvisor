@@ -21,6 +21,21 @@ const VISITOR_RETENTION_MS = VISITOR_WINDOWS[VISITOR_WINDOWS.length - 1].ms;
 const MAX_TRACKED = 5000;
 const UNKNOWN_COUNTRY = 'unknown';
 
+// Label values for the per-user breakdown when the user's group is known to be
+// absent (the account has no student profile or no group) vs. not resolved yet
+// (no resolver wired, DB unreachable, or the account no longer exists).
+const NO_GROUP = 'no group';
+const UNKNOWN_GROUP = 'unknown';
+
+// How long a resolved identity (display name + group) is trusted before it is
+// looked up again, so a renamed user or a group transfer eventually shows up
+// without re-querying on every scrape.
+const IDENTITY_TTL_MS = 6 * 60 * 60 * 1000;
+
+// Upper bound on identities resolved in one round trip; the rest are picked up
+// by the following scrapes.
+const MAX_RESOLVE_BATCH = 500;
+
 // A distinct visitor is either an authenticated user (counted by user id, so
 // they count once across devices/IPs) or an anonymous client (counted by IP).
 type VisitorKind = 'user' | 'anon';
@@ -34,8 +49,26 @@ interface VisitorHit {
 interface UserHit {
   count: number;
   lastSeen: number;
-  username: string;
+  // What the `user` label shows: the username (or email) looked up in the
+  // database, falling back to the JWT username and finally to the raw user id.
+  label: string;
+  group: string;
+  // Epoch ms of the last database lookup; 0 means never resolved.
+  resolvedAt: number;
 }
+
+// Identity of a tracked user as seen by the database. `label` is the username
+// or, when the account has none, the email; `group` is the group code, absent
+// when the user isn't in a group.
+export interface UserIdentity {
+  label?: string;
+  group?: string;
+}
+
+// Resolves display identities for a batch of user ids. Injected from the
+// database side (see MetricsUserResolver) so this service — which is imported
+// by PrismaModule — stays free of any dependency on Prisma.
+export type UserIdentityResolver = (userIds: string[]) => Promise<Map<string, UserIdentity>>;
 
 // Internal / infrastructure traffic (Docker bridge, loopback, private LAN) is
 // not a real visitor and must never appear in the visitor metrics — otherwise
@@ -81,9 +114,14 @@ export class MetricsService {
   // retention sweep in the gauge's collect() hook.
   private readonly visitorHits = new Map<string, VisitorHit>();
 
-  // User id -> request count / last-seen / username, for the per-user breakdown
-  // table. Same bounds as visitorHits.
+  // User id -> request count / last-seen / display identity, for the per-user
+  // breakdown table. Same bounds as visitorHits.
   private readonly userHits = new Map<string, UserHit>();
+
+  // Set once at startup by the database side; absent in contexts that don't
+  // wire it up (unit tests), where the JWT username is used as-is.
+  private resolveIdentities?: UserIdentityResolver;
+  private resolving = false;
 
   constructor () {
     this.registry.setDefaultLabels({ app: 'fictadvisor-api' });
@@ -186,11 +224,12 @@ export class MetricsService {
     });
 
     // Per-user request counts for authenticated visitors within the retention
-    // window, labelled with the username. Same re-emit/prune scheme as above.
+    // window, labelled with the username (or email) and the user's group. Same
+    // re-emit/prune scheme as above.
     this.userRequests = new Gauge({
       name: 'http_user_requests',
-      help: 'Requests per authenticated user within the retention window, labelled by username',
-      labelNames: ['user'],
+      help: 'Requests per authenticated user within the retention window, labelled by username and group',
+      labelNames: ['user', 'group'],
       registers: [this.registry],
       collect: () => {
         const now = Date.now();
@@ -200,8 +239,12 @@ export class MetricsService {
             this.userHits.delete(id);
             continue;
           }
-          this.userRequests.set({ user: hit.username }, hit.count);
+          this.userRequests.set({ user: hit.label, group: hit.group }, hit.count);
         }
+        // Deliberately not awaited: a scrape must never wait on (or fail
+        // because of) the database. Newly seen users are exposed under their
+        // JWT username for one scrape and get their real label a scrape later.
+        void this.refreshIdentities();
       },
     });
   }
@@ -220,12 +263,15 @@ export class MetricsService {
       if (existing) {
         existing.count += 1;
         existing.lastSeen = now;
-        if (visitor.username) existing.username = visitor.username;
+        // The database label wins once resolved; until then keep the JWT one.
+        if (visitor.username && !existing.resolvedAt) existing.label = visitor.username;
       } else if (this.userHits.size < MAX_TRACKED) {
         this.userHits.set(visitor.userId, {
           count: 1,
           lastSeen: now,
-          username: visitor.username || visitor.userId,
+          label: visitor.username || visitor.userId,
+          group: UNKNOWN_GROUP,
+          resolvedAt: 0,
         });
       }
       return;
@@ -245,6 +291,47 @@ export class MetricsService {
         lastSeen: now,
         country: geoip.lookup(ip)?.country || UNKNOWN_COUNTRY,
       });
+    }
+  }
+
+  setIdentityResolver (resolver: UserIdentityResolver): void {
+    this.resolveIdentities = resolver;
+  }
+
+  // Fills in the display label and group of tracked users from the database,
+  // for the ones never resolved or resolved longer than IDENTITY_TTL_MS ago.
+  // One batched query per scrape at most, and only while there is something to
+  // resolve, so the steady state costs nothing.
+  private async refreshIdentities (): Promise<void> {
+    if (this.resolving || !this.resolveIdentities) return;
+
+    const now = Date.now();
+    const stale: string[] = [];
+    for (const [id, hit] of this.userHits) {
+      if (now - hit.resolvedAt <= IDENTITY_TTL_MS) continue;
+      stale.push(id);
+      if (stale.length >= MAX_RESOLVE_BATCH) break;
+    }
+    if (!stale.length) return;
+
+    this.resolving = true;
+    try {
+      const identities = await this.resolveIdentities(stale);
+      for (const id of stale) {
+        const hit = this.userHits.get(id);
+        if (!hit) continue;
+        const identity = identities.get(id);
+        // Stamped either way: an id with no row behind it (deleted account)
+        // must not be re-queried on every single scrape.
+        hit.resolvedAt = Date.now();
+        if (identity?.label) hit.label = identity.label;
+        hit.group = identity ? identity.group || NO_GROUP : UNKNOWN_GROUP;
+      }
+    } catch {
+      // Database unavailable: keep the JWT-derived labels and try again on the
+      // next scrape.
+    } finally {
+      this.resolving = false;
     }
   }
 
