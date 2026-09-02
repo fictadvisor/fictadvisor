@@ -756,11 +756,11 @@
     },
     {
       "type": "timeseries",
-      "title": "Unique visitors (users + anon IPs)",
-      "description": "Distinct visitors seen within each rolling window: logged-in users (deduplicated by user id) plus anonymous clients (by IP). The windows are fixed server-side (5m / 1h / 24h) and do not follow the dashboard time range.",
+      "title": "Unique visitors (last 5m)",
+      "description": "Distinct visitors seen within the last 5m rolling window, and how many of them were logged in. Logged-in users are deduplicated by user id (so one user counts once across devices), anonymous ones by IP. The window is fixed server-side and does not follow the dashboard time range.",
       "gridPos": {
         "h": 8,
-        "w": 16,
+        "w": 8,
         "x": 0,
         "y": 64
       },
@@ -774,6 +774,16 @@
         },
         "overrides": []
       },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
       "targets": [
         {
           "refId": "A",
@@ -782,7 +792,7 @@
             "uid": "prometheus"
           },
           "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"5m\"})",
-          "legendFormat": "last 5m"
+          "legendFormat": "total"
         },
         {
           "refId": "B",
@@ -790,23 +800,66 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\"})",
-          "legendFormat": "last 1h"
-        },
-        {
-          "refId": "C",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"})",
-          "legendFormat": "last 24h"
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"5m\",kind=\"user\"})",
+          "legendFormat": "logged in"
         }
       ]
     },
     {
-      "type": "stat",
-      "title": "Unique visitors (24h)",
+      "type": "timeseries",
+      "title": "Unique visitors (last 1h)",
+      "description": "Distinct visitors seen within the last 1h rolling window, and how many of them were logged in. Logged-in users are deduplicated by user id (so one user counts once across devices), anonymous ones by IP. The window is fixed server-side and does not follow the dashboard time range.",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 64
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\"})",
+          "legendFormat": "total"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"1h\",kind=\"user\"})",
+          "legendFormat": "logged in"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Unique visitors (last 24h)",
+      "description": "Distinct visitors seen within the last 24h rolling window, and how many of them were logged in. Logged-in users are deduplicated by user id (so one user counts once across devices), anonymous ones by IP. The window is fixed server-side and does not follow the dashboard time range.",
       "gridPos": {
         "h": 8,
         "w": 8,
@@ -823,6 +876,16 @@
         },
         "overrides": []
       },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
       "targets": [
         {
           "refId": "A",
@@ -830,14 +893,24 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"})"
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\"})",
+          "legendFormat": "total"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(http_unique_visitors{job=\"fictadvisor-api-dev\",window=\"24h\",kind=\"user\"})",
+          "legendFormat": "logged in"
         }
       ]
     },
     {
       "type": "table",
       "title": "Requests by user (last 24h)",
-      "description": "Requests per logged-in user in the last 24h, identified by a signature-verified JWT (deduplicated across devices/IPs). Bounded to 5000 users. Anonymous traffic appears in the IP table below.",
+      "description": "Requests per logged-in user in the last 24h, identified by a signature-verified JWT (deduplicated across devices/IPs). The user column shows the username, or the email for accounts that never set one; the group column shows the user's group, or \"no group\" when they aren't in one. Bounded to 5000 users. Anonymous traffic appears in the IP table below.",
       "gridPos": {
         "h": 10,
         "w": 24,
@@ -894,11 +967,13 @@
             },
             "renameByName": {
               "Value": "requests",
-              "user": "user"
+              "user": "user",
+              "group": "group"
             },
             "indexByName": {
               "user": 0,
-              "Value": 1
+              "group": 1,
+              "Value": 2
             }
           }
         }
