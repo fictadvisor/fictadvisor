@@ -165,28 +165,26 @@ export class UserService {
   }
 
   async changeGroupRole (studentId: string, name: RoleName) {
-    const userRole = await this.getGroupRoleDB(studentId);
+    const { groupId } = await this.studentRepository.findOne({ userId: studentId });
+    if (!groupId) throw new ObjectIsRequiredException('group');
 
+    // The target group comes from the student's own row rather than from the
+    // group their current role belongs to: during a move the two disagree, and
+    // trusting the role would hand them a role in the group they just left.
     const { id: roleId } = await this.roleRepository.findOne({
       groupRole: {
-        groupId: userRole.groupId,
+        groupId,
       },
       name,
     });
 
-    await this.studentRepository.updateById(studentId, {
-      roles: {
-        update: {
-          where: {
-            studentId_roleId: {
-              roleId: userRole.id,
-              studentId,
-            },
-          },
-          data: { roleId },
-        },
-      },
-    });
+    const currentRole = await this.getGroupRole(studentId);
+    if (currentRole?.id === roleId) return;
+
+    if (currentRole) {
+      await this.removeRole(studentId, currentRole.id);
+    }
+    await this.giveRole(studentId, roleId);
   }
 
   async changeGroup (studentId: string, groupId: string) {

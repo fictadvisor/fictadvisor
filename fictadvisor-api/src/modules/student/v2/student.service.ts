@@ -106,14 +106,24 @@ export class StudentService {
     const oldRoleName = role?.role.name ?? GroupRoles.STUDENT;
     const { roleName = oldRoleName, groupId, ...fullName } = body;
 
+    const newGroupId = groupId ?? student.groupId;
+    if (!newGroupId) throw new ObjectIsRequiredException('group');
+
     // Only an actual move clears the student's selectives — a body without
     // `groupId` leaves them in their current group.
     const changeGroup = groupId && groupId !== student.groupId
       ? this.changeGroup(groupId, userId, oldRoleName)
       : {};
 
-    const newGroupId = groupId ?? student.groupId;
-    if (!newGroupId) throw new ObjectIsRequiredException('group');
+    if (roleName === GroupRoles.CAPTAIN) {
+      // `switchCaptain` and the `changeGroupRole` underneath it both resolve the
+      // group from the student's own row, so a move has to be persisted first —
+      // otherwise the student is checked against, and made captain of, the group
+      // they are on their way out of.
+      await this.studentRepository.updateById(userId, { ...fullName, ...changeGroup });
+      await this.groupService.switchCaptain(newGroupId, userId);
+      return this.studentRepository.findOne({ userId });
+    }
 
     const roles = await this.getSwitchRoles(userId, roleName, newGroupId);
 
@@ -140,11 +150,6 @@ export class StudentService {
   }
 
   private async getSwitchRoles (studentId: string, roleName: RoleName, groupId: string) {
-    if (roleName === GroupRoles.CAPTAIN) {
-      await this.groupService.switchCaptain(groupId, studentId);
-      return {};
-    }
-
     const oldGroupRole = await this.roleRepository.findOne({
       name: {
         in: Object.values(GroupRoles),
@@ -160,12 +165,15 @@ export class StudentService {
 
     return {
       roles: {
-        delete: {
-          studentId_roleId: {
-            studentId,
-            roleId: oldGroupRole.id,
+        // A student whose group role went missing still has to get the new one.
+        ...(oldGroupRole && {
+          delete: {
+            studentId_roleId: {
+              studentId,
+              roleId: oldGroupRole.id,
+            },
           },
-        },
+        }),
         create: { roleId },
       },
     };
