@@ -394,7 +394,15 @@ export class UserService {
     const years = await this.dateService.getYears();
     const missingDisciplines: string[] = [];
     for (const year of years) {
-      const selectiveFile = await this.fileService.getFileContent(`selective/${year}.csv`);
+      const selectivePath = `selective/${year}.csv`;
+
+      // A year's selectives are uploaded some time after its semester starts, so
+      // the newest year has no file yet every autumn. That is not a reason to
+      // refuse the student — approving them used to fail outright with the S3
+      // NoSuchKey behind a 500.
+      if (!await this.fileService.checkFileExist(selectivePath)) continue;
+
+      const selectiveFile = await this.fileService.getFileContent(selectivePath);
       selectiveFile.replaceAll(';', ',');
       for (const parsedRow of selectiveFile.split('\n')) {
         const [, , subjectName, , semester, , , , , studentName] = parsedRow.split(',');
