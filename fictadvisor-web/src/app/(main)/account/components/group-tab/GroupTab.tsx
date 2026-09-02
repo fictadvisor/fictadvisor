@@ -24,6 +24,7 @@ import {
 import Popup from '@/components/common/ui/pop-ups/Popup';
 import Progress from '@/components/common/ui/progress';
 import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
+import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import groupAPI from '@/lib/api/group/GroupAPI';
 import GroupService from '@/lib/services/group/GroupService';
 import { Order } from '@/lib/services/group/types/OrderEnum';
@@ -35,6 +36,7 @@ const GroupTab = () => {
   const [order, setOrder] = useState(Order.ascending);
   const { user } = useAuthentication();
   const { refresh } = useRouter();
+  const { displayError } = useToastError();
 
   const groupId = user?.group?.id;
 
@@ -64,10 +66,17 @@ const GroupTab = () => {
   };
 
   const handleGroupLeave = async () => {
-    if (user?.group?.id) {
-      await groupAPI.leaveGroup(user.group.id);
+    try {
+      if (user?.group?.id) {
+        await groupAPI.leaveGroup(user.group.id);
+      }
+      refresh();
+    } catch (error) {
+      // Without this the request failed silently and the popup just sat there.
+      displayError(error);
+    } finally {
+      setLeavePopupOpen(false);
     }
-    refresh();
   };
 
   if (isLoading)
