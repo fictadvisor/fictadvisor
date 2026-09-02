@@ -1,4 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import {
   ApproveDTO,
   CreateGroupDTO,
@@ -31,22 +32,49 @@ import { StudentRepository } from '../../../database/v2/repositories/student.rep
 import { DisciplineRepository } from '../../../database/v2/repositories/discipline.repository';
 import { UserRepository } from '../../../database/v2/repositories/user.repository';
 import { RoleRepository } from '../../../database/v2/repositories/role.repository';
+import { GrantRepository } from '../../../database/v2/repositories/grant.repository';
+import { AlreadyExistException } from '../../../common/exceptions/already-exist.exception';
 import { AlreadyRegisteredException } from '../../../common/exceptions/already-registered.exception';
 import { NoPermissionException } from '../../../common/exceptions/no-permission.exception';
 import { InvalidEntityIdException } from '../../../common/exceptions/invalid-entity-id.exception';
 import { StudentIsAlreadyCaptainException } from '../../../common/exceptions/student-is-already-captain.exception';
 import { NotApprovedException } from '../../../common/exceptions/not-approved.exception';
 import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of-captain.exception';
+import { CaptainCanNotLeaveException } from '../../../common/exceptions/captain-can-not-leave.exception';
 import { AVATARS } from '../../auth/v2/auth.service';
 import { PaginatedData } from '../../../database/types/paginated.data';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { isUniqueViolation } from '../../../common/utils/prisma-error.util';
+import {
+  getAdmissionYearFromCode,
+  getStudyYears,
+  isGraduatedCode,
+  toGraduatedCode,
+  LEVEL_MARKERS,
+  POSTGRADUATE_LEVEL,
+  STUDY_YEARS_BY_LEVEL,
+} from '../../../common/utils/group-code.util';
+
+interface GraduableGroup {
+  code: string;
+  admissionYear: number;
+}
+
+
+const LAST_SEMESTER = 2;
+
+const LEAVE_SUFFIX = '.leave';
+const LEAVE_PERMISSION = `groups.$groupId${LEAVE_SUFFIX}`;
 
 const ROLE_LIST = [
   {
     name: RoleName.CAPTAIN,
     weight: 100,
     grants: {
+      // Denied while the group is still studying: the captain has to hand the
+      // role over first. Reopened for graduated groups by `openLeaveForGraduatedGroups`.
+      [LEAVE_PERMISSION]: { set: false, weight: 2 },
       'groups.$groupId.*': { set: true, weight: 1 },
     },
   },
@@ -82,6 +110,7 @@ export class GroupService {
     private studentRepository: StudentRepository,
     private userRepository: UserRepository,
     private roleRepository: RoleRepository,
+    private grantRepository: GrantRepository,
     private disciplineRepository: DisciplineRepository,
     private dateService: DateService,
     private fileService: FileService,
@@ -89,14 +118,33 @@ export class GroupService {
   ) {}
 
   async create ({ code, eduProgramId, cathedraId, admissionYear }: CreateGroupDTO): Promise<DbGroup>  {
-    const group = await this.groupRepository.create({
+    // Codes are unique in the database, so a duplicate is the caller's mistake and
+    // deserves a 400 rather than the 500 a bare P2002 would surface as.
+    const group = await this.createGroup({
       code,
       cathedraId,
       educationalProgramId: eduProgramId,
-      admissionYear,
+      admissionYear: admissionYear ?? getAdmissionYearFromCode(code),
+    }, () => {
+      throw new AlreadyExistException('Group');
     });
+
     await this.addPermissions(group.id);
     return group;
+  }
+
+  // `onTakenCode` decides what a code collision means to the caller: a mistake
+  // worth rejecting, or a race whose winner should simply be read back.
+  private async createGroup (
+    data: Prisma.GroupUncheckedCreateInput,
+    onTakenCode: () => Promise<DbGroup> | never,
+  ): Promise<DbGroup> {
+    try {
+      return await this.groupRepository.create(data);
+    } catch (error) {
+      if (!isUniqueViolation(error)) throw error;
+      return await onTakenCode();
+    }
   }
 
   async getOrCreate (
@@ -105,16 +153,20 @@ export class GroupService {
   ): Promise<DbGroup>  {
     const group =
       await this.groupRepository.findOne({ code }) ??
-      await this.groupRepository.create({
+      // Two parses running at once both miss the lookup and both insert. The one
+      // that loses the race reads back what the other wrote rather than failing.
+      await this.createGroup({
         code,
         cathedraId,
         educationalProgramId: eduProgramId,
-        admissionYear,
-      });
+        admissionYear: admissionYear ?? getAdmissionYearFromCode(code),
+      }, () => this.groupRepository.findOne({ code }));
 
+    // By id rather than by code: the group we hold is the one that needs its
+    // permissions, whoever created it.
     const permissionsCount = await this.roleRepository.count({
       groupRole: {
-        group: { code },
+        groupId: group.id,
       },
     });
 
@@ -398,12 +450,17 @@ export class GroupService {
       await this.switchModerators(groupId, moderatorIds);
     }
 
-    return this.groupRepository.updateById(groupId, {
-      code,
-      cathedraId,
-      educationalProgramId: eduProgramId,
-      admissionYear,
-    });
+    try {
+      return await this.groupRepository.updateById(groupId, {
+        code,
+        cathedraId,
+        educationalProgramId: eduProgramId,
+        admissionYear,
+      });
+    } catch (error) {
+      if (isUniqueViolation(error)) throw new AlreadyExistException('Group');
+      throw error;
+    }
   }
 
   async getUnverifiedStudents (groupId: string): Promise<DbStudent[]> {
@@ -519,8 +576,12 @@ export class GroupService {
     const student = await this.studentRepository.findOne({ userId: studentId });
     if (student.state !== State.APPROVED) throw new NotApprovedException();
 
-    const captain = await this.getCaptain(groupId);
-    if (captain.id === studentId) throw new NoPermissionException();
+    // `findCaptain`, not `getCaptain`: a group left without a captain must not
+    // trap the rest of its students inside it.
+    const captain = await this.findCaptain(groupId);
+    if (captain?.id === studentId && !(await this.isGraduated(groupId))) {
+      throw new CaptainCanNotLeaveException();
+    }
 
     await this.userService.deleteStudentSelectives(studentId);
 
@@ -534,5 +595,118 @@ export class GroupService {
         }],
       },
     });
+  }
+
+  // The most recent admission year that has already graduated off a programme of
+  // the given length: a group admitted in year A sits its last academic year in
+  // A + studyYears - 1, so it has graduated once that year's second semester is over.
+  private async getGraduatedThroughYear (studyYears: number): Promise<number> {
+    const { year, semester, isFinished } = await this.dateService.getCurrentSemester();
+
+    return semester === LAST_SEMESTER && isFinished
+      ? year - studyYears + 1
+      : year - studyYears;
+  }
+
+  private async hasGraduated ({ code, admissionYear }: GraduableGroup): Promise<boolean> {
+    const studyYears = getStudyYears(code);
+    // Аспіранти and codes the grammar does not recognise never graduate here.
+    if (!studyYears) return false;
+
+    return admissionYear <= await this.getGraduatedThroughYear(studyYears);
+  }
+
+  // Asks the database for the graduated groups directly instead of reading every
+  // past cohort and filtering in memory. Built from the very table `hasGraduated`
+  // reads, so the query cannot drift away from the check it narrows for — and
+  // `hasGraduated` stays the authority, because SQL cannot tell a bachelor code
+  // from one the grammar does not recognise at all.
+  private async getGraduatedGroupsWhere (): Promise<Prisma.GroupWhereInput> {
+    // Bachelors carry no marker, so they are "none of the markers".
+    const matchesLevel = (level: string): Prisma.GroupWhereInput => level
+      ? { code: { contains: level } }
+      : { NOT: { OR: LEVEL_MARKERS.map((marker) => ({ code: { contains: marker } })) } };
+
+    const levelsByYears = new Map<number, string[]>();
+    for (const [level, years] of Object.entries(STUDY_YEARS_BY_LEVEL)) {
+      levelsByYears.set(years, [...levelsByYears.get(years) ?? [], level]);
+    }
+
+    return {
+      // Аспіранти never graduate, so they are never worth looking at.
+      NOT: { code: { contains: POSTGRADUATE_LEVEL } },
+      OR: await Promise.all(
+        [...levelsByYears].map(async ([years, levels]) => ({
+          OR: levels.map(matchesLevel),
+          admissionYear: { lte: await this.getGraduatedThroughYear(years) },
+        })),
+      ),
+    };
+  }
+
+  async isGraduated (groupId: string): Promise<boolean> {
+    return this.hasGraduated(await this.groupRepository.findOne({ id: groupId }));
+  }
+
+  // Graduation is a date, not an event anyone triggers, so everything that has to
+  // happen when a group finishes hangs off one nightly pass. A group graduates
+  // once, so a few hours of lag costs nothing.
+  @Cron('0 30 3 * * *')
+  async handleGraduatedGroups (): Promise<void> {
+    const groups = await this.groupRepository.findMany(await this.getGraduatedGroupsWhere());
+
+    for (const group of groups) {
+      // The query cannot rule out a code the grammar rejects — that is this check.
+      if (!await this.hasGraduated(group)) continue;
+
+      // Independent of each other on purpose: a code that cannot be freed must
+      // still not keep the captain locked in.
+      await this.openLeaveForCaptain(group.id);
+      await this.freeGroupCode(group);
+    }
+  }
+
+  // The captain's `leave` denial is a static grant, so it has to be lifted by hand
+  // once the group it guards is over. Only the captain role carries this exact
+  // permission, and `set: false` makes a second run a no-op.
+  private async openLeaveForCaptain (groupId: string): Promise<void> {
+    await this.grantRepository.update({
+      permission: `groups.${groupId}${LEAVE_SUFFIX}`,
+      set: false,
+    }, {
+      set: true,
+    });
+  }
+
+  // Codes come round every ten years — ІМ-31 is the 2023 cohort and will be the
+  // 2033 one — so a graduated group has to hand its bare code back before the
+  // parser meets the next group wearing it. The admission year is what gets
+  // appended, not the graduation year: it is what the code's own digit encodes.
+  private async freeGroupCode ({ id, code, admissionYear }: DbGroup): Promise<void> {
+    if (isGraduatedCode(code)) return;
+
+    const graduatedCode = toGraduatedCode(code, admissionYear);
+
+    // Merging two cohorts is not this job's call, but staying quiet would be worse
+    // than useless: the bare code is never freed, and the cohort ten years from
+    // now silently attaches itself to this group through `getOrCreate`. Checked
+    // up front for the message, caught as well because the check is not atomic.
+    if (await this.groupRepository.exists({ code: graduatedCode })) {
+      return this.warnCodeTaken(code, graduatedCode);
+    }
+
+    try {
+      await this.groupRepository.updateById(id, { code: graduatedCode });
+    } catch (error) {
+      if (!isUniqueViolation(error)) throw error;
+      this.warnCodeTaken(code, graduatedCode);
+    }
+  }
+
+  private warnCodeTaken (code: string, graduatedCode: string): void {
+    console.warn(
+      `Cannot free group code "${code}": "${graduatedCode}" already exists. ` +
+      'Merge or rename the duplicate, or the next cohort with this code will reuse the old group.',
+    );
   }
 }

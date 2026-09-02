@@ -38,7 +38,7 @@ model User {
 
 model Group {
   id                   String               @id @default(uuid())
-  code                 String
+  code                 String               @unique
   admissionYear        Int                  @default(dbgenerated("EXTRACT(YEAR FROM CURRENT_DATE)")) @map("admission_year")
   students             Student[]
   disciplines          Discipline[]
