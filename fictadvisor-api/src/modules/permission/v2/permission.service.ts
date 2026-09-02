@@ -50,7 +50,13 @@ export class PermissionService {
     grants.push(...role.grants);
 
     if (role.parentId) {
-      const parent = await this.roleRepository.findOne({ id: role.parentId });
+      const parent = await this.roleRepository.findOne({ id: role.parentId }, {
+        grants: {
+          orderBy: {
+            weight: 'desc',
+          },
+        },
+      });
       await this.pushGrantsAndCheckParent(parent, grants);
     }
   }
@@ -64,7 +70,13 @@ export class PermissionService {
   async hasPermissionInRoles (roles: DbRole[], permission: string): Promise<boolean> {
     const grants: Grant[] = [];
 
-    roles.forEach((role) => this.pushGrantsAndCheckParent(role, grants));
+    // Sequential and awaited: `pushGrantsAndCheckParent` walks the parent chain
+    // asynchronously, so firing it off unawaited left inherited grants out of the
+    // array by the time we looked for a match. The first match wins, so the order
+    // is the precedence — each role's own grants before the ones it inherits.
+    for (const role of roles) {
+      await this.pushGrantsAndCheckParent(role, grants);
+    }
 
     const grant = this.findGrantMatchesPermission(permission, grants);
     return !!grant?.set;
