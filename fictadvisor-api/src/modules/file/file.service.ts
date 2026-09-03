@@ -7,6 +7,7 @@ import {
   GetObjectCommand,
   HeadObjectCommand,
   DeleteObjectCommand,
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { find } from '../../common/utils/array.utils';
@@ -14,6 +15,7 @@ import { StudentWithContactsData } from './types/student-with-contacts.data';
 import { MINUTE } from '../date/v2/date.service';
 import { utils, write } from 'xlsx';
 import { MinioConfigService } from '../../config/minio-config.service';
+import { StoredFile } from './types/stored-file.data';
 
 @Injectable()
 export class FileService {
@@ -119,6 +121,55 @@ export class FileService {
 
   private resolveKey (path: string, isPrivate: boolean): string {
     return this.formatLink(join(isPrivate ? 'private' : 'static', path));
+  }
+
+  /** Writes to a path the caller names, rather than to a hash of the content. */
+  async saveContent (
+    path: string,
+    body: Buffer | string,
+    contentType: string,
+    isPrivate = true,
+  ): Promise<void> {
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: this.resolveKey(path, isPrivate),
+      Body: body,
+      ContentType: contentType,
+    }));
+  }
+
+  async deleteByPath (path: string, isPrivate = true): Promise<void> {
+    await this.deleteFile(this.resolveKey(path, isPrivate));
+  }
+
+  /** Every object under a prefix, with the path relative to that prefix. */
+  async listFiles (prefix: string, isPrivate = true): Promise<StoredFile[]> {
+    const base = this.resolveKey(prefix, isPrivate);
+    const files: StoredFile[] = [];
+    let continuationToken: string | undefined;
+
+    do {
+      const page = await this.client.send(new ListObjectsV2Command({
+        Bucket: this.bucket,
+        // A prefix has to end with the separator, otherwise `selective` would
+        // also match a sibling called `selective-archive`.
+        Prefix: base.endsWith('/') ? base : `${base}/`,
+        ContinuationToken: continuationToken,
+      }));
+
+      for (const object of page.Contents ?? []) {
+        if (!object.Key) continue;
+        files.push({
+          name: object.Key.slice(base.replace(/\/+$/, '').length + 1),
+          size: object.Size ?? 0,
+          updatedAt: object.LastModified ?? new Date(0),
+        });
+      }
+
+      continuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
+    } while (continuationToken);
+
+    return files;
   }
 
   private getSignedReadUrl (key: string, expiresInMs: number): Promise<string> {
