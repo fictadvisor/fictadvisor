@@ -1,5 +1,4 @@
 import { TelegramDTO } from '@fictadvisor/utils/requests';
-import * as process from 'process';
 
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
