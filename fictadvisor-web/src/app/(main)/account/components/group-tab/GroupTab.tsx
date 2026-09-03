@@ -4,7 +4,6 @@ import { PERMISSION } from '@fictadvisor/utils/security';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 import NoGroupBlock from '@/app/(main)/account/components/group-tab/components/no-group-block';
 import RequestsTable from '@/app/(main)/account/components/group-tab/components/table/requests-table';
@@ -34,8 +33,7 @@ import * as styles from './GroupTab.styles';
 
 const GroupTab = () => {
   const [order, setOrder] = useState(Order.ascending);
-  const { user } = useAuthentication();
-  const { refresh } = useRouter();
+  const { user, refetchUser } = useAuthentication();
   const { displayError } = useToastError();
 
   const groupId = user?.group?.id;
@@ -70,7 +68,10 @@ const GroupTab = () => {
       if (user?.group?.id) {
         await groupAPI.leaveGroup(user.group.id);
       }
-      refresh();
+      // The roster is drawn from the user's own group state, which lives in a
+      // react-query cache that `router.refresh()` does not touch — so the tab
+      // kept showing the group until the page was reloaded by hand.
+      await refetchUser();
     } catch (error) {
       // Without this the request failed silently and the popup just sat there.
       displayError(error);
