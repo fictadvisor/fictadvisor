@@ -4,6 +4,13 @@ import { PrismaService } from '../../../database/v2/prisma.service';
 import { DataNotFoundException } from '../../../common/exceptions/data-not-found.exception';
 import { DataMissingException } from '../../../common/exceptions/data-missing.exception';
 import { DateTime } from 'luxon';
+import {
+  CreateSemesterDateDTO,
+  UpdatePollDatesDTO,
+  UpdateSemesterDateDTO,
+} from '@fictadvisor/utils/requests';
+import { AlreadyExistException } from '../../../common/exceptions/already-exist.exception';
+import { InvalidDateException } from '../../../common/exceptions/invalid-date.exception';
 import { ScheduleDayNumber } from '../../parser/v2/types/schedule-parser.types';
 
 export const MINUTE = 1000 * 60;
@@ -141,6 +148,127 @@ export class DateService {
     const { semesters, isFinished } = await this.getAllPreviousSemesters();
     if (isFinished === isLastFinished || isFinished) return { semesters };
     return { semesters: semesters.slice(1) };
+  }
+
+  /** Every semester ever configured, including ones that have not started. */
+  async getAllSemesters () {
+    return this.prisma.semesterDate.findMany({
+      orderBy: [
+        { year: 'desc' },
+        { semester: 'desc' },
+      ],
+    });
+  }
+
+  async createSemester (data: CreateSemesterDateDTO) {
+    DateService.checkOrder(data.startDate, data.endDate);
+
+    const { year, semester } = data;
+    if (await this.findSemester({ year, semester })) {
+      throw new AlreadyExistException('Semester');
+    }
+
+    const created = await this.prisma.semesterDate.create({ data });
+    this.currentSemesterCache = null;
+
+    return created;
+  }
+
+  async updateSemester (period: StudyingSemester, data: UpdateSemesterDateDTO) {
+    const semester = await this.getSemester(period);
+
+    DateService.checkOrder(
+      data.startDate ?? semester.startDate,
+      data.endDate ?? semester.endDate,
+    );
+
+    const updated = await this.prisma.semesterDate.update({
+      where: { year_semester: period },
+      data,
+    });
+    // The cached row may be the one that just moved, and a stale copy would
+    // keep the whole API on the wrong semester until the TTL runs out.
+    this.currentSemesterCache = null;
+
+    return updated;
+  }
+
+  async deleteSemester (period: StudyingSemester) {
+    await this.getSemester(period);
+
+    await this.prisma.semesterDate.delete({
+      where: { year_semester: period },
+    });
+    this.currentSemesterCache = null;
+  }
+
+  // The poll of a semester is bounded by two named date variables rather than
+  // by columns of its own, so they are read and written as a pair.
+  static getPollDateNames (period: StudyingSemester) {
+    return {
+      start: `START_POLL_${period.year}_${period.semester}`,
+      end: `END_POLL_${period.year}_${period.semester}`,
+    };
+  }
+
+  async getPollDates () {
+    const semesters = await this.getAllSemesters();
+    const names = semesters.flatMap((period) => {
+      const { start, end } = DateService.getPollDateNames(period);
+      return [start, end];
+    });
+
+    const dateVars = await this.prisma.dateVar.findMany({
+      where: { name: { in: names } },
+    });
+    const dateByName = new Map(dateVars.map(({ name, date }) => [name, date]));
+
+    return semesters.map(({ year, semester }) => {
+      const { start, end } = DateService.getPollDateNames({ year, semester });
+      return {
+        year,
+        semester,
+        startPoll: dateByName.get(start) ?? null,
+        endPoll: dateByName.get(end) ?? null,
+      };
+    });
+  }
+
+  async setPollDates (period: StudyingSemester, { startPoll, endPoll }: UpdatePollDatesDTO) {
+    await this.getSemester(period);
+    DateService.checkOrder(startPoll, endPoll);
+
+    const { start, end } = DateService.getPollDateNames(period);
+
+    for (const [name, date] of [[start, startPoll], [end, endPoll]] as [string, Date][]) {
+      await this.prisma.dateVar.upsert({
+        where: { name },
+        update: { date },
+        create: { name, date },
+      });
+    }
+
+    return {
+      ...period,
+      startPoll,
+      endPoll,
+    };
+  }
+
+  async deletePollDates (period: StudyingSemester) {
+    const { start, end } = DateService.getPollDateNames(period);
+
+    const { count } = await this.prisma.dateVar.deleteMany({
+      where: { name: { in: [start, end] } },
+    });
+
+    // Nothing to delete means the semester never had borders — the panel lists
+    // only the ones that do, so this is a stale view rather than a no-op.
+    if (!count) throw new DataNotFoundException();
+  }
+
+  private static checkOrder (from: Date, to: Date) {
+    if (from.getTime() >= to.getTime()) throw new InvalidDateException();
   }
 
   async getDateVar (name: string): Promise<Date> {

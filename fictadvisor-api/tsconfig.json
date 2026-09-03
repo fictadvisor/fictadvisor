@@ -6,7 +6,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "target": "es2024",
+    // ES2022+ turns `useDefineForClassFields` on by default, which redefines
+    // class fields instead of assigning them — that breaks the decorator-heavy
+    // entities and the injected parsers. The target was raised for `Object.groupBy`
+    // alone, so keep the field semantics the code was written against.
+    "useDefineForClassFields": false,
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,

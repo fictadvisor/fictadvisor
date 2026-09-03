@@ -1,8 +1,11 @@
 import {
   AcademicCapIcon,
+  ArrowUpTrayIcon,
   BriefcaseIcon,
   BuildingLibraryIcon,
+  CalendarDaysIcon,
   ClipboardDocumentListIcon,
+  ClockIcon,
   HomeIcon,
   IdentificationIcon,
   NewspaperIcon,
@@ -61,7 +64,22 @@ export const adminPanelTabs = [
     text: 'Головна сторінка',
     icon: <HomeIcon />,
   },
+  {
+    link: BASE_URL + '/semesters',
+    text: 'Семестри',
+    icon: <CalendarDaysIcon />,
+  },
+  {
+    link: BASE_URL + '/selective-files',
+    text: 'Вибіркові',
+    icon: <ArrowUpTrayIcon />,
+  },
   'Опитування',
+  {
+    link: BASE_URL + '/poll-dates',
+    text: 'Дати опитувань',
+    icon: <ClockIcon />,
+  },
   {
     link: BASE_URL + '/questions',
     text: 'База питань',

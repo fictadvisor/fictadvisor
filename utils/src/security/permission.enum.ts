@@ -12,6 +12,9 @@ export enum PERMISSION {
 	ADMIN_PANEL_QUESTIONS_SHOW = 'adminPanel.questions.show',
 	ADMIN_PANEL_ROLES_SHOW = 'adminPanel.roles.show',
 	ADMIN_PANEL_SUBJECTS_SHOW = 'adminPanel.subjects.show',
+	ADMIN_PANEL_SELECTIVE_FILES_SHOW = 'adminPanel.selectiveFiles.show',
+	ADMIN_PANEL_SEMESTERS_SHOW = 'adminPanel.semesters.show',
+	ADMIN_PANEL_POLL_DATES_SHOW = 'adminPanel.pollDates.show',
 
 	CATHEDRAS_CREATE = 'cathedras.create',
 	CATHEDRAS_UPDATE = 'cathedras.update',
@@ -72,6 +75,19 @@ export enum PERMISSION {
 	COMMENTS_DELETE = 'comments.delete',
 
 	SCHEDULE_PARSE = 'schedule.parse',
+
+	SELECTIVE_FILES_GET = 'selectiveFiles.get',
+	SELECTIVE_FILES_CREATE = 'selectiveFiles.create',
+	SELECTIVE_FILES_DELETE = 'selectiveFiles.delete',
+	SELECTIVE_FILES_PARSE = 'selectiveFiles.parse',
+
+	SEMESTERS_CREATE = 'semesters.create',
+	SEMESTERS_UPDATE = 'semesters.update',
+	SEMESTERS_DELETE = 'semesters.delete',
+
+	POLL_DATES_GET = 'pollDates.get',
+	POLL_DATES_UPDATE = 'pollDates.update',
+	POLL_DATES_DELETE = 'pollDates.delete',
 
 	STUDENTS_$STUDENTID_DELETE = 'students.$studentId.delete',
 	STUDENTS_GET = 'students.get',

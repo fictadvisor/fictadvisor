@@ -16,6 +16,8 @@ import { PageTextModule } from './page-text/page-text.module';
 import { EduProgramModule } from './edu-program/edu-program.module';
 import { SpecialityModule } from './speciality/speciality.module';
 import { HealthModule } from './health/health.module';
+import { SelectiveFileModule } from './selective-file/selective-file.module';
+import { SemesterModule } from './semester/semester.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { HealthModule } from './health/health.module';
     EduProgramModule,
     SpecialityModule,
     HealthModule,
+    SelectiveFileModule,
+    SemesterModule,
   ],
 })
 export class ApiModule {}
