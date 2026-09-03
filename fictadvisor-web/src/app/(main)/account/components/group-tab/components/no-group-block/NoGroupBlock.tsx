@@ -27,7 +27,7 @@ import * as muiStyles from './NoGroupBlock.styles';
 const NoGroupBlock = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down('mobileMedium'));
   const { displayError } = useToastError();
-  const { user: userNotNull } = useAuthentication();
+  const { user: userNotNull, refetchUser } = useAuthentication();
   const user = userNotNull!;
   const { isLoading, data } = useQuery({
     queryKey: ['groups'],
@@ -37,6 +37,9 @@ const NoGroupBlock = () => {
   const handleSubmitGroup = async (data: GroupRequestDTO) => {
     try {
       await UserAPI.requestNewGroup(user.id, data);
+      // Which alert this block shows keys off `user.group.state`, so without a
+      // refetch the request stayed looking rejected until the page was reloaded.
+      await refetchUser();
     } catch (error) {
       displayError(error);
     }
