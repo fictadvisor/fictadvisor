@@ -12,7 +12,9 @@ export default async function SchedulePageWrapper() {
   try {
     const [semestersData, groupData] = await Promise.all([
       DatesAPI.getCurrentSemester(),
-      GroupAPI.getAll(),
+      // A graduated group has no schedule left to show, so it has no business in
+      // the picker either.
+      GroupAPI.getAll({ hideGraduated: true }),
     ]);
     groups = groupData.groups;
     semester = semestersData;
