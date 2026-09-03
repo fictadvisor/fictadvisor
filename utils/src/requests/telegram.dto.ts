@@ -45,11 +45,11 @@ export class TelegramDTO {
   @IsString(validationOptionsMsg('Photo url must be a string'))
     photo_url?: string;
 
-  @ApiProperty({
-    description: 'User\'s telegram username',
+  @ApiPropertyOptional({
+    description: 'User\'s telegram username, absent for accounts without a public one',
   })
+  @IsOptional()
   @IsString(validationOptionsMsg('Username must be a string'))
-  @IsNotEmpty(validationOptionsMsg('Username cannot be empty'))
-    username: string;
+    username?: string;
 
 }
