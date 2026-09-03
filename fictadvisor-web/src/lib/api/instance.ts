@@ -19,12 +19,27 @@ client.interceptors.response.use(
   },
   async error => {
     const { response, config: originalRequest } = error;
+    // A 401 from the refresh endpoint itself must not trigger another refresh:
+    // every attempt builds a fresh config, so the `_retry` flag below cannot
+    // stop that recursion and the server would spin forever on a dead session.
+    const isRefreshRequest = (
+      originalRequest?.url as string | undefined
+    )?.includes(authRefreshPath);
 
-    if (response?.status === 401) {
+    if (
+      response?.status === 401 &&
+      originalRequest &&
+      !isRefreshRequest &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
       const tokenRefreshed = await refreshToken();
 
       if (tokenRefreshed) {
-        return axios(originalRequest);
+        // Drop the stale header and go through `client` so the request
+        // interceptor picks up the access token that refreshToken just wrote.
+        delete originalRequest.headers.Authorization;
+        return client(originalRequest);
       }
     }
     return Promise.reject(error);
@@ -54,10 +69,10 @@ const authorizationInterceptor = async (req: any) => {
   } else {
     for (const cookie of document.cookie.split('; ')) {
       const [key, value] = cookie.split('=');
-      if (key === 'refresh_token' && !isRefresh) {
+      if (key === AuthToken.AccessToken && !isRefresh) {
         cookieToSet = value;
         break;
-      } else if (key === 'access_token' && isRefresh) {
+      } else if (key === AuthToken.RefreshToken && isRefresh) {
         cookieToSet = value;
         break;
       }

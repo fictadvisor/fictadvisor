@@ -39,15 +39,12 @@ class TelegramService {
     }
   }
   static async register() {
-    try {
-      const data =
-        (await TelegramService.openAuthenticationDialog()) as TelegramUser;
-      StorageUtil.setTelegramInfo({ telegram: data });
-    } catch (e) {
-      const data =
-        (await TelegramService.openAuthenticationDialog()) as TelegramUser;
-      StorageUtil.setTelegramInfo({ telegram: data });
-    }
+    // Never retry the dialog here: the second `window.open` would happen after
+    // an await, outside the user gesture, so the browser blocks it and the real
+    // reason for the first failure is lost. Let the caller show the error.
+    const data =
+      (await TelegramService.openAuthenticationDialog()) as TelegramUser;
+    StorageUtil.setTelegramInfo({ telegram: data });
   }
 
   static async redirectToRegisterBot() {
