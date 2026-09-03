@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsEnum, IsIn, IsNumber, IsOptional, Max, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 import { validationOptionsMsg } from '../validation.util';
 import { QueryAllDTO } from './query-all.dto';
 import { OrderQAParam } from '../enums';
@@ -39,6 +39,15 @@ export class QueryAllGroupsDTO extends QueryAllDTO {
   @IsOptional()
     courses?: number[];
   
+  @ApiPropertyOptional({
+    description: 'Option to leave out the groups that have already graduated',
+    default: false,
+  })
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean(validationOptionsMsg('HideGraduated must be a boolean'))
+  @IsOptional()
+    hideGraduated?: boolean;
+
   @ApiPropertyOptional({
     enum: SortQAGroupsParam,
     enumName: 'SortQAGroupsParam',

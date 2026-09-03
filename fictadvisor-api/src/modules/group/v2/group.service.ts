@@ -188,6 +188,7 @@ export class GroupService {
           this.GroupSearching.specialities(query.specialities),
           this.GroupSearching.cathedras(query.cathedras),
           this.GroupSearching.courses(query.courses),
+          await this.notGraduated(query.hideGraduated),
         ],
       },
       ...this.getGroupSorting(query),
@@ -204,6 +205,7 @@ export class GroupService {
             this.GroupSearching.specialities(query.specialities),
             this.GroupSearching.cathedras(query.cathedras),
             this.GroupSearching.courses(query.courses),
+            await this.notGraduated(query.hideGraduated),
           ],
         },
         roles: {
@@ -642,6 +644,19 @@ export class GroupService {
         })),
       ),
     };
+  }
+
+  // The plain negation of the query the nightly pass graduates by, so a list of
+  // groups that still study is drawn on the same line as the rename that follows
+  // graduation. Аспіранти fall on the studying side, as they do everywhere else.
+  // The one place this is stricter than `hasGraduated` is a code the grammar
+  // rejects: SQL cannot tell one from a bachelor's, so an old one is left out of
+  // the list. The pass checks again before renaming because renaming is
+  // destructive; leaving a group out of a picker is not, and the database holds
+  // no such code.
+  private async notGraduated (hideGraduated?: boolean): Promise<Prisma.GroupWhereInput> {
+    if (!hideGraduated) return {};
+    return { NOT: await this.getGraduatedGroupsWhere() };
   }
 
   async isGraduated (groupId: string): Promise<boolean> {
