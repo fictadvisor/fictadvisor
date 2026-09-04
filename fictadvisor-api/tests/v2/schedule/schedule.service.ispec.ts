@@ -159,11 +159,12 @@ describe('ScheduleService', () => {
       },
     });
 
-    await prisma.subject.create({
-      data: {
-        id: 'subject',
-        name: 'subject',
-      },
+    await prisma.subject.createMany({
+      data: [
+        { id: 'subject', name: 'subject' },
+        { id: 'subject2', name: 'subject2' },
+        { id: 'subject3', name: 'subject3' },
+      ],
     });
 
     await prisma.discipline.createMany({
@@ -180,7 +181,7 @@ describe('ScheduleService', () => {
           year: 2022,
           semester: 1,
           groupId: 'group',
-          subjectId: 'subject',
+          subjectId: 'subject2',
           isSelective: true,
         },
         {
@@ -188,7 +189,7 @@ describe('ScheduleService', () => {
           year: 2022,
           semester: 1,
           groupId: 'group',
-          subjectId: 'subject',
+          subjectId: 'subject3',
           isSelective: true,
         },
         {
@@ -203,7 +204,7 @@ describe('ScheduleService', () => {
           year: 2022,
           semester: 1,
           groupId: 'anotherGroup',
-          subjectId: 'subject',
+          subjectId: 'subject2',
           isSelective: true,
         },
       ],
@@ -1006,11 +1007,11 @@ describe('ScheduleService', () => {
         semester: 1,
         subject: {
           createdAt: expect.any(Date),
-          id: 'subject',
-          name: 'subject',
+          id: 'subject3',
+          name: 'subject3',
           updatedAt: expect.any(Date),
         },
-        subjectId: 'subject',
+        subjectId: 'subject3',
         updatedAt: expect.any(Date),
         year: 2022,
       };
@@ -1099,11 +1100,11 @@ describe('ScheduleService', () => {
         semester: 1,
         subject: {
           createdAt: expect.any(Date),
-          id: 'subject',
-          name: 'subject',
+          id: 'subject3',
+          name: 'subject3',
           updatedAt: expect.any(Date),
         },
-        subjectId: 'subject',
+        subjectId: 'subject3',
         updatedAt: expect.any(Date),
         year: 2022,
       };

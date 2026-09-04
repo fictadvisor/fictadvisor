@@ -114,7 +114,7 @@ model Student {
 
 model Subject {
   id          String       @id @default(uuid())
-  name        String
+  name        String       @unique
   disciplines Discipline[]
   createdAt   DateTime?    @default(now()) @map("created_at")
   updatedAt   DateTime?    @default(now()) @updatedAt @map("updated_at")
@@ -138,8 +138,8 @@ model Discipline {
   createdAt            DateTime?             @default(now()) @map("created_at")
   updatedAt            DateTime?             @default(now()) @updatedAt @map("updated_at")
 
+  @@unique([subjectId, groupId, year, semester])
   @@index([groupId, year, semester])
-  @@index([subjectId])
   @@map("disciplines")
 }
 

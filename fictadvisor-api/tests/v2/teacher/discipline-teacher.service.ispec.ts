@@ -100,11 +100,13 @@ describe('DisciplineTeacherService', () => {
       },
     });
 
-    await prismaService.subject.create({
-      data: {
-        id: 'subjectId1',
-        name: 'Subject - N: Some useless info',
-      },
+    // A group studies a subject once per semester, so the selective disciplines
+    // of the fixture need a subject of their own.
+    await prismaService.subject.createMany({
+      data: [
+        { id: 'subjectId1', name: 'Subject - N: Some useless info' },
+        { id: 'subjectId2', name: 'Subject - M: Some other useless info' },
+      ],
     });
 
     nonSelective20221 = {
@@ -117,7 +119,7 @@ describe('DisciplineTeacherService', () => {
     };
     selective20222 = {
       id: 'selective20222Id',
-      subjectId: 'subjectId1',
+      subjectId: 'subjectId2',
       groupId: 'groupId1',
       semester: 2,
       year: 2022,
@@ -134,7 +136,7 @@ describe('DisciplineTeacherService', () => {
           year: 2022,
         }, {
           id: 'selective20221Id',
-          subjectId: 'subjectId1',
+          subjectId: 'subjectId2',
           groupId: 'groupId1',
           semester: 1,
           year: 2022,
