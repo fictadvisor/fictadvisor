@@ -60,6 +60,14 @@ export const input: SxProps<Theme> = {
 
 export const tag: SxProps<Theme> = { m: '3px' };
 
+// The checkbox is only there to show the state - the MenuItem around it owns the
+// click. Without this a single click on the label reaches the MenuItem twice
+// (once for the label, once for the click it forwards to the hidden input), so
+// the option is selected and immediately unselected again.
+export const optionCheckbox: SxProps<Theme> = {
+  pointerEvents: 'none',
+};
+
 export const paperProps = (width: number): SxProps<Theme> => ({
   marginTop: '8px',
   backgroundColor: 'backgroundDark.100',

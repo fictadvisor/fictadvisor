@@ -69,6 +69,7 @@ const CheckboxesDropdown: FC<CheckboxesDropdownProps> = ({
             <Checkbox
               checked={selectedValues.includes(option.value)}
               label={option.label}
+              sx={styles.optionCheckbox}
             />
           </MenuItem>
         ))}
