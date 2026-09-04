@@ -27,10 +27,10 @@ import * as styles from './UsersList.styles';
 
 interface UsersListProps {
   currPage: number;
-  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  setCurrPage: (page: number) => void;
   users: UserForGetAllResponse[];
   pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  setPageSize: (pageSize: number) => void;
   totalCount: number;
   refetch: QueryObserverBaseResult['refetch'];
 }

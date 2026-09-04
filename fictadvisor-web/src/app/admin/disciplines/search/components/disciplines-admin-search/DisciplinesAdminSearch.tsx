@@ -25,13 +25,14 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress/Progress';
+import { useRestorableState } from '@/hooks/use-restorable-state';
 
 import { sortOptions } from '../../constants';
 
 import * as styles from './DisciplinesAdminSearch.styles';
 
 interface DisciplinesAdminSearchProps {
-  onSumbit: React.Dispatch<React.SetStateAction<QueryAllDisciplinesDTO>>;
+  onSumbit: (values: QueryAllDisciplinesDTO) => void;
   values: QueryAllDisciplinesDTO;
 }
 
@@ -42,9 +43,19 @@ const DisciplinesAdminSearch: FC<DisciplinesAdminSearchProps> = ({
   const [search, setSearch] = useState<string>(values.search ?? '');
   const [sortBy, setSortBy] = useState<string>(values.sort ?? '');
   const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
-  const [groups, setGroups] = useState<CheckboxesDropdownOption[]>([]);
-  const [semesters, setSemesters] = useState<CheckboxesDropdownOption[]>([]);
-  const [teachers, setTeachers] = useState<CheckboxesDropdownOption[]>([]);
+  // Chips are the option objects the dropdowns render, not the ids the query
+  // carries, so they are restored as they are rather than rebuilt from the
+  // filters once the option lists arrive.
+  const [groups, setGroups] = useRestorableState<CheckboxesDropdownOption[]>(
+    'search:groups',
+    [],
+  );
+  const [semesters, setSemesters] = useRestorableState<
+    CheckboxesDropdownOption[]
+  >('search:semesters', []);
+  const [teachers, setTeachers] = useRestorableState<
+    CheckboxesDropdownOption[]
+  >('search:teachers', []);
 
   const handleFormSubmit = () => {
     const newGroups = groups.map(({ value }) => value) as string[];

@@ -1,25 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
-import { QueryAllTeachersDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import TeachersAdminSearch from '@/app/admin/teachers/search/components/teachers-admin-search';
 import TeachersTable from '@/app/admin/teachers/search/components/teachers-table';
 import { initialValues } from '@/app/admin/teachers/search/constants';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
-import teachersApi from '@/lib/api/teacher/TeacherAPI';
 import TeacherAPI from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currPage, setCurrPage] = useState(0);
-  const [values, setValues] = useState<QueryAllTeachersDTO>(initialValues);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(initialValues, 10);
   const { displayError } = useToastError();
   const toast = useToast();
 
@@ -27,14 +33,16 @@ const Page = () => {
     queryKey: ['teachers', currPage, pageSize, values],
 
     queryFn: () =>
-      teachersApi.getAll({
+      TeacherAPI.getAll({
         ...values,
         pageSize,
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
+
+  useScrollRestoration(restorationKey, !!data);
 
   const deleteTeacher = async (id: string) => {
     try {
@@ -46,23 +54,6 @@ const Page = () => {
     }
   };
 
-  const handleChange = (values: QueryAllTeachersDTO) => {
-    setValues(prevValues => {
-      if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurrPage(0);
-        return values;
-      }
-      return prevValues;
-    });
-  };
-
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrPage(0);
-  };
-
   if (error) {
     displayError(error);
     throw new Error('error loading data');
@@ -70,7 +61,7 @@ const Page = () => {
 
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <TeachersAdminSearch onSubmit={handleChange} values={values} />
+      <TeachersAdminSearch onSubmit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {data && (
         <>
@@ -84,7 +75,7 @@ const Page = () => {
             page={currPage}
             rowsPerPage={pageSize}
             onPageChange={(e, page) => setCurrPage(page)}
-            onRowsPerPageChange={e => handleRowsPerPageChange(e)}
+            onRowsPerPageChange={e => changePageSize(Number(e.target.value))}
           />
         </>
       )}

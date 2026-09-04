@@ -1,23 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
-import { QueryAllCommentsDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { initialValues } from '@/app/admin/comments/common/constants';
 import AdminCommentsSearch from '@/app/admin/comments/search/components/admin-comments-search/AdminCommentsSearch';
 import CommentsTable from '@/app/admin/comments/search/components/admin-comments-table';
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import TeacherApi from '@/lib/api/teacher/TeacherAPI';
 
 const Page = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currPage, setCurrPage] = useState(0);
-  const [values, setValues] = useState<QueryAllCommentsDTO>(initialValues);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(initialValues, 10);
   const { displayError } = useToastError();
 
   const {
@@ -35,18 +42,10 @@ const Page = () => {
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
 
-  const submitHandler = (query: QueryAllCommentsDTO) =>
-    setValues(prev => ({ ...prev, ...query }));
-
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrPage(0);
-  };
+  useScrollRestoration(restorationKey, !!commentsData);
 
   if (errorComments) {
     displayError(errorComments);
@@ -55,7 +54,7 @@ const Page = () => {
 
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <AdminCommentsSearch onSubmit={submitHandler} values={values} />
+      <AdminCommentsSearch onSubmit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {commentsData && (
         <>
@@ -66,7 +65,7 @@ const Page = () => {
             page={currPage}
             rowsPerPage={pageSize}
             onPageChange={(e, page) => setCurrPage(page)}
-            onRowsPerPageChange={handleRowsPerPageChange}
+            onRowsPerPageChange={e => changePageSize(Number(e.target.value))}
           />
         </>
       )}

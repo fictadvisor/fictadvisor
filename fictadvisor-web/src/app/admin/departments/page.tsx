@@ -1,29 +1,35 @@
 'use client';
-import React, { useState } from 'react';
-import { QueryAllCathedrasDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import AdminDepartmentsSearch from '@/app/admin/departments/search/components/admin-departments-search';
 import AdminDepartmentsTable from '@/app/admin/departments/search/components/admin-departments-table';
 import { AdminDepartmentsInitialValues } from '@/app/admin/departments/search/constants';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
 const Page = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currPage, setCurrPage] = useState(0);
-  const [values, setValues] = useState<QueryAllCathedrasDTO>(
-    AdminDepartmentsInitialValues,
-  );
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(AdminDepartmentsInitialValues, 10);
   const { displayError } = useToastError();
   const toast = useToast();
+
   const { data, isLoading, refetch, error } = useQuery({
-    queryKey: ['teachers', values, currPage, pageSize],
+    queryKey: ['cathedras-page', values, currPage, pageSize],
 
     queryFn: () =>
       CathedraAPI.getAll({
@@ -32,25 +38,10 @@ const Page = () => {
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
 
-  const handleChange = (values: QueryAllCathedrasDTO) => {
-    setValues(prevValues => {
-      if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurrPage(0);
-        return values;
-      }
-      return prevValues;
-    });
-  };
-
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrPage(0);
-  };
+  useScrollRestoration(restorationKey, !!data);
 
   const handleDelete = async (departmentId: string) => {
     try {
@@ -70,7 +61,7 @@ const Page = () => {
   return (
     <Box sx={{ padding: '16px' }}>
       <AdminDepartmentsSearch
-        onSubmit={handleChange}
+        onSubmit={updateFilters}
         values={values}
         cathedras={data?.cathedras ?? []}
       />
@@ -86,7 +77,7 @@ const Page = () => {
             count={data.pagination.totalAmount}
             onPageChange={(e, page) => setCurrPage(page)}
             rowsPerPage={pageSize}
-            onRowsPerPageChange={e => handleRowsPerPageChange(e)}
+            onRowsPerPageChange={e => changePageSize(Number(e.target.value))}
             sx={stylesAdmin.pagination}
           />
         </>

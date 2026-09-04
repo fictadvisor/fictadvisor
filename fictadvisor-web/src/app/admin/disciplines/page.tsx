@@ -1,14 +1,15 @@
 'use client';
-import React, { useState } from 'react';
-import { QueryAllDisciplinesDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import DisciplinesTable from '@/app/admin/disciplines/search/components/disciplines-table';
 import { initialValues } from '@/app/admin/disciplines/search/constants';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
@@ -16,11 +17,18 @@ import DisciplineAPI from '@/lib/api/discipline/DisciplineAPI';
 import DisciplinesAdminSearch from './search/components/disciplines-admin-search';
 
 const DisciplinesAdminSearchPage = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currPage, setCurrPage] = useState(0);
-  const [values, setValues] = useState<QueryAllDisciplinesDTO>(initialValues);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(initialValues, 10);
   const { displayError } = useToastError();
   const toast = useToast();
+
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: ['disciplines', values, currPage, pageSize],
 
@@ -31,15 +39,11 @@ const DisciplinesAdminSearchPage = () => {
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
 
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrPage(0);
-  };
+  useScrollRestoration(restorationKey, !!data);
+
   const deleteDiscipline = async (id: string) => {
     try {
       await DisciplineAPI.deleteDiscipline(id);
@@ -57,7 +61,7 @@ const DisciplinesAdminSearchPage = () => {
 
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <DisciplinesAdminSearch onSumbit={setValues} values={values} />
+      <DisciplinesAdminSearch onSumbit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {data && (
         <>
@@ -71,7 +75,7 @@ const DisciplinesAdminSearchPage = () => {
             page={currPage}
             rowsPerPage={pageSize}
             onPageChange={(e, page) => setCurrPage(page)}
-            onRowsPerPageChange={handleRowsPerPageChange}
+            onRowsPerPageChange={e => changePageSize(Number(e.target.value))}
           />
         </>
       )}

@@ -1,24 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
-import { QueryAllRolesDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { RolesInitialValues } from '@/app/admin/roles/common/constants';
-import { HeaderRolesSearchProps } from '@/app/admin/roles/common/types';
 import HeaderRolesSearch from '@/app/admin/roles/search/components/header-roles-search';
 import RolesList from '@/app/admin/roles/search/components/roles-list';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import RoleAPI from '@/lib/api/role/RoleAPI';
 
 const Page = () => {
-  const [values, setValues] = useState<QueryAllRolesDTO>(RolesInitialValues);
-  const [currPage, setCurrPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(RolesInitialValues, 5);
   const { displayError } = useToastError();
 
   const { data, isLoading, refetch, error } = useQuery({
@@ -31,20 +37,19 @@ const Page = () => {
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
+
+  useScrollRestoration(restorationKey, !!data);
 
   if (error) {
     displayError(error);
     throw new Error('error loading data');
   }
 
-  const submitHandler: HeaderRolesSearchProps['onSubmit'] = query =>
-    setValues(prev => ({ ...prev, ...query }));
-
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderRolesSearch onSubmit={submitHandler} values={values} />
+      <HeaderRolesSearch onSubmit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {data && (
         <RolesList
@@ -52,7 +57,7 @@ const Page = () => {
           setCurrPage={setCurrPage}
           roles={data.data}
           pageSize={pageSize}
-          setPageSize={setPageSize}
+          setPageSize={changePageSize}
           totalCount={data.pagination.totalAmount}
           refetch={refetch}
         />

@@ -1,26 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import HeaderUserSearch from '@/app/admin/users/search/components/header-user-search';
 import UsersList from '@/app/admin/users/search/components/users-list';
 import { UserInitialValues } from '@/app/admin/users/search/constants';
-import {
-  HeaderUserSearchProps,
-  UserSearchFormFields,
-} from '@/app/admin/users/search/types';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import UserAPI from '@/lib/api/user/UserAPI';
 
 const Page = () => {
-  const [values, setValues] = useState<UserSearchFormFields>(UserInitialValues);
-  const [currPage, setCurrPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(UserInitialValues, 5);
   const { displayError } = useToastError();
 
   const { data, isLoading, refetch, error } = useQuery({
@@ -31,11 +35,10 @@ const Page = () => {
         page: currPage,
         pageSize,
       }),
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
 
-  const submitHandler: HeaderUserSearchProps['onSubmit'] = query =>
-    setValues(prev => ({ ...prev, ...query }));
+  useScrollRestoration(restorationKey, !!data);
 
   if (error) {
     displayError(error);
@@ -44,7 +47,7 @@ const Page = () => {
 
   return (
     <Box sx={stylesAdmin.wrapper}>
-      <HeaderUserSearch onSubmit={submitHandler} values={values} />
+      <HeaderUserSearch onSubmit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {data && (
         <UsersList
@@ -52,7 +55,7 @@ const Page = () => {
           setCurrPage={setCurrPage}
           users={data.data}
           pageSize={pageSize}
-          setPageSize={setPageSize}
+          setPageSize={changePageSize}
           totalCount={data.pagination.totalAmount}
           refetch={refetch}
         />

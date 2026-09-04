@@ -27,6 +27,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress';
+import { useRestorableState } from '@/hooks/use-restorable-state';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import CathedraAPI from '@/lib/api/cathedras/CathedraAPI';
 
@@ -65,16 +66,18 @@ const TeachersAdminSearch: FC<TeachersAdminSearchProps> = ({
     id: cathedra.id,
   }));
 
-  const newCathedrasIds = values.cathedrasId?.map(cathedraId =>
-    cathedras?.find(({ id }) => id === cathedraId),
-  ) as CheckboxesDropdownOption[];
-  const [cathedrasId, setCathedrasId] =
-    useState<CheckboxesDropdownOption[]>(newCathedrasIds);
+  // Chips are the option objects the dropdowns render, and the cathedra options
+  // only arrive with their own request - looking the filters' ids up in a list
+  // that is not there yet would leave holes in the chips. They are restored as
+  // they are instead.
+  const [cathedrasId, setCathedrasId] = useRestorableState<
+    CheckboxesDropdownOption[]
+  >('search:cathedras', []);
 
-  const newRoles = values.disciplineTypes?.map(role =>
-    tags.find(({ value }) => value === TagText[role]),
-  ) as CheckboxesDropdownOption[];
-  const [roles, setRoles] = useState<CheckboxesDropdownOption[]>(newRoles);
+  const [roles, setRoles] = useRestorableState<CheckboxesDropdownOption[]>(
+    'search:roles',
+    [],
+  );
 
   const handleFormSubmit = () => {
     onSubmit({

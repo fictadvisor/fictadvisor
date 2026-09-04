@@ -22,6 +22,7 @@ import {
 } from '@/components/common/ui/icon-button';
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
+import { useRestorableState } from '@/hooks/use-restorable-state';
 import { Cathedra } from '@/types/cathedra';
 
 import { AdminDepartmentsSortOptions } from '../../constants';
@@ -43,7 +44,11 @@ const AdminDepartmentsSearch: FC<AdminDepartmentSearchProps> = ({
     values.sort ?? SortQACParam.NAME,
   );
 
-  const [divisions, setDivisions] = useState<CheckboxesDropdownOption[]>([]);
+  // Chips are the option objects the dropdown renders, not the ids the query
+  // carries, so they are restored as they are.
+  const [divisions, setDivisions] = useRestorableState<
+    CheckboxesDropdownOption[]
+  >('search:divisions', []);
 
   const handleFormSubmit = () => {
     const newFaculties = divisions.map(division => division.id!);
