@@ -3,6 +3,7 @@
 import React, { FC, MouseEventHandler, ReactNode, useState } from 'react';
 import { Box, Button as MuiButton, CircularProgress } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
+import NextLink from 'next/link';
 
 import mergeSx from '@/lib/utils/MergeSxStylesUtil';
 
@@ -35,6 +36,7 @@ const Button: FC<ButtonProps> = ({
   sx = {},
   disabled,
   onClick,
+  href,
   ...rest
 }) => {
   const [loading, setLoading] = useState(false);
@@ -60,12 +62,21 @@ const Button: FC<ButtonProps> = ({
     }
   };
 
+  // A bare href makes MUI render a plain anchor, which reloads the whole app for
+  // a route of our own - throwing away the router, the query cache and whatever
+  // the page the user came from was showing. In-app routes go through the Next
+  // router; anything else stays an ordinary link.
+  const linkProps = href?.startsWith('/')
+    ? { component: NextLink, href }
+    : { href };
+
   return (
     <MuiButton
       sx={mergeSx(styles.button(color, variant, size, loading), sx)}
       disableRipple
       onClick={handleClick}
       disabled={disabled}
+      {...linkProps}
       {...rest}
     >
       {loading ? (
