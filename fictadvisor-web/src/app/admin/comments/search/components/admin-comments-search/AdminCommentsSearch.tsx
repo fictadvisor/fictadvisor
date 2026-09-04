@@ -26,6 +26,7 @@ import {
 import IconButton from '@/components/common/ui/icon-button-mui';
 import { IconButtonSize } from '@/components/common/ui/icon-button-mui/types';
 import Progress from '@/components/common/ui/progress';
+import { useRestorableState } from '@/hooks/use-restorable-state';
 
 interface AdminCommentsSearch {
   onSubmit: (values: QueryAllCommentsDTO) => void;
@@ -36,7 +37,11 @@ const AnswersAdminSearch: FC<AdminCommentsSearch> = ({ onSubmit, values }) => {
   const [search, setSearch] = useState<string>(values.search ?? '');
   const [sortBy, setSortBy] = useState<string>(values.sort ?? 'username');
   const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'desc');
-  const [semesters, setSemesters] = useState<CheckboxesDropdownOption[]>([]);
+  // Chips are the option objects the dropdown renders, not the {year, semester}
+  // pairs the query carries, so they are restored as they are.
+  const [semesters, setSemesters] = useRestorableState<
+    CheckboxesDropdownOption[]
+  >('search:semesters', []);
 
   const handleFormSubmit = () => {
     const newSemestersFilter = semesters.map(semester => ({

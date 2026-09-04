@@ -1,26 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
-import { QueryAllQuestionsDTO } from '@fictadvisor/utils/requests';
+import React from 'react';
 import { Box, TablePagination } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { useQueryAdminOptions } from '@/app/admin/common/constants';
+import { adminListQueryOptions } from '@/app/admin/common/constants';
+import { useAdminListState } from '@/app/admin/common/hooks/useAdminListState';
 import * as stylesAdmin from '@/app/admin/common/styles/AdminPages.styles';
 import { initialValues } from '@/app/admin/questions/common/constants';
 import QuestionsAdminSearch from '@/app/admin/questions/search/components/questions-search-page';
 import QuestionsTable from '@/app/admin/questions/search/components/questions-search-page/components/questions-table';
 import LoadPage from '@/components/common/ui/load-page';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import useToast from '@/hooks/use-toast';
 import { useToastError } from '@/hooks/use-toast-error/useToastError';
 import QuestionAPI from '@/lib/api/questions/QuestionAPI';
 
 const Page = () => {
-  const [pageSize, setPageSize] = useState(10);
-  const [currPage, setCurrPage] = useState(0);
-  const [values, setValues] = useState<QueryAllQuestionsDTO>(initialValues);
+  const {
+    filters: values,
+    updateFilters,
+    page: currPage,
+    setPage: setCurrPage,
+    pageSize,
+    changePageSize,
+    restorationKey,
+  } = useAdminListState(initialValues, 10);
   const { displayError } = useToastError();
   const toast = useToast();
+
   const { data, isLoading, refetch, error } = useQuery({
     queryKey: ['questions', currPage, values, pageSize],
 
@@ -31,25 +39,10 @@ const Page = () => {
         page: currPage,
       }),
 
-    ...useQueryAdminOptions,
+    ...adminListQueryOptions,
   });
 
-  const handleChange = (values: QueryAllQuestionsDTO) => {
-    setValues(prevValues => {
-      if (JSON.stringify(values) !== JSON.stringify(prevValues)) {
-        setCurrPage(0);
-        return values;
-      }
-      return prevValues;
-    });
-  };
-
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setPageSize(Number(event.target.value));
-    setCurrPage(0);
-  };
+  useScrollRestoration(restorationKey, !!data);
 
   const deleteQuestion = async (id: string) => {
     try {
@@ -68,7 +61,7 @@ const Page = () => {
 
   return (
     <Box sx={{ p: '20px 16px 0 16px' }}>
-      <QuestionsAdminSearch onSubmit={handleChange} values={values} />
+      <QuestionsAdminSearch onSubmit={updateFilters} values={values} />
       {isLoading && <LoadPage />}
       {data && (
         <>
@@ -82,7 +75,7 @@ const Page = () => {
             page={currPage}
             rowsPerPage={pageSize}
             onPageChange={(e, page) => setCurrPage(page)}
-            onRowsPerPageChange={handleRowsPerPageChange}
+            onRowsPerPageChange={e => changePageSize(Number(e.target.value))}
           />
         </>
       )}

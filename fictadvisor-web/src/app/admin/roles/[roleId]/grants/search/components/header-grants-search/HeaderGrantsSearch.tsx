@@ -31,19 +31,21 @@ import {
 
 export interface HeaderGrantsSearchProps {
   roleId: string;
+  values: GrantsSearchFormFields;
   onSubmit: (values: Partial<GrantsSearchFormFields>) => void;
 }
 
 const HeaderGrantsSearch: FC<HeaderGrantsSearchProps> = ({
   onSubmit,
+  values,
   roleId,
 }) => {
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>(values.search ?? '');
   const [sort, setSort] = useState<SortQAGrantsParam>(
-    SortQAGrantsParam.PERMISSION,
+    (values.sort as SortQAGrantsParam) ?? SortQAGrantsParam.PERMISSION,
   );
-  const [grantSet, setGrantSet] = useState<GrantSet>('given' as GrantSet);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const [grantSet, setGrantSet] = useState<GrantSet>(values.set);
+  const [order, setOrder] = useState<'asc' | 'desc'>(values.order ?? 'asc');
 
   const handleSearchChange = (value: string) => {
     setSearch(value);

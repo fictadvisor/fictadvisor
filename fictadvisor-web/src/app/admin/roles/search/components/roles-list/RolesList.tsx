@@ -28,10 +28,10 @@ import TableActions from './components/table-actions';
 
 interface RolesListProps {
   currPage: number;
-  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  setCurrPage: (page: number) => void;
   roles: RoleResponse[];
   pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  setPageSize: (pageSize: number) => void;
   totalCount: number;
   refetch: QueryObserverBaseResult['refetch'];
 }

@@ -22,10 +22,10 @@ import TableActions from './components/table-actions';
 
 interface GrantsListProps {
   currPage: number;
-  setCurrPage: React.Dispatch<React.SetStateAction<number>>;
+  setCurrPage: (page: number) => void;
   grants: GrantResponse[];
   pageSize: number;
-  setPageSize: React.Dispatch<React.SetStateAction<number>>;
+  setPageSize: (pageSize: number) => void;
   totalCount: number;
   roleId: string;
   refetch: QueryObserverBaseResult['refetch'];
