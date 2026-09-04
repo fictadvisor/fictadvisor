@@ -31,7 +31,11 @@ import { DateService } from '../../date/v2/date.service';
 import { DisciplineTeacherService } from './discipline-teacher.service';
 import { DbDisciplineTeacher, DbDisciplineTeacherWithDisciplineAndRoles } from '../../../database/v2/entities/discipline-teacher.entity';
 import { DbTeacher, DbTeacherWithRoles } from '../../../database/v2/entities/teacher.entity';
-import { TeacherRepository } from '../../../database/v2/repositories/teacher.repository';
+import {
+  TEACHER_NO_RELATIONS,
+  TEACHER_ROLES_INCLUDE,
+  TeacherRepository,
+} from '../../../database/v2/repositories/teacher.repository';
 import { DisciplineTeacherRepository } from '../../../database/v2/repositories/discipline-teacher.repository';
 import { SubjectRepository } from '../../../database/v2/repositories/subject.repository';
 import { GroupRepository } from '../../../database/v2/repositories/group.repository';
@@ -77,10 +81,11 @@ export class TeacherService {
           },
         ],
       },
+      include: TEACHER_ROLES_INCLUDE,
       ...this.getSortedTeacher(body),
     };
 
-    return await PaginationUtil.paginate<'teacher', DbTeacher>(this.teacherRepository, body, data);
+    return await PaginationUtil.paginate<'teacher', DbTeacherWithRoles>(this.teacherRepository, body, data);
   }
 
   private getSortedTeacher ({ sort, order }: SortDTO): Sort {
@@ -143,7 +148,7 @@ export class TeacherService {
 
   @Cron('0 0 3 * * *')
   async updateRating () {
-    const teachers = await this.teacherRepository.findMany({});
+    const teachers = await this.teacherRepository.findMany<Pick<DbTeacher, 'id'>>({}, TEACHER_NO_RELATIONS);
     if (!teachers.length) return;
     for (const { id } of teachers) {
       const marks = await this.getMarks(id);
@@ -153,7 +158,7 @@ export class TeacherService {
   }
 
   async getTeacher (id: string) {
-    const dbTeacher = await this.teacherRepository.findOne({ id });
+    const dbTeacher = await this.teacherRepository.findOne<DbTeacherWithRoles>({ id }, TEACHER_ROLES_INCLUDE);
     const contacts = await this.contactRepository.findMany({ entityId: id });
 
     return {
@@ -228,7 +233,7 @@ export class TeacherService {
   }
 
   async getTeacherRoles (id: string) {
-    const teacher = await this.teacherRepository.findOne({ id });
+    const teacher = await this.teacherRepository.findOne<DbTeacherWithRoles>({ id }, TEACHER_ROLES_INCLUDE);
     if (!teacher.disciplineTeachers) return [];
 
     const disciplineTypes: DisciplineTypeEnum[] = [];
