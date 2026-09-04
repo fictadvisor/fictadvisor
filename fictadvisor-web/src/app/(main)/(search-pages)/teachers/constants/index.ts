@@ -6,6 +6,8 @@ export const filterOptions: DropDownOption[] = [
   { id: 'lastName', label: 'Прізвищем' },
 ];
 
+export const sortOptions = filterOptions.map(({ id }) => id);
+
 export const breadcrumbs: Breadcrumb[] = [
   {
     label: 'Головна',

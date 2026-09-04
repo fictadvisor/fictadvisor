@@ -6,5 +6,5 @@ export interface SearchFormFields {
   sort: string;
   groupId?: string;
   disciplineTypes: DisciplineTypeEnum[];
-  cathedrasId: [];
+  cathedrasId: string[];
 }

@@ -12,17 +12,23 @@ import * as styles from './SubjectSearchList.styles';
 
 const TOAST_TIMER = 4000;
 
-export const SubjectSearchList: FC<{
+interface SubjectSearchListProps {
   subjects: SubjectCountResponse[];
-}> = ({ subjects }) => {
+  isFetching: boolean;
+}
+
+export const SubjectSearchList: FC<SubjectSearchListProps> = ({
+  subjects,
+  isFetching,
+}) => {
   const router = useRouter();
   const toast = useToast();
 
   useEffect(() => {
-    if (!subjects.length) {
+    if (subjects.length === 0 && !isFetching) {
       toast.error('Результатів за запитом не знайдено', '', TOAST_TIMER);
     }
-  }, [subjects.length]);
+  }, [isFetching, subjects.length]);
 
   const redirect = useCallback(
     (subjectId: string) => () => {
@@ -33,26 +39,25 @@ export const SubjectSearchList: FC<{
 
   return (
     <Masonry columns={breakpoints} spacing={2} sx={styles.masonry}>
-      {subjects &&
-        subjects.map(subject => (
-          <Box key={subject.id}>
-            <SubjectCard
-              onClick={redirect(subject.id)}
-              name={`${subject.name}`}
-              details={`${
-                subject.amount +
-                ' ' +
-                (subject.amount === 1
-                  ? 'викладач'
-                  : subject.amount === 2 ||
-                      subject.amount === 3 ||
-                      subject.amount === 4
-                    ? 'викладачі'
-                    : 'викладачів')
-              }`}
-            />
-          </Box>
-        ))}
+      {subjects.map(subject => (
+        <Box key={subject.id}>
+          <SubjectCard
+            onClick={redirect(subject.id)}
+            name={`${subject.name}`}
+            details={`${
+              subject.amount +
+              ' ' +
+              (subject.amount === 1
+                ? 'викладач'
+                : subject.amount === 2 ||
+                    subject.amount === 3 ||
+                    subject.amount === 4
+                  ? 'викладачі'
+                  : 'викладачів')
+            }`}
+          />
+        </Box>
+      ))}
     </Masonry>
   );
 };
