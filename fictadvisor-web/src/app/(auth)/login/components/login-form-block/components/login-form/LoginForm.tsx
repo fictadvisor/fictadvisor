@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -14,10 +14,9 @@ import { ButtonSize } from '@/components/common/ui/button-mui/types';
 import CustomLink from '@/components/common/ui/custom-link';
 import { CustomLinkType } from '@/components/common/ui/custom-link/types';
 import { Input, InputSize, InputType } from '@/components/common/ui/form';
+import { useAuthentication } from '@/hooks/use-authentication/useAuthentication';
 import AuthAPI from '@/lib/api/auth/AuthAPI';
 import { setAuthTokens } from '@/lib/api/auth/ServerAuthApi';
-import { AuthToken } from '@/lib/constants/AuthToken';
-import { getClientCookie } from '@/lib/utils/getClientCookie';
 
 import { getLoginFieldsError } from './utils/getLoginFieldsError';
 import * as sxStyles from './LoginForm.styles';
@@ -27,12 +26,15 @@ export const LoginForm: FC = () => {
   const searchParams = useSearchParams();
   const redirect = searchParams?.get('redirect') as string;
   const queryClient = useQueryClient();
-  const accessToken = getClientCookie(AuthToken.AccessToken);
+  const { user, isLoading } = useAuthentication();
 
-  if (!!accessToken) {
-    push('/');
-    return null;
-  }
+  // A leftover token cookie is not a session. Once it expires the request for
+  // the current user fails, and gating on the cookie alone used to bounce
+  // straight back to the home page - locking the user out of the only form that
+  // could give them a working token again.
+  useEffect(() => {
+    if (!isLoading && user) push('/');
+  }, [isLoading, user, push]);
 
   const handleSubmit = async (
     data: LoginFormFields,
