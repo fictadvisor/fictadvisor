@@ -1,16 +1,27 @@
 'use client';
 
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { QueryAllSubjectsDTO } from '@fictadvisor/utils/requests';
+import { PaginatedSubjectsResponse } from '@fictadvisor/utils/responses';
 import { Box } from '@mui/material';
-import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  InfiniteData,
+  keepPreviousData,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import {
   SEARCH_LIST_QUERY_OPTIONS,
   SubjectInitialValues,
 } from '@/app/(main)/(search-pages)/search-form/constants';
+import {
+  hasSameResultSet,
+  useLoadedPages,
+} from '@/app/(main)/(search-pages)/search-form/hooks/useLoadedPages';
 import { useSearchFormState } from '@/app/(main)/(search-pages)/search-form/hooks/useSearchFormState';
 import SearchForm from '@/app/(main)/(search-pages)/search-form/SearchForm';
+import { SearchFormFields } from '@/app/(main)/(search-pages)/search-form/types';
 import { SubjectSearchList } from '@/app/(main)/(search-pages)/subjects/components/SubjectSearchList';
 import {
   breadcrumbs,
@@ -29,19 +40,60 @@ import Progress from '@/components/common/ui/progress';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import SubjectsAPI from '@/lib/api/subject/SubjectAPI';
 
+const getQueryKey = (values: SearchFormFields) => ['subjects', values];
+
+const countSubjects = (data: InfiniteData<PaginatedSubjectsResponse>) =>
+  data.pages.reduce((total, page) => total + page.subjects.length, 0);
+
 const SubjectSearchPage: FC = () => {
+  const queryClient = useQueryClient();
+  const { loadedPagesRef, resetLoadedPages, rememberLoadedItems } =
+    useLoadedPages(PAGE_SIZE);
+
+  const handleValuesChange = useCallback(
+    (next: SearchFormFields, prev: SearchFormFields) => {
+      if (!hasSameResultSet(prev, next)) {
+        resetLoadedPages();
+        return;
+      }
+
+      // Reordering has to open with everything the user already has. An earlier,
+      // shorter visit to that sorting is still cached, and react-query would
+      // serve it as is - which is exactly the list silently shrinking back to
+      // one page. Drop it so the first page below covers the whole extent.
+      const cached = queryClient.getQueryData<
+        InfiniteData<PaginatedSubjectsResponse>
+      >(getQueryKey(next));
+      if (!cached) return;
+
+      const cachedSubjects = countSubjects(cached);
+      const isTruncated =
+        cachedSubjects <
+        cached.pages[cached.pages.length - 1].pagination.totalAmount;
+      if (isTruncated && cachedSubjects < loadedPagesRef.current * PAGE_SIZE) {
+        queryClient.removeQueries({ queryKey: getQueryKey(next), exact: true });
+      }
+    },
+    [queryClient, resetLoadedPages, loadedPagesRef],
+  );
+
   const { initialValues, values, handleSubmit, restorationKey } =
-    useSearchFormState(SubjectInitialValues, { sortOptions });
+    useSearchFormState(
+      SubjectInitialValues,
+      { sortOptions },
+      handleValuesChange,
+    );
 
   const {
     data,
     isPending,
     isFetching,
     isFetchingNextPage,
+    isPlaceholderData,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ['subjects', values],
+    queryKey: getQueryKey(values),
 
     queryFn: ({ pageParam }) =>
       SubjectsAPI.getAll({
@@ -49,15 +101,20 @@ const SubjectSearchPage: FC = () => {
         order: values.order,
         sort: values.sort,
         groupId: values.groupId,
-        page: pageParam,
-        pageSize: PAGE_SIZE,
+        ...pageParam,
       } as QueryAllSubjectsDTO),
 
-    initialPageParam: 0,
-    getNextPageParam: ({ pagination }) =>
-      pagination.page + 1 < pagination.totalPages
-        ? pagination.page + 1
-        : undefined,
+    // A reordered list starts as one page holding everything the user had open.
+    initialPageParam: { page: 0, pageSize: PAGE_SIZE * loadedPagesRef.current },
+    getNextPageParam: ({ pagination }, pages) => {
+      const loaded = pages.reduce(
+        (total, page) => total + page.subjects.length,
+        0,
+      );
+      return loaded < pagination.totalAmount
+        ? { page: Math.ceil(loaded / PAGE_SIZE), pageSize: PAGE_SIZE }
+        : undefined;
+    },
     placeholderData: keepPreviousData,
     ...SEARCH_LIST_QUERY_OPTIONS,
   });
@@ -66,6 +123,11 @@ const SubjectSearchPage: FC = () => {
     () => data?.pages.flatMap(page => page.subjects) ?? [],
     [data],
   );
+
+  useEffect(() => {
+    if (isPlaceholderData || !subjects.length) return;
+    rememberLoadedItems(subjects.length);
+  }, [subjects.length, isPlaceholderData, rememberLoadedItems]);
 
   // Every page the user had loaded comes back from the query cache at once, so
   // the list is already its full height when we put the scroll offset back.
