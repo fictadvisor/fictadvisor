@@ -16,6 +16,8 @@ import { SubjectRepository } from '../../../database/v2/repositories/subject.rep
 import { TeacherRepository } from '../../../database/v2/repositories/teacher.repository';
 import { QuestionType } from '@prisma-client/fictadvisor';
 import { DbSubject } from '../../../database/v2/entities/subject.entity';
+import { AlreadyExistException } from '../../../common/exceptions/already-exist.exception';
+import { isUniqueViolation } from '../../../common/utils/prisma-error.util';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { DbTeacherWithAnswers, DbTeacherWithRoles } from '../../../database/v2/entities/teacher.entity';
@@ -189,7 +191,13 @@ export class SubjectService {
   }
 
   async create (body: CreateSubjectDTO) {
-    return this.subjectRepository.create(body);
+    try {
+      return await this.subjectRepository.create(body);
+    } catch (error) {
+      // Subject names are unique, so a taken one is a bad request, not a 500.
+      if (isUniqueViolation(error)) throw new AlreadyExistException('Subject');
+      throw error;
+    }
   }
 
   async update (id: string, body: UpdateSubjectDTO) {

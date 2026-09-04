@@ -23,6 +23,7 @@ describe('PollService', () => {
   let teacherLaborant: Teacher;
   let rejectedTeacher: Teacher;
   let subject: Subject;
+  let secondSubject: Subject;
   let discipline1: DbDiscipline;
   let discipline2: DbDiscipline;
   let discipline3: DbDiscipline;
@@ -119,6 +120,15 @@ describe('PollService', () => {
       },
     });
 
+    // discipline3 shares a group and a semester with discipline2, so it cannot
+    // share their subject as well.
+    secondSubject = await prisma.subject.create({
+      data: {
+        id: 'd3f1f0b6-6c1a-4f5e-9a2b-2a1f0c3d4e5f',
+        name: 'subject2',
+      },
+    });
+
     discipline1 = await prisma.discipline.create({
       data: {
         id: '7974396c-5d98-4cc2-8dca-c14f32e4e7de',
@@ -184,7 +194,7 @@ describe('PollService', () => {
         semester: 1,
         year: 2022,
         groupId: group.id,
-        subjectId: subject.id,
+        subjectId: secondSubject.id,
       },
       include: {
         disciplineTeachers: {
@@ -340,6 +350,12 @@ describe('PollService', () => {
     await prisma.group.delete({
       where: {
         id: group.id,
+      },
+    });
+
+    await prisma.subject.delete({
+      where: {
+        id: secondSubject.id,
       },
     });
 
