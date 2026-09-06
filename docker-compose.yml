@@ -16,6 +16,7 @@ services:
       - ~/private:/app/private
     depends_on:
       - postgres-db-dev
+      - redis
       - watchtower
     networks:
       - fictadvisor-dev
@@ -33,6 +34,7 @@ services:
       - ~/private:/app/private
     depends_on:
       - postgres-db
+      - redis
       - watchtower
     networks:
       - fictadvisor
@@ -112,6 +114,28 @@ services:
       - fictadvisor
     env_file:
       - ~/deployment/env/postgres.env
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    # Holds the visitor/user request counters so an API restart (watchtower
+    # redeploys several times on a busy day) doesn't reset the 24h breakdowns.
+    # RDB only, no AOF: the API rewrites the whole snapshot once a minute anyway,
+    # so an append log would just repeat it. `save` also makes redis write a final
+    # snapshot on SIGTERM. noeviction because these keys are the data, not a cache
+    # -- the size bound is MAX_TRACKED in the API, not maxmemory.
+    command: >
+      redis-server
+      --save 60 1
+      --appendonly no
+      --maxmemory 256mb
+      --maxmemory-policy noeviction
+    volumes:
+      - redis-data:/data
+    networks:
+      - fictadvisor
+      - fictadvisor-dev
 
   minio:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
@@ -197,3 +221,4 @@ services:
 volumes:
   prometheus-data:
   grafana-data:
+  redis-data:

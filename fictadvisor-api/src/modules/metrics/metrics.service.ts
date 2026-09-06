@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, Optional, OnApplicationShutdown, OnModuleInit } from '@nestjs/common';
 import { createHash } from 'crypto';
 import geoip from 'geoip-lite';
 import { collectDefaultMetrics, Counter, Gauge, Histogram, Registry } from 'prom-client';
+import { MetricsSnapshot, MetricsStore } from './metrics-store';
 
 // Rolling windows over which distinct visitors are counted. Ordered so the
 // largest one doubles as the retention horizon for the last-seen map.
@@ -38,15 +39,15 @@ const MAX_RESOLVE_BATCH = 500;
 
 // A distinct visitor is either an authenticated user (counted by user id, so
 // they count once across devices/IPs) or an anonymous client (counted by IP).
-type VisitorKind = 'user' | 'anon';
+export type VisitorKind = 'user' | 'anon';
 
-interface VisitorHit {
+export interface VisitorHit {
   count: number;
   lastSeen: number;
   country: string;
 }
 
-interface UserHit {
+export interface UserHit {
   count: number;
   lastSeen: number;
   // What the `user` label shows: the username (or email) looked up in the
@@ -91,7 +92,7 @@ function isInternalIp (ip: string): boolean {
 }
 
 @Injectable()
-export class MetricsService {
+export class MetricsService implements OnModuleInit, OnApplicationShutdown {
   readonly registry = new Registry();
   readonly httpRequestDuration: Histogram<string>;
   readonly httpRequestsTotal: Counter<string>;
@@ -123,7 +124,15 @@ export class MetricsService {
   private resolveIdentities?: UserIdentityResolver;
   private resolving = false;
 
-  constructor () {
+  private readonly logger = new Logger(MetricsService.name);
+  private flushTimer?: NodeJS.Timeout;
+  private flushing = false;
+
+  // Optional for the same reason JwtModule carries no secret here: this service
+  // is listed directly in the providers of narrow unit-test modules that never
+  // import MetricsModule, and a new required dependency would break every one of
+  // them. Without a store the metrics simply stay in memory, as they always were.
+  constructor (@Optional() private readonly store?: MetricsStore) {
     this.registry.setDefaultLabels({ app: 'fictadvisor-api' });
 
     // Node.js process / runtime metrics (cpu, memory, event loop lag, gc, ...)
@@ -249,6 +258,34 @@ export class MetricsService {
     });
   }
 
+  // Restores the previous process's counters, so a deploy — which restarts the
+  // API several times on a busy day — no longer resets the 24h breakdowns.
+  async onModuleInit (): Promise<void> {
+    const store = this.store;
+    if (!store?.enabled) return;
+
+    const snapshot = await store.load();
+    if (snapshot) this.restore(snapshot);
+
+    // The maps stay the source of truth and are written out periodically, so the
+    // request path never waits on Redis. unref() keeps the timer from holding the
+    // process open on its own.
+    this.flushTimer = setInterval(() => void this.flush(), store.flushIntervalMs);
+    this.flushTimer.unref();
+  }
+
+  // Watchtower stops the container with SIGTERM (30s grace) and main.ts enables
+  // shutdown hooks, so a normal deploy flushes here and loses nothing.
+  async onApplicationShutdown (): Promise<void> {
+    if (this.flushTimer) clearInterval(this.flushTimer);
+
+    const store = this.store;
+    if (!store?.enabled) return;
+
+    await this.flush();
+    await store.disconnect();
+  }
+
   // Records one hit. Authenticated requests (identified by a verified JWT) are
   // attributed to the user; everyone else to their client IP. Internal
   // infrastructure IPs are ignored entirely. Each request feeds:
@@ -333,6 +370,50 @@ export class MetricsService {
     } finally {
       this.resolving = false;
     }
+  }
+
+  private async flush (): Promise<void> {
+    // A flush that outruns the interval must not pile up; the next tick carries
+    // the same state anyway.
+    if (this.flushing) return;
+
+    this.flushing = true;
+    try {
+      await this.store?.save({
+        visitors: [...this.visitorHits],
+        users: [...this.userHits],
+        seen: [...this.visitorLastSeen],
+      });
+    } finally {
+      this.flushing = false;
+    }
+  }
+
+  // Loads a snapshot back into the maps, applying the same retention and
+  // cardinality bounds as the live recording path: a snapshot may have been
+  // written before a long downtime, and entries older than the retention window
+  // would otherwise resurface as stale series.
+  private restore (snapshot: MetricsSnapshot): void {
+    const now = Date.now();
+    const fresh = (lastSeen: unknown): boolean =>
+      typeof lastSeen === 'number' && now - lastSeen <= VISITOR_RETENTION_MS;
+
+    for (const [id, entry] of snapshot.seen ?? []) {
+      if (fresh(entry?.lastSeen)) this.visitorLastSeen.set(id, entry);
+    }
+    for (const [ip, hit] of snapshot.visitors ?? []) {
+      if (this.visitorHits.size >= MAX_TRACKED) break;
+      if (fresh(hit?.lastSeen)) this.visitorHits.set(ip, hit);
+    }
+    for (const [id, hit] of snapshot.users ?? []) {
+      if (this.userHits.size >= MAX_TRACKED) break;
+      if (fresh(hit?.lastSeen)) this.userHits.set(id, hit);
+    }
+
+    this.logger.log(
+      `Restored visitor metrics: ${this.visitorHits.size} anonymous IPs, ` +
+      `${this.userHits.size} users, ${this.visitorLastSeen.size} unique visitors`,
+    );
   }
 
   // Short, stable hash used only to key the unique-visitor set (never exposed).

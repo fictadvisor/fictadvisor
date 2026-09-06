@@ -3,6 +3,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MetricsController } from './metrics.controller';
 import { MetricsService } from './metrics.service';
+import { MetricsStore } from './metrics-store';
 import { HttpMetricsInterceptor } from './http-metrics.interceptor';
 
 @Global()
@@ -17,6 +18,9 @@ import { HttpMetricsInterceptor } from './http-metrics.interceptor';
   controllers: [MetricsController],
   providers: [
     MetricsService,
+    // Persists the visitor counters across restarts. Reads REDIS_URL from the
+    // environment directly, for the same reason JwtModule takes no secret here.
+    MetricsStore,
     {
       provide: APP_INTERCEPTOR,
       useClass: HttpMetricsInterceptor,
