@@ -28,6 +28,7 @@ import { NoPermissionException } from '../../../src/common/exceptions/no-permiss
 import { CampusParser } from '../../../src/modules/parser/v2/campus-parser';
 import { RozParser } from '../../../src/modules/parser/v2/roz-parser';
 import { GeneralParser } from '../../../src/modules/parser/v2/general-parser';
+import { ParseQueueService } from '../../../src/modules/parser/v2/parse-queue.service';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { ScheduleHelperService } from '../../../src/modules/schedule/v2/schedule.helper-service';
@@ -44,6 +45,7 @@ describe('ScheduleService', () => {
         ScheduleHelperService,
         UserService,
         GeneralParser,
+        ParseQueueService,
         {
           provide: RozParser,
           useValue: {},

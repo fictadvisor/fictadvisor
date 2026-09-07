@@ -8,7 +8,7 @@ import { DateService } from '../../../src/modules/date/v2/date.service';
 import { UserService } from '../../../src/modules/user/v2/user.service';
 import { CampusParser } from '../../../src/modules/parser/v2/campus-parser';
 import { RozParser } from '../../../src/modules/parser/v2/roz-parser';
-import { GeneralParser } from '../../../src/modules/parser/v2/general-parser';
+import { ParseQueueService } from '../../../src/modules/parser/v2/parse-queue.service';
 import { DbEvent } from '../../../src/database/v2/entities/event.entity';
 import { ScheduleHelperService } from '../../../src/modules/schedule/v2/schedule.helper-service';
 
@@ -26,7 +26,7 @@ describe('ScheduleService', () => {
     }).useMocker((token) => {
       const tokens: InjectionToken[] = [
         UserService,
-        GeneralParser,
+        ParseQueueService,
         RozParser,
         CampusParser,
       ];

@@ -10,7 +10,7 @@ import {
 } from '@fictadvisor/utils/requests';
 import { EventTypeEnum, ParserTypeEnum } from '@fictadvisor/utils/enums';
 import { DisciplineTypeEnum, Period } from '@prisma-client/fictadvisor';
-import { CurrentSemester, DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
+import { CurrentSemester, DateService, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DateUtils } from '../../date/date.utils';
 import { every, everyAsync, find, some } from '../../../common/utils/array.utils';
 import { UserService } from '../../user/v2/user.service';
@@ -27,16 +27,11 @@ import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-
 import { InvalidWeekException } from '../../../common/exceptions/invalid-week.exception';
 import { NoPermissionException } from '../../../common/exceptions/no-permission.exception';
 import { GroupRepository } from '../../../database/v2/repositories/group.repository';
-import { GeneralParser } from '../../parser/v2/general-parser';
+import { ParseQueueService } from '../../parser/v2/parse-queue.service';
 import { Cron } from '@nestjs/schedule';
 import { DbDisciplineTeacherWithRoles } from '../../../database/v2/entities/discipline-teacher.entity';
 import { ScheduleHelperService } from './schedule.helper-service';
-
-export const weeksPerEvent = {
-  EVERY_WEEK: WEEK / WEEK,
-  EVERY_FORTNIGHT: FORTNITE / WEEK,
-  NO_PERIOD: 1,
-};
+export { weeksPerEvent } from './schedule.constants';
 
 @Injectable()
 export class ScheduleService {
@@ -50,7 +45,7 @@ export class ScheduleService {
     private studentRepository: StudentRepository,
     private dateUtils: DateUtils,
     private groupRepository: GroupRepository,
-    private generalParser: GeneralParser,
+    private parseQueue: ParseQueueService,
     private readonly scheduleHelperService: ScheduleHelperService,
   ) {}
 
@@ -58,12 +53,14 @@ export class ScheduleService {
     const { parser, page, year, semester, groups } = query;
     const period: StudyingSemester = { year, semester };
     const groupList = groups ? groups.trim().split(';') : [];
-    await this.generalParser.parse(parser, groupList, period, page);
+    // Returns once the groups are queued, not once they are parsed: the import is
+    // minutes of work and no caller was ever waiting on the result of it.
+    await this.parseQueue.enqueueManual(parser, groupList, period, page);
   }
 
   @Cron('0 3 * * *', { name: 'ScheduleService.autoParse' })
   async autoParse () {
-    await this.generalParser.parse(ParserTypeEnum.CAMPUS);
+    await this.parseQueue.enqueueNightly(ParserTypeEnum.CAMPUS);
   }
 
   async getGeneralGroupEvents (

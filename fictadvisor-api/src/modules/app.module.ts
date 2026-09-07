@@ -11,6 +11,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AutomapperModule } from '@automapper/nestjs';
 import { TelegramApiModule } from './telegram-api/telegram-api.module';
 import { CronErrorReporter } from '../common/services/cron-error-reporter';
+import { QueueModule } from './queue/queue.module';
 import { classes } from '@automapper/classes';
 
 @Module({
@@ -24,6 +25,7 @@ import { classes } from '@automapper/classes';
       strategyInitializer: classes(),
     }),
     ScheduleModule.forRoot(),
+    QueueModule,
     ApiModule,
     EmailModule,
     MetricsModule,

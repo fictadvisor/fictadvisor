@@ -4,7 +4,7 @@ import { CurrentSemester, FORTNITE, WEEK } from '../../date/v2/date.service';
 import { DateUtils } from '../../date/date.utils';
 import { Injectable } from '@nestjs/common';
 import { DisciplineTypeEnum, Period } from '@fictadvisor/utils/enums';
-import { weeksPerEvent } from './schedule.service';
+import { weeksPerEvent } from './schedule.constants';
 import { BaseShortEventResponse } from '@fictadvisor/utils';
 import { UpdateEventDTO } from '@fictadvisor/utils/requests';
 import { ObjectIsRequiredException } from '../../../common/exceptions/object-is-required.exception';
