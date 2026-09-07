@@ -9,11 +9,7 @@ export class EventRepository extends PrismaRepository<'event', DbEvent> {
     super(prisma.event, {
       group: true,
       eventInfo: true,
-      lessons: {
-        include: {
-          disciplineType: true,
-        },
-      },
+      disciplineType: true,
     });
   }
 }

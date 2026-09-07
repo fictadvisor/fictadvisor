@@ -106,7 +106,7 @@ export class ScheduleController {
       response.startTime = event.startTime;
       response.endTime = event.endTime;
       response.eventType =
-        (event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum) ??
+        (event.disciplineType?.name as unknown as EventTypeEnum) ??
         EventTypeEnum.OTHER;
       return response;
     });
