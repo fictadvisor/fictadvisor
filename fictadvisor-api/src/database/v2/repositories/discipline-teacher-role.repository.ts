@@ -30,11 +30,25 @@ export class DisciplineTeacherRoleRepository implements RepositoryInterface<DbDi
   }
 
   async getOrCreate (data: Prisma.DisciplineTeacherRoleUncheckedCreateInput) {
-    let disciplineTeacherRole = await this.find(data);
-    if (!disciplineTeacherRole) {
-      disciplineTeacherRole = await this.create(data);
+    // A null discipline type cannot be upserted on: Postgres treats NULLs as
+    // distinct, so the compound unique would never match and every call would
+    // insert. Those rows are not reachable from any caller today, and the
+    // find-then-create they fall back to is what this always did.
+    if (data.disciplineTypeId == null) {
+      return await this.find(data) ?? this.create(data);
     }
-    return disciplineTeacherRole;
+
+    return this.prisma.disciplineTeacherRole.upsert({
+      where: {
+        disciplineTeacherId_disciplineTypeId: {
+          disciplineTeacherId: data.disciplineTeacherId,
+          disciplineTypeId: data.disciplineTypeId,
+        },
+      },
+      create: data,
+      update: {},
+      include: this.include,
+    });
   }
 
   async deleteMany (where: Prisma.DisciplineTeacherRoleWhereInput) {

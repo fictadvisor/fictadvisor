@@ -2,12 +2,22 @@
 export const PARSE_QUEUE = 'parse';
 export const PARSE_GROUP_JOB = 'group';
 
-// One at a time, deliberately. The old loop was sequential too, so this costs nothing
-// against today, and it buys two things back: campus is not hit in parallel by a
-// stranger, and `getOrCreate` for a teacher or a discipline cannot race itself --
-// `teachers` and `events` are protected by unique indexes now, but `discipline_types`
-// is not, and a burst of parallel writers would be a new way to duplicate rows.
-export const PARSE_QUEUE_CONCURRENCY = 1;
+// How many groups are imported at once. Defaults to one, which is what the old loop
+// did, so an environment that sets nothing behaves exactly as before.
+//
+// What actually bounds this, measured rather than assumed:
+//   - Campus does not: 120 requests at 71/s came back 200 with no latency drift and
+//     no 429, and the whole fetch is under 10% of the import anyway (~44ms x 630
+//     groups against a ~300s run). The rest is Postgres.
+//   - The connection pool does: every concurrent import holds one connection for the
+//     length of its transaction, on top of ordinary request traffic. `connection_limit`
+//     in FICTADVISOR_DATABASE_URL is the ceiling.
+//   - Contention does, mildly: only `subjects` and `teachers` are shared between
+//     groups -- everything else (disciplines, discipline types, discipline teachers,
+//     events) hangs off a group -- and both are reached through upserts now, so a
+//     collision is resolved by Postgres instead of aborting the transaction.
+export const PARSE_QUEUE_CONCURRENCY =
+  parseInt(process.env.PARSE_QUEUE_CONCURRENCY ?? '') || 1;
 
 // A group that failed on a campus hiccup is worth retrying, but not for long: the
 // nightly import has all night, and a group that fails three times an hour apart is

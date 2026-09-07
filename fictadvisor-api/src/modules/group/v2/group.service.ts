@@ -151,16 +151,19 @@ export class GroupService {
     { code, eduProgramId, cathedraId, admissionYear }:
     Omit<UpdateGroupDTO, 'code'> & { code: string },
   ): Promise<DbGroup>  {
-    const group =
-      await this.groupRepository.findOne({ code }) ??
-      // Two parses running at once both miss the lookup and both insert. The one
-      // that loses the race reads back what the other wrote rather than failing.
-      await this.createGroup({
+    // Two parses running at once both miss a lookup and both insert, and the loser's
+    // unique violation would abort the transaction the import runs in -- taking the
+    // read-back with it. An upsert never raises one in the first place.
+    const group = await this.groupRepository.upsert(
+      { code },
+      {
         code,
         cathedraId,
         educationalProgramId: eduProgramId,
         admissionYear: admissionYear ?? getAdmissionYearFromCode(code),
-      }, () => this.groupRepository.findOne({ code }));
+      },
+      {},
+    );
 
     // By id rather than by code: the group we hold is the one that needs its
     // permissions, whoever created it.

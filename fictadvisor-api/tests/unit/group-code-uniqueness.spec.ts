@@ -79,37 +79,54 @@ describe('creating a group with a code that is taken', () => {
   });
 });
 
-// Two parses can run at once — the nightly cron and a manual one — and both miss
-// the lookup for a group neither has seen before.
-describe('getOrCreate losing the race', () => {
-  it('reads back the row the other writer inserted', async () => {
+// Two parses can run at once -- the nightly cron and a manual one -- and both miss
+// the lookup for a group neither has seen before. It is an upsert now rather than a
+// create-and-catch: the loser's unique violation would abort the transaction the
+// import runs in, and the read-back that used to rescue it would never get to run.
+describe('getOrCreate under a race', () => {
+  const build = (upsert: any) => {
     const service: any = Object.create(GroupService.prototype);
-    const winner = { id: 'winner', code: 'ІМ-61', admissionYear: 2026 };
-    let inserted = false;
-
-    service.groupRepository = {
-      // Absent on the first look, present by the time the insert is rejected.
-      findOne: async () => (inserted ? winner : undefined),
-      create: async () => {
-        inserted = true;
-        throw uniqueViolation();
-      },
-    };
+    service.groupRepository = { upsert };
     service.roleRepository = { count: async () => 1 };
+    return service;
+  };
+
+  it('returns the row the other writer inserted, without raising', async () => {
+    const winner = { id: 'winner', code: 'ІМ-61', admissionYear: 2026 };
+
+    // What Postgres does on conflict: hands back what is already there.
+    const service = build(async () => winner);
 
     await expect(service.getOrCreate({ code: 'ІМ-61' })).resolves.toBe(winner);
   });
 
   it('creates the group when nothing else got there first', async () => {
-    const service: any = Object.create(GroupService.prototype);
-
-    service.groupRepository = {
-      findOne: async () => undefined,
-      create: async (data: any) => ({ id: 'new', ...data }),
-    };
-    service.roleRepository = { count: async () => 1 };
+    const service = build(async (_where: any, create: any) => ({ id: 'new', ...create }));
 
     await expect(service.getOrCreate({ code: 'ІМ-61' }))
       .resolves.toMatchObject({ code: 'ІМ-61', admissionYear: 2026 });
+  });
+
+  it('derives the admission year from the code it upserts', async () => {
+    let created: any;
+    const service = build(async (_where: any, create: any) => (created = create));
+
+    await service.getOrCreate({ code: 'ІМ-31' });
+
+    expect(created.admissionYear).toBe(2023);
+  });
+
+  // Locks the hazard out rather than trusting the reader: a bare create here is what
+  // used to poison the surrounding transaction.
+  it('never falls back to a bare create or a read-first lookup', async () => {
+    const service = build(async () => ({ id: 'x', code: 'ІМ-61' }));
+    service.groupRepository.create = () => {
+      throw new Error('must not create directly'); 
+    };
+    service.groupRepository.findOne = () => {
+      throw new Error('must not read first'); 
+    };
+
+    await expect(service.getOrCreate({ code: 'ІМ-61' })).resolves.toBeDefined();
   });
 });

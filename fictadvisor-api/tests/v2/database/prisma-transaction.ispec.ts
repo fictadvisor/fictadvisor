@@ -80,6 +80,36 @@ describe('PrismaService.transaction', () => {
     expect(await subjects.findOne({ name: subjectName })).toBeNull();
   });
 
+  // The reason every find-then-create in the import became an upsert. Two groups
+  // studying the same subject, imported at once, both miss the lookup and both
+  // insert; the loser's unique violation would abort its whole transaction, taking
+  // the read-back with it. An upsert never raises one.
+  it('lets concurrent transactions upsert the same row without either failing', async () => {
+    const subjectName = name('concurrent');
+
+    const results = await Promise.allSettled(
+      Array.from({ length: 5 }, () =>
+        prisma.transaction(async () => {
+          await subjects.upsert({ name: subjectName }, { name: subjectName }, {});
+        })),
+    );
+
+    expect(results.filter((r) => r.status === 'rejected')).toEqual([]);
+    expect(await prisma.subject.count({ where: { name: subjectName } })).toBe(1);
+  });
+
+  it('still lets a find-then-create style race abort the transaction', async () => {
+    const subjectName = name('violation');
+    await subjects.create({ name: subjectName });
+
+    // Documents why the upsert above is not optional: once a statement inside a
+    // transaction violates a constraint, nothing after it can run.
+    await expect(prisma.transaction(async () => {
+      await subjects.create({ name: subjectName }).catch(() => undefined);
+      await subjects.findOne({ name: subjectName });
+    })).rejects.toBeDefined();
+  });
+
   it('writes outside a transaction exactly as before', async () => {
     const subjectName = name('plain');
 
