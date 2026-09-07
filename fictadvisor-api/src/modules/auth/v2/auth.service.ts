@@ -19,7 +19,7 @@ import { JwtPayload } from './types/jwt.payload';
 import { TelegramAPI } from '../../telegram-api/telegram-api';
 import { SecurityConfigService } from '../../../config/security-config.service';
 import { TelegramConfigService } from '../../../config/telegram-config.service';
-import { EmailService } from '../../email/email.service';
+import { EmailQueueService } from '../../email/email-queue.service';
 import { GroupService } from '../../group/v2/group.service';
 import { PrismaService } from '../../../database/v2/prisma.service';
 import { UserRepository } from '../../../database/v2/repositories/user.repository';
@@ -81,7 +81,7 @@ export class AuthService {
     private jwtService: JwtService,
     private securityConfig: SecurityConfigService,
     private telegramConfig: TelegramConfigService,
-    private emailService: EmailService,
+    private emailQueue: EmailQueueService,
     private userRepository: UserRepository,
     private studentRepository: StudentRepository,
     private telegramApi: TelegramAPI,
@@ -276,7 +276,7 @@ export class AuthService {
       },
     });
 
-    await this.emailService.sendEmail({
+    await this.emailQueue.sendEmail({
       to: email,
       subject: 'Відновлення пароля на fictadvisor.com',
       message: 'Для відновлення пароля натисни на кнопку нижче. Посилання діє годину.',
@@ -329,7 +329,7 @@ export class AuthService {
         ...user,
       },
     });
-    await this.emailService.sendEmail({
+    await this.emailQueue.sendEmail({
       to: user.email,
       subject: 'Верифікація пошти на fictadvisor.com',
       message: 'Для верифікації пошти натисни на кнопку нижче. Посилання діє годину.',

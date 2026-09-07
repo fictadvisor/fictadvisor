@@ -1,8 +1,49 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
 import { EmailService } from './email.service';
+import { EmailQueueService } from './email-queue.service';
+import { EmailProcessor } from './email.processor';
+import {
+  EMAIL_JOB_ATTEMPTS,
+  EMAIL_JOB_BACKOFF_MS,
+  EMAIL_QUEUE,
+  EMAIL_QUEUE_PREFIX,
+} from './email.constants';
 import { join } from 'path';
+
+// Redis is optional here for the same reason it is optional in MetricsStore:
+// `.development.env` and `.testing.env` carry no REDIS_URL, and the unit and
+// integration runs build this module without one. With no Redis the queue and
+// its worker are never registered, EmailQueueService sends inline, and emails
+// behave exactly as they did before the queue existed.
+const redisUrl = process.env.REDIS_URL;
+
+const queueImports: DynamicModule[] = redisUrl
+  ? [
+    BullModule.forRoot({
+      connection: { url: redisUrl },
+      prefix: EMAIL_QUEUE_PREFIX,
+    }),
+    BullModule.registerQueue({
+      name: EMAIL_QUEUE,
+      defaultJobOptions: {
+        attempts: EMAIL_JOB_ATTEMPTS,
+        backoff: { type: 'exponential', delay: EMAIL_JOB_BACKOFF_MS },
+        // Completed jobs are kept just long enough to answer "did it go out?",
+        // failures for a week so a bad SMTP night is still visible on Monday.
+        // Both are capped by count as well as age because this Redis runs
+        // `maxmemory-policy noeviction`: an unbounded set would eventually start
+        // rejecting writes for the metrics snapshots sharing the instance.
+        removeOnComplete: { age: 60 * 60, count: 200 },
+        removeOnFail: { age: 7 * 24 * 60 * 60, count: 500 },
+      },
+    }),
+  ]
+  : [];
+
+const queueProviders: Provider[] = redisUrl ? [EmailProcessor] : [];
 
 @Module({
   imports: [
@@ -26,8 +67,11 @@ import { join } from 'path';
         },
       },
     }),
+    ...queueImports,
   ],
-  providers: [EmailService],
-  exports: [EmailService],
+  providers: [EmailService, EmailQueueService, ...queueProviders],
+  // Only the queue is exported: EmailService stays internal so a new caller
+  // cannot accidentally reintroduce a blocking SMTP send on a request path.
+  exports: [EmailQueueService],
 })
 export class EmailModule {}
