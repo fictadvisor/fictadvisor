@@ -26,7 +26,7 @@ export class ScheduleProfile extends AutomapperProfile {
     return (mapper: Mapper) => {
       createMap(mapper, DbEvent, GeneralShortEventResponse,
         forMember((response) => response.eventType,
-          mapFrom(({ lessons }) => this.getEventType(lessons[0]?.disciplineType))));
+          mapFrom(({ disciplineType }) => this.getEventType(disciplineType))));
 
       createMap(mapper, DbEvent, ShortEventResponse,
         extend(DbEvent, GeneralShortEventResponse));
@@ -46,8 +46,8 @@ export class ScheduleProfile extends AutomapperProfile {
           mapWithArguments((_, { discipline }: any) => discipline?.id ?? null)),
 
         forMember((response) => response.teachers,
-          mapWithArguments(({ lessons }, { discipline }: any) =>
-            this.getTeachers(discipline?.disciplineTeachers, lessons[0]?.disciplineType)),
+          mapWithArguments(({ disciplineType }, { discipline }: any) =>
+            this.getTeachers(discipline?.disciplineTeachers, disciplineType)),
         ));
     };
   }

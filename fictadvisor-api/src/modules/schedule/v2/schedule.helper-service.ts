@@ -87,7 +87,7 @@ export class ScheduleHelperService {
     addPractice?: boolean,
     addOtherEvents?: boolean,
   ): boolean {
-    if (!event.lessons.length) return !!addOtherEvents;
+    if (!event.disciplineType) return !!addOtherEvents;
     const typeFilter: Record<DisciplineTypeEnum, boolean | undefined> = {
       [DisciplineTypeEnum.LECTURE]: addLecture,
       [DisciplineTypeEnum.PRACTICE]: addPractice,
@@ -96,9 +96,7 @@ export class ScheduleHelperService {
       [DisciplineTypeEnum.EXAM]: addOtherEvents,
       [DisciplineTypeEnum.WORKOUT]: addOtherEvents,
     };
-    return event.lessons.some(
-      (lesson) => !!lesson.disciplineType && !!typeFilter[lesson.disciplineType.name],
-    );
+    return !!typeFilter[event.disciplineType.name];
   }
 
   calculateEventsAmount (

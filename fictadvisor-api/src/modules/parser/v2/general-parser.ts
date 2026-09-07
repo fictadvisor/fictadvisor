@@ -513,20 +513,12 @@ export class GeneralParser {
     const { id: eventId } =
       (await this.eventRepository.findOne({
         ...event,
-        lessons: {
-          some: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
-        },
+        disciplineTypeId: DbDisciplineType.id,
       })) ??
       (await this.eventRepository.create({
         ...event,
         eventsAmount: await this.getEventsAmount(period, currentSemester),
-        lessons: {
-          create: {
-            disciplineTypeId: DbDisciplineType.id,
-          },
-        },
+        disciplineTypeId: DbDisciplineType.id,
       }));
 
     await this.handleTeachers(
@@ -657,12 +649,7 @@ export class GeneralParser {
           },
         }),
         this.eventRepository.updateById(eventId, {
-          lessons: {
-            deleteMany: {},
-            create: {
-              disciplineTypeId: disciplineType.id,
-            },
-          },
+          disciplineTypeId: disciplineType.id,
         }),
       ]);
     }
@@ -761,17 +748,13 @@ export class GeneralParser {
     const events = await this.eventRepository.findMany({
       groupId,
       OR: dates,
-      lessons: {
-        some: {
-          disciplineType: {
-            name: {
-              in: [
-                EventTypeEnum.PRACTICE,
-                EventTypeEnum.LECTURE,
-                EventTypeEnum.LABORATORY,
-              ],
-            },
-          },
+      disciplineType: {
+        name: {
+          in: [
+            EventTypeEnum.PRACTICE,
+            EventTypeEnum.LECTURE,
+            EventTypeEnum.LABORATORY,
+          ],
         },
       },
       isCustom: false,
@@ -781,9 +764,9 @@ export class GeneralParser {
       const discipline = await this.disciplineRepository.findOne({
         disciplineTypes: {
           some: {
-            lessons: {
+            events: {
               some: {
-                eventId: event.id,
+                id: event.id,
               },
             },
           },
@@ -795,8 +778,8 @@ export class GeneralParser {
           extraArgs: () => ({ discipline }),
         });
 
-      // The query above only matches events whose lesson has a discipline type.
-      const disciplineType = event.lessons[0].disciplineType as DbDisciplineType;
+      // The query above only matches events that have a discipline type.
+      const disciplineType = event.disciplineType as DbDisciplineType;
 
       return {
         id,

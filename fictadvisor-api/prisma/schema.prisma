@@ -185,6 +185,7 @@ model DisciplineType {
   name                   DisciplineTypeEnum
   disciplineTeacherRoles DisciplineTeacherRole[]
   lessons                Lesson[]
+  events                 Event[]
   createdAt              DateTime?               @default(now()) @map("created_at")
   updatedAt              DateTime?               @default(now()) @updatedAt @map("updated_at")
 
@@ -453,10 +454,17 @@ model Event {
   isCustom            Boolean     @default(false) @map("is_custom")
   eventInfo           EventInfo[]
   lessons             Lesson[]
+  // Replaces the `lessons` link table, which never held more than one row per
+  // event and carried nothing but this id. SetNull rather than Cascade so a
+  // deleted discipline type leaves the event behind exactly as the old link row
+  // did, instead of taking the event with it.
+  disciplineType      DisciplineType? @relation(fields: [disciplineTypeId], references: [id], onDelete: SetNull)
+  disciplineTypeId    String?     @map("discipline_type_id")
   createdAt           DateTime?   @default(now()) @map("created_at")
   updatedAt           DateTime?   @default(now()) @updatedAt @map("updated_at")
 
   @@index([groupId, startTime])
+  @@index([disciplineTypeId])
   @@map("events")
 }
 

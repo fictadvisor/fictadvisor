@@ -485,60 +485,36 @@ describe('ScheduleService', () => {
       ],
     });
 
-    await prisma.lesson.createMany({
-      data: [
-        {
-          eventId: 'lecture-event-1st-semester-every-fortnight-09-05',
-          disciplineTypeId: 'discipline-lecture',
-        },
-        {
-          eventId: 'practice-event-1st-semester-every-week-09-12',
-          disciplineTypeId: 'discipline-practice',
-        },
-        {
-          eventId: 'workout-event-1st-semester-every-fortnight-09-12',
-          disciplineTypeId: 'discipline-workout',
-        },
-        {
-          eventId: 'event-2st-semester-every-week-02-05',
-          disciplineTypeId: 'discipline-practice',
-        },
-
-        {
-          eventId: 'selective-practice-event-1st-semester-every-week-09-12',
-          disciplineTypeId: 'selectiveDiscipline-practice',
-        },
-        {
-          eventId: 'selective-workout-event-1st-semester-every-fortnight-09-12',
-          disciplineTypeId: 'selectiveDiscipline-workout',
-        },
-        {
-          eventId: 'nonselected-lecture-event-1st-semester-every-week-09-05',
-          disciplineTypeId: 'nonSelectedDiscipline-lecture',
-        },
-
-        {
-          eventId: 'anotherGroup-lecture-event-1st-semester-every-week-09-05',
-          disciplineTypeId: 'anotherGroup-discipline-lecture',
-        },
-        {
-          eventId: 'anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
-          disciplineTypeId: 'anotherGroup-selectiveDiscipline-practice',
-        },
-        {
-          eventId: 'anotherGroup-selective-workout-event-1st-semester-every-fortnight-09-12',
-          disciplineTypeId: 'anotherGroup-selectiveDiscipline-workout',
-        },
-        {
-          eventId: 'anotherGroup-selective-workout-event-1st-semester-every-fortnight-10-12',
-          disciplineTypeId: 'discipline-lecture',
-        },
-        {
-          eventId: 'anotherGroup-workout-event-1st-semester-every-fortnight-11-12',
-          disciplineTypeId: 'discipline-lecture',
-        },
-      ],
-    });
+    // The discipline type lives on the event itself now; this used to fill a
+    // `lessons` link table with exactly one row per event.
+    for (const [id, disciplineTypeId] of [
+      ['lecture-event-1st-semester-every-fortnight-09-05',
+        'discipline-lecture'],
+      ['practice-event-1st-semester-every-week-09-12',
+        'discipline-practice'],
+      ['workout-event-1st-semester-every-fortnight-09-12',
+        'discipline-workout'],
+      ['event-2st-semester-every-week-02-05',
+        'discipline-practice'],
+      ['selective-practice-event-1st-semester-every-week-09-12',
+        'selectiveDiscipline-practice'],
+      ['selective-workout-event-1st-semester-every-fortnight-09-12',
+        'selectiveDiscipline-workout'],
+      ['nonselected-lecture-event-1st-semester-every-week-09-05',
+        'nonSelectedDiscipline-lecture'],
+      ['anotherGroup-lecture-event-1st-semester-every-week-09-05',
+        'anotherGroup-discipline-lecture'],
+      ['anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
+        'anotherGroup-selectiveDiscipline-practice'],
+      ['anotherGroup-selective-workout-event-1st-semester-every-fortnight-09-12',
+        'anotherGroup-selectiveDiscipline-workout'],
+      ['anotherGroup-selective-workout-event-1st-semester-every-fortnight-10-12',
+        'discipline-lecture'],
+      ['anotherGroup-workout-event-1st-semester-every-fortnight-11-12',
+        'discipline-lecture'],
+    ] as const) {
+      await prisma.event.update({ where: { id }, data: { disciplineTypeId } });
+    }
 
     await prisma.teacher.create({
       data: {
@@ -616,10 +592,9 @@ describe('ScheduleService', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-12T00:01:00'));
       const { events } = await scheduleService.getGeneralGroupEvents('group', 1);
       expect(events.every(
-        (event) => event.lessons.every(
-          (lesson) => lesson.disciplineType?.name === DisciplineTypeEnum.LECTURE ||
-                      lesson.disciplineType?.name === DisciplineTypeEnum.PRACTICE ||
-                      lesson.disciplineType?.name === DisciplineTypeEnum.LABORATORY),
+        (event) => event.disciplineType?.name === DisciplineTypeEnum.LECTURE ||
+                   event.disciplineType?.name === DisciplineTypeEnum.PRACTICE ||
+                   event.disciplineType?.name === DisciplineTypeEnum.LABORATORY,
       )).toBe(true);
     });
   });
@@ -629,7 +604,7 @@ describe('ScheduleService', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', {});
       const containsOnlyGeneral = events.every((event) => {
-        return generalTypes.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
+        return generalTypes.includes(event.disciplineType?.name as unknown as EventTypeEnum);
       });
       expect(containsOnlyGeneral).toBe(true);
     });
@@ -650,7 +625,7 @@ describe('ScheduleService', () => {
 
         const { events } = await scheduleService.getGeneralGroupEventsWrapper('group', filter);
         const filterWorks = events.every((event) => {
-          return query.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
+          return query.includes(event.disciplineType?.name as unknown as EventTypeEnum);
         });
 
         expect(filterWorks).toBe(true);
@@ -757,9 +732,7 @@ describe('ScheduleService', () => {
       ];
       expect(
         events.every((event) =>
-          event.lessons.every(
-            (lesson) => !generalTypes.includes(lesson.disciplineType?.name as DisciplineTypeEnum),
-          ),
+          !generalTypes.includes(event.disciplineType?.name as DisciplineTypeEnum),
         ),
       ).toBe(true);
     });
@@ -800,9 +773,8 @@ describe('ScheduleService', () => {
       ];
 
       expect(events.every(
-        (event) => event.groupId === 'anotherGroup' && event.lessons.every(
-          (lesson) => generalTypes.includes(lesson.disciplineType?.name as DisciplineTypeEnum),
-        ),
+        (event) => event.groupId === 'anotherGroup' &&
+          generalTypes.includes(event.disciplineType?.name as DisciplineTypeEnum),
       )).toBe(true);
     });
 
@@ -817,11 +789,9 @@ describe('ScheduleService', () => {
       }, 'user', 2);
 
       expect(events.every(
-        (event) => event.lessons.every(
-          (lesson) => lesson.disciplineType?.name !== DisciplineTypeEnum.LECTURE &&
-                      lesson.disciplineType?.name !== DisciplineTypeEnum.PRACTICE &&
-                      lesson.disciplineType?.name !== DisciplineTypeEnum.LABORATORY,
-        )),
+        (event) => event.disciplineType?.name !== DisciplineTypeEnum.LECTURE &&
+          event.disciplineType?.name !== DisciplineTypeEnum.PRACTICE &&
+          event.disciplineType?.name !== DisciplineTypeEnum.LABORATORY),
       ).toBe(true);
     });
   });
@@ -878,7 +848,7 @@ describe('ScheduleService', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const events = await scheduleService.getGroupEventsForTelegram('group', 1);
       const areAllPublic = events.every((event) => {
-        return generalTypes.includes(event.lessons[0]?.disciplineType?.name as unknown as EventTypeEnum);
+        return generalTypes.includes(event.disciplineType?.name as unknown as EventTypeEnum);
       });
       expect(areAllPublic).toBe(true);
     });
@@ -918,7 +888,8 @@ describe('ScheduleService', () => {
               updatedAt: expect.any(Date),
             },
           ],
-          lessons: [],
+          disciplineTypeId: null,
+          disciplineType: null,
           group: {
             cathedraId: 'ipiCathedraId',
             code: 'AA-12',
@@ -1238,7 +1209,8 @@ describe('ScheduleService', () => {
           updatedAt: expect.any(Date),
         },
         eventInfo: [],
-        lessons: [],
+        disciplineTypeId: null,
+        disciplineType: null,
       };
 
       const { event } = await scheduleService.getEvent(eventId, data.week);
@@ -1291,7 +1263,8 @@ describe('ScheduleService', () => {
             updatedAt: expect.any(Date),
           },
         ],
-        lessons: [],
+        disciplineTypeId: null,
+        disciplineType: null,
       };
 
       await scheduleService.updateEvent(eventId, data);
@@ -1362,22 +1335,14 @@ describe('ScheduleService', () => {
             updatedAt: expect.any(Date),
           },
         ],
-        lessons: [
-          {
-            id: expect.any(String),
-            eventId: 'some-event-2st-semester-no-period-02-05',
-            disciplineTypeId: 'nonSelectedDiscipline-lecture',
-            createdAt: expect.any(Date),
-            updatedAt: expect.any(Date),
-            disciplineType: {
-              id: 'nonSelectedDiscipline-lecture',
-              disciplineId: 'nonSelectedDiscipline',
-              name: EventTypeEnum.LECTURE,
-              createdAt: expect.any(Date),
-              updatedAt: expect.any(Date),
-            },
-          },
-        ],
+        disciplineTypeId: 'nonSelectedDiscipline-lecture',
+        disciplineType: {
+          id: 'nonSelectedDiscipline-lecture',
+          disciplineId: 'nonSelectedDiscipline',
+          name: EventTypeEnum.LECTURE,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
       };
 
       await scheduleService.updateEvent(eventId, data);
@@ -1417,7 +1382,7 @@ describe('ScheduleService', () => {
       year: 2022,
     };
 
-    it('should delete an event without associated lessons', async () => {
+    it('should delete an event without a discipline type', async () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const eventToDelete = {
         id: 'some-event-1st-semester-no-period-09-12',
@@ -1449,7 +1414,8 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-12T10:00:00'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
-        lessons: [],
+        disciplineTypeId: null,
+        disciplineType: null,
         url: null,
       };
 
@@ -1457,7 +1423,7 @@ describe('ScheduleService', () => {
       expect(deletedEvent.event).toEqual(eventToDelete);
     });
 
-    it('should delete an event with associated lessons and discipline', async () => {
+    it('should delete an event with a discipline type and discipline', async () => {
       const deletedEventID = 'anotherGroup-selective-practice-event-1st-semester-every-week-09-12';
       jest.useFakeTimers().setSystemTime(new Date('2022-09-05T00:01:00'));
       const eventToDelete = {
@@ -1481,23 +1447,14 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-12T10:00:00'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
-        lessons: [
-          {
-            id: expect.any(String),
-            createdAt: expect.any(Date),
-            disciplineType: {
-              createdAt: expect.any(Date),
-              disciplineId: 'anotherGroup-discipline',
-              id: 'anotherGroup-selectiveDiscipline-practice',
-              name: 'PRACTICE',
-              updatedAt: expect.any(Date),
-            },
-            disciplineTypeId: 'anotherGroup-selectiveDiscipline-practice',
-            eventId:
-              'anotherGroup-selective-practice-event-1st-semester-every-week-09-12',
-            updatedAt: expect.any(Date),
-          },
-        ],
+        disciplineTypeId: 'anotherGroup-selectiveDiscipline-practice',
+        disciplineType: {
+          createdAt: expect.any(Date),
+          disciplineId: 'anotherGroup-discipline',
+          id: 'anotherGroup-selectiveDiscipline-practice',
+          name: 'PRACTICE',
+          updatedAt: expect.any(Date),
+        },
         url: null,
       };
 
@@ -1530,22 +1487,14 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-09-05T10:00:00.000Z'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
-        lessons: [
-          {
-            id: expect.any(String),
-            disciplineType: {
-              createdAt: expect.any(Date),
-              disciplineId: 'discipline',
-              id: 'discipline-lecture',
-              name: 'LECTURE',
-              updatedAt: expect.any(Date),
-            },
-            createdAt: expect.any(Date),
-            disciplineTypeId: 'discipline-lecture',
-            eventId: 'lecture-event-1st-semester-every-fortnight-09-05',
-            updatedAt: expect.any(Date),
-          },
-        ],
+        disciplineTypeId: 'discipline-lecture',
+        disciplineType: {
+          createdAt: expect.any(Date),
+          disciplineId: 'discipline',
+          id: 'discipline-lecture',
+          name: 'LECTURE',
+          updatedAt: expect.any(Date),
+        },
         url: null,
       };
 
@@ -1583,22 +1532,14 @@ describe('ScheduleService', () => {
         endTime: new Date('2022-11-12T10:00:00.000Z'),
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
-        lessons: [
-          {
-            id: expect.any(String),
-            disciplineType: {
-              createdAt: expect.any(Date),
-              disciplineId: 'discipline',
-              id: 'discipline-lecture',
-              name: 'LECTURE',
-              updatedAt: expect.any(Date),
-            },
-            createdAt: expect.any(Date),
-            disciplineTypeId: 'discipline-lecture',
-            eventId: 'anotherGroup-workout-event-1st-semester-every-fortnight-11-12',
-            updatedAt: expect.any(Date),
-          },
-        ],
+        disciplineTypeId: 'discipline-lecture',
+        disciplineType: {
+          createdAt: expect.any(Date),
+          disciplineId: 'discipline',
+          id: 'discipline-lecture',
+          name: 'LECTURE',
+          updatedAt: expect.any(Date),
+        },
         url: null,
       };
 
@@ -1625,7 +1566,6 @@ describe('ScheduleService', () => {
     await prisma.user.deleteMany();
     await prisma.group.deleteMany();
     await prisma.subject.deleteMany();
-    await prisma.lesson.deleteMany();
     await prisma.event.deleteMany();
     await prisma.disciplineType.deleteMany();
     await prisma.selectiveDiscipline.deleteMany();
