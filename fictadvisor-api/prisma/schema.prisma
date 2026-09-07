@@ -184,7 +184,6 @@ model DisciplineType {
   disciplineId           String                  @map("discipline_id")
   name                   DisciplineTypeEnum
   disciplineTeacherRoles DisciplineTeacherRole[]
-  lessons                Lesson[]
   events                 Event[]
   createdAt              DateTime?               @default(now()) @map("created_at")
   updatedAt              DateTime?               @default(now()) @updatedAt @map("updated_at")
@@ -453,7 +452,6 @@ model Event {
   teacherForceChanges Boolean     @default(false) @map("teacher_force_changes")
   isCustom            Boolean     @default(false) @map("is_custom")
   eventInfo           EventInfo[]
-  lessons             Lesson[]
   // Replaces the `lessons` link table, which never held more than one row per
   // event and carried nothing but this id. SetNull rather than Cascade so a
   // deleted discipline type leaves the event behind exactly as the old link row
@@ -463,6 +461,10 @@ model Event {
   createdAt           DateTime?   @default(now()) @map("created_at")
   updatedAt           DateTime?   @default(now()) @updatedAt @map("updated_at")
 
+  // What actually identifies a pair. The discipline type is part of it because
+  // campus publishes a lecture and a practice in the same slot, and it is the
+  // only column that tells those two apart.
+  @@unique([groupId, startTime, endTime, name, disciplineTypeId, period], map: "events_natural_key")
   @@index([groupId, startTime])
   @@index([disciplineTypeId])
   @@map("events")
@@ -480,19 +482,6 @@ model EventInfo {
   @@map("event_info")
 }
 
-model Lesson {
-  id               String          @id @default(uuid())
-  event            Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId          String          @map("event_id")
-  disciplineType   DisciplineType? @relation(fields: [disciplineTypeId], references: [id], onDelete: Cascade)
-  disciplineTypeId String?         @map("discipline_type_id")
-  createdAt        DateTime?       @default(now()) @map("created_at")
-  updatedAt        DateTime?       @default(now()) @updatedAt @map("updated_at")
-
-  @@unique([eventId, disciplineTypeId])
-  @@index([disciplineTypeId])
-  @@map("lessons")
-}
 
 model RemovedDisciplineTeacher {
   studentId           String            @map("student_id")
