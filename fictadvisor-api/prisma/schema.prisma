@@ -195,7 +195,7 @@ model DisciplineType {
 model Teacher {
   id                 String                @id @default(uuid())
   firstName          String                @map("first_name")
-  middleName         String?               @default("") @map("middle_name")
+  middleName         String                @default("") @map("middle_name")
   lastName           String                @map("last_name")
   description        String?
   avatar             String?
@@ -209,6 +209,7 @@ model Teacher {
   createdAt          DateTime?             @default(now()) @map("created_at")
   updatedAt          DateTime?             @default(now()) @updatedAt @map("updated_at")
 
+  @@unique([lastName, firstName, middleName])
   @@map("teachers")
 }
 
