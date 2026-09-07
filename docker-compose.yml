@@ -119,16 +119,22 @@ services:
     image: redis:7-alpine
     container_name: redis
     restart: unless-stopped
-    # Holds the visitor/user request counters so an API restart (watchtower
-    # redeploys several times on a busy day) doesn't reset the 24h breakdowns.
-    # RDB only, no AOF: the API rewrites the whole snapshot once a minute anyway,
-    # so an append log would just repeat it. `save` also makes redis write a final
-    # snapshot on SIGTERM. noeviction because these keys are the data, not a cache
-    # -- the size bound is MAX_TRACKED in the API, not maxmemory.
+    # Holds two things: the visitor/user request counters, so an API restart
+    # (watchtower redeploys several times on a busy day) doesn't reset the 24h
+    # breakdowns, and the outgoing email queue.
+    # AOF is on because of the queue. The counters alone were fine on RDB -- the
+    # API rewrites that entire snapshot once a minute, so an append log only
+    # repeated it -- but a queued email exists nowhere else, and `save 60 1`
+    # would drop up to a minute of them on a crash. `save` is kept as well: it
+    # still makes redis write a final snapshot on SIGTERM.
+    # noeviction because all of this is data, not a cache -- the size bounds are
+    # MAX_TRACKED in the API and removeOnComplete/removeOnFail on the queue,
+    # not maxmemory.
     command: >
       redis-server
       --save 60 1
-      --appendonly no
+      --appendonly yes
+      --appendfsync everysec
       --maxmemory 256mb
       --maxmemory-policy noeviction
     volumes:
