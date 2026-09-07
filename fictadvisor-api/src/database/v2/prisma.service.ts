@@ -1,9 +1,10 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { PrismaClient, State } from '@prisma-client/fictadvisor';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { MetricsService } from '../../modules/metrics/metrics.service';
 import { createMetricsExtension } from './prisma-metrics.extension';
+import { retry } from '../../common/utils/retry.util';
 
 const connectionString = process.env.FICTADVISOR_DATABASE_URL;
 
@@ -34,6 +35,19 @@ export interface TransactionOptions {
 // out-run on a slow night; the wait is what a caller spends queuing for a pool slot.
 const DEFAULT_TIMEOUT_MS = 30 * 1000;
 const DEFAULT_MAX_WAIT_MS = 10 * 1000;
+
+// Roughly 45 seconds of patience in total, which covers a Postgres restart and a task
+// that starts ahead of it. Past that, the orchestrator restarting the container is a
+// better escalation than waiting here forever.
+const CONNECT_ATTEMPTS = 10;
+const MAX_CONNECT_DELAY_MS = 10 * 1000;
+
+// Prisma reports an unreachable database over several lines, with the sentence anyone
+// wants ("Can't reach database server at ...") last. Keep the warning to one line.
+function connectionFailureReason (error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.split('\n').map((line) => line.trim()).filter(Boolean).pop() ?? String(error);
+}
 
 function isModelDelegate (value: unknown): boolean {
   return !!value && typeof value === 'object' &&
@@ -95,7 +109,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   async onModuleInit () {
-    await this.$connect();
+    await this.connect();
     await this.user.deleteMany({
       where: {
         state: State.PENDING,
@@ -105,6 +119,29 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
           },
         },
       },
+    });
+  }
+
+  // Swarm has no `depends_on`, so a task can start while Postgres is still coming up,
+  // and a process that gives up on the first refusal turns that into a crash loop paced
+  // by the orchestrator rather than by us. It earns its keep under compose too, where
+  // `depends_on` only orders the start and does nothing for a database that restarts
+  // later.
+  private async connect (): Promise<void> {
+    const logger = new Logger(PrismaService.name);
+
+    await retry(async () => {
+      await this.$connect();
+      // $connect can return against a pool that has not actually reached Postgres, so
+      // round-trip once before calling the database up.
+      await this.$queryRaw`SELECT 1`;
+    }, {
+      attempts: CONNECT_ATTEMPTS,
+      delayMs: (attempt) => Math.min(attempt * 1000, MAX_CONNECT_DELAY_MS),
+      onRetry: (error, attempt, delayMs) => logger.warn(
+        `Postgres is not reachable yet (attempt ${attempt}/${CONNECT_ATTEMPTS}), ` +
+        `retrying in ${delayMs}ms: ${connectionFailureReason(error)}`,
+      ),
     });
   }
 }
