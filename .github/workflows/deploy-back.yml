@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Run tests
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Node and dependencies
         uses: ./.github/actions/install
       - name: Start PostgreSQL Database
@@ -42,22 +42,22 @@ jobs:
     runs-on: self-hosted-ubuntu-arm64
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Cleanup Pre-Build
         run: docker system prune -f || true
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Build and push ARM64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./fictadvisor-api/Dockerfile
@@ -70,19 +70,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Build and push AMD64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./fictadvisor-api/Dockerfile
@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
@@ -106,3 +106,44 @@ jobs:
             -t fictadvisor/fictadvisor-api:${{ github.ref_name }} \
             fictadvisor/fictadvisor-api:${{ github.ref_name }}-amd64 \
             fictadvisor/fictadvisor-api:${{ github.ref_name }}-arm64
+
+  # The runner sits on the swarm manager itself, so rolling out needs no SSH and no
+  # secret beyond the registry login -- the same reason deploy-monitoring.yml can write
+  # ~/deployment directly.
+  deploy:
+    needs: [ merge ]
+    runs-on: self-hosted-ubuntu-arm64
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      # `--image` with the same moving tag is what re-resolves it to the digest just
+      # pushed; `--force` alone would redeploy the digest already running. Swarm then
+      # rolls the task under the stack's update_config: start the new one, wait for the
+      # healthcheck in the image, and only then stop the old one.
+      - name: Roll out the new image
+        run: |
+          if [ "${{ github.ref_name }}" = "dev" ]; then
+            service=fa_api-dev
+          else
+            service=fa_api
+          fi
+          # Until the swarm migration has run this service does not exist and watchtower
+          # is still what deploys the image. Skip rather than fail the pipeline.
+          if ! docker service inspect "$service" >/dev/null 2>&1; then
+            echo "::notice::$service is not a swarm service yet, skipping the roll-out"
+            exit 0
+          fi
+          docker service update \
+            --with-registry-auth \
+            --image fictadvisor/fictadvisor-api:${{ github.ref_name }} \
+            "$service"
+
+      - name: Report what ended up running
+        if: always()
+        run: |
+          service=$([ "${{ github.ref_name }}" = "dev" ] && echo fa_api-dev || echo fa_api)
+          docker service ps --no-trunc "$service" || true

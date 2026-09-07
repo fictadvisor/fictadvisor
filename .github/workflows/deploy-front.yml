@@ -26,20 +26,20 @@ jobs:
             arch: arm64
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Build and push by digest
         id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./fictadvisor-web/Dockerfile
@@ -57,7 +57,7 @@ jobs:
           touch "${{ runner.temp }}/digests/${digest#sha256:}"
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: digests-${{ matrix.arch }}
           path: ${{ runner.temp }}/digests/*
@@ -69,17 +69,17 @@ jobs:
     needs: build
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: ${{ runner.temp }}/digests
           pattern: digests-*
           merge-multiple: true
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
@@ -92,3 +92,32 @@ jobs:
 
       - name: Inspect image
         run: docker buildx imagetools inspect ${{ env.IMAGE }}:${{ github.ref_name }}
+
+  deploy:
+    needs: [ merge ]
+    runs-on: self-hosted-ubuntu-arm64
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      # See deploy-back.yml for why this is `--image` rather than `--force`.
+      - name: Roll out the new image
+        run: |
+          service=fa_web
+          # Until the swarm migration has run this service does not exist and watchtower
+          # is still what deploys the image. Skip rather than fail the pipeline.
+          if ! docker service inspect "$service" >/dev/null 2>&1; then
+            echo "::notice::$service is not a swarm service yet, skipping the roll-out"
+            exit 0
+          fi
+          docker service update \
+            --with-registry-auth \
+            --image ${{ env.IMAGE }}:${{ github.ref_name }} \
+            fa_web
+
+      - name: Report what ended up running
+        if: always()
+        run: docker service ps --no-trunc fa_web || true
