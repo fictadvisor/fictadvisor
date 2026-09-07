@@ -61,7 +61,7 @@ export class ScheduleService {
     await this.generalParser.parse(parser, groupList, period, page);
   }
 
-  @Cron('0 3 * * *')
+  @Cron('0 3 * * *', { name: 'ScheduleService.autoParse' })
   async autoParse () {
     await this.generalParser.parse(ParserTypeEnum.CAMPUS);
   }

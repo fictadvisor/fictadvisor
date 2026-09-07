@@ -146,7 +146,7 @@ export class TeacherService {
     return +(sum / marks.length).toFixed(2);
   }
 
-  @Cron('0 0 3 * * *')
+  @Cron('0 0 3 * * *', { name: 'TeacherService.updateRating' })
   async updateRating () {
     const teachers = await this.teacherRepository.findMany<Pick<DbTeacher, 'id'>>({}, TEACHER_NO_RELATIONS);
     if (!teachers.length) return;

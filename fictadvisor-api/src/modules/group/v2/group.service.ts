@@ -666,7 +666,7 @@ export class GroupService {
   // Graduation is a date, not an event anyone triggers, so everything that has to
   // happen when a group finishes hangs off one nightly pass. A group graduates
   // once, so a few hours of lag costs nothing.
-  @Cron('0 30 3 * * *')
+  @Cron('0 30 3 * * *', { name: 'GroupService.handleGraduatedGroups' })
   async handleGraduatedGroups (): Promise<void> {
     const groups = await this.groupRepository.findMany(await this.getGraduatedGroupsWhere());
 

@@ -9,6 +9,8 @@ import { PrismaModule } from '../database/prisma.module';
 import * as process from 'process';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AutomapperModule } from '@automapper/nestjs';
+import { TelegramApiModule } from './telegram-api/telegram-api.module';
+import { CronErrorReporter } from '../common/services/cron-error-reporter';
 import { classes } from '@automapper/classes';
 
 @Module({
@@ -26,7 +28,8 @@ import { classes } from '@automapper/classes';
     EmailModule,
     MetricsModule,
     PrismaModule,
+    TelegramApiModule,
   ],
-  providers: [SecurityConfigService],
+  providers: [SecurityConfigService, CronErrorReporter],
 })
 export class AppModule {}
