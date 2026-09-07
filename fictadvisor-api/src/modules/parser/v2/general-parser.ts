@@ -556,9 +556,15 @@ export class GeneralParser {
     semester: StudyingSemester,
     currentSemester?: CurrentSemester,
   ) {
-    const { id: subjectId } =
-      (await this.subjectRepository.findOne({ name })) ??
-      (await this.subjectRepository.create({ name: name ?? '' }));
+    // Subjects are shared across every group that studies them, so this is one of
+    // only two places a parallel import can collide. An upsert is what keeps that
+    // collision from raising a violation -- which, inside the per-group transaction,
+    // would abort everything after it rather than just this statement.
+    const { id: subjectId } = await this.subjectRepository.upsert(
+      { name: name ?? '' },
+      { name: name ?? '' },
+      {},
+    );
 
     const discipline = await this.getOrCreateDiscipline(
       {
@@ -583,16 +589,20 @@ export class GeneralParser {
       period,
     };
 
-    const { id: eventId } =
-      (await this.eventRepository.findOne({
-        ...event,
-        disciplineTypeId: DbDisciplineType.id,
-      })) ??
-      (await this.eventRepository.create({
+    const { id: eventId } = await this.eventRepository.upsert(
+      {
+        groupId_startTime_endTime_name_disciplineTypeId_period: {
+          ...event,
+          disciplineTypeId: DbDisciplineType.id,
+        },
+      },
+      {
         ...event,
         eventsAmount: await this.getEventsAmount(period, currentSemester),
         disciplineTypeId: DbDisciplineType.id,
-      }));
+      },
+      {},
+    );
 
     await this.handleTeachers(
       teacherIds,
@@ -641,9 +651,11 @@ export class GeneralParser {
     disciplineTypeName: DisciplineTypeEnum,
     isSelective: boolean,
   ) {
-    const discipline =
-      (await this.disciplineRepository.findOne(disciplineData)) ??
-      (await this.disciplineRepository.create(disciplineData));
+    const discipline = await this.disciplineRepository.upsert(
+      { subjectId_groupId_year_semester: disciplineData },
+      disciplineData,
+      {},
+    );
 
     const updateData: DisciplineUpdateInput = {
       isSelective: discipline.isSelective || isSelective,
@@ -675,12 +687,22 @@ export class GeneralParser {
       middleName,
     };
 
-    return (
-      (await this.teacherRepository.findOne({
-        lastName,
-        firstName: { startsWith: firstName },
-        middleName: { startsWith: middleName },
-      })) ?? (await this.teacherRepository.create(teacherDto))
+    const found = await this.teacherRepository.findOne({
+      lastName,
+      firstName: { startsWith: firstName },
+      middleName: { startsWith: middleName },
+    });
+    if (found) return found;
+
+    // This lookup cannot be folded into the upsert: it matches on prefixes, because
+    // campus gives initials in some places and full names in others, while the unique
+    // index is on the exact three parts. Upserting the exact name is still what makes
+    // it safe -- teachers are the other entity shared between groups, and a writer
+    // that got there first is read back instead of raising a violation.
+    return this.teacherRepository.upsert(
+      { lastName_firstName_middleName: teacherDto },
+      teacherDto,
+      {},
     );
   }
 
@@ -695,18 +717,14 @@ export class GeneralParser {
       disciplineId,
     };
 
-    const disciplineTeacher =
-      (await this.disciplineTeacherRepository.findOne(
-        disciplineTeacherWhere,
-      )) ??
-      (await this.disciplineTeacherRepository.create({
-        ...disciplineTeacherWhere,
-        roles: {
-          create: {
-            disciplineTypeId: disciplineType.id,
-          },
-        },
-      }));
+    // Created without its role: a nested write would take this off Postgres'
+    // single-statement upsert path, and the block below already creates the role
+    // whenever it is missing.
+    const disciplineTeacher = await this.disciplineTeacherRepository.upsert(
+      { disciplineId_teacherId: disciplineTeacherWhere },
+      disciplineTeacherWhere,
+      {},
+    );
 
     if (
       !disciplineTeacher.roles.some(

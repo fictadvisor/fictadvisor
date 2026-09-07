@@ -246,9 +246,11 @@ export class ScheduleService {
 
     for (const teacherId of data.teacherIds) {
       const teacher = { teacherId, disciplineId: discipline.id };
-      const disciplineTeacher =
-        (await this.disciplineTeacherRepository.findOne(teacher)) ??
-        (await this.disciplineTeacherRepository.create(teacher));
+      const disciplineTeacher = await this.disciplineTeacherRepository.upsert(
+        { disciplineId_teacherId: teacher },
+        teacher,
+        {},
+      );
 
       if (
         !disciplineTeacher.roles.some(
@@ -788,9 +790,11 @@ export class ScheduleService {
 
     for (const teacherId of teachers) {
       const teacher = { teacherId, disciplineId };
-      const disciplineTeacher =
-        (await this.disciplineTeacherRepository.findOne(teacher)) ??
-        (await this.disciplineTeacherRepository.create(teacher));
+      const disciplineTeacher = await this.disciplineTeacherRepository.upsert(
+        { disciplineId_teacherId: teacher },
+        teacher,
+        {},
+      );
 
       if (
         !disciplineTeacher.roles.some(

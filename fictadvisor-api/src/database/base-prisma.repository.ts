@@ -120,15 +120,21 @@ export abstract class BasePrismaRepository<
     return (this.model as any).count({ where });
   }
 
+  // The race-safe way to get-or-create. It matters more than it looks: a
+  // `findOne ?? create` pair loses to a concurrent writer, and the unique violation
+  // that follows aborts the *whole* Postgres transaction it happens in, so nothing
+  // after it -- including reading back the row the winner wrote -- can run.
   async upsert<T = Dto> (
     where: WhereUniqueType,
     create: CreateType,
     update: UpdateType,
-  ): Promise<T[]> {
+    include?: IncludeType,
+  ): Promise<T> {
     return (this.model as any).upsert({
       where,
       update,
       create,
+      include: include ?? this.repositoryInclude,
     });
   }
 
