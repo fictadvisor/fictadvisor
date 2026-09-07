@@ -10,7 +10,7 @@ import { mapAsync } from '../../../common/utils/array.utils';
 import { CampusParser } from './campus-parser';
 import { Parser } from './interfaces/parser.interface';
 import { GroupService } from '../../group/v2/group.service';
-import { weeksPerEvent } from '../../schedule/v2/schedule.service';
+import { weeksPerEvent } from '../../schedule/v2/schedule.constants';
 import { CurrentSemester, DateService, FORTNITE, StudyingSemester, WEEK } from '../../date/v2/date.service';
 import { DisciplineTypeEnum, EventTypeEnum, ParserTypeEnum, Period } from '@fictadvisor/utils/enums';
 import { DbDisciplineType } from '../../../database/v2/entities/discipline-type.entity';
@@ -30,6 +30,17 @@ import { Prisma } from '@prisma-client/fictadvisor';
 import { DateTime } from 'luxon';
 import DisciplineUpdateInput = Prisma.DisciplineUpdateInput;
 import EventWhereInput = Prisma.EventWhereInput;
+import { PrismaService } from '../../../database/v2/prisma.service';
+import { ParseGroupJobData, ParsePlan, ParsePlanContext } from './types/parse-plan.types';
+import { BaseGroup } from './types/schedule-parser.types';
+
+// What one group's import actually runs against, rebuilt from the JSON a job carries.
+type ParseContext = {
+  semester: Awaited<ReturnType<DateService['getSemester']>>;
+  dates: [EventWhereInput[], EventWhereInput[]];
+  weekNumber: number;
+  semesterStartDate: Date;
+}
 
 type BaseGeneralParserPair = ParsedSchedulePair & {
   period: Period;
@@ -57,6 +68,7 @@ export class GeneralParser {
     private disciplineTeacherRepository: DisciplineTeacherRepository,
     private disciplineTeacherRoleRepository: DisciplineTeacherRoleRepository,
     private campusParser: CampusParser,
+    private prisma: PrismaService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -169,19 +181,21 @@ export class GeneralParser {
     });
   }
 
-  async parse (
+  // The prologue every group shares, run once. Null means there is nothing to import,
+  // which is how a finished semester has always been handled.
+  async plan (
     parserType: ParserTypeEnum,
     groupList?: string[],
     period?: StudyingSemester,
     page?: number,
-  ) {
+  ): Promise<ParsePlan | null> {
     const weekNumber = await this.dateService.getCurrentWeek();
 
     const { isFinished, startDate: semesterStartDate } =
       await this.dateService.getCurrentSemester();
 
     if (!period && isFinished) {
-      return;
+      return null;
     }
 
     const semester = period
@@ -196,16 +210,51 @@ export class GeneralParser {
       page ? page * groupsPerPage : undefined,
     );
 
-    const dates = await Promise.all([
-      this.getDates(1, semesterStartDate),
-      this.getDates(2, semesterStartDate),
+    return {
+      parserType,
+      groups,
+      weekNumber,
+      semesterStartDate: semesterStartDate.toISOString(),
+      year: semester.year,
+      semester: semester.semester,
+    };
+  }
+
+  // Turns the JSON a job carries back into the objects the import works with. Cheap
+  // enough to redo per job: the date service caches the semester, and the week windows
+  // are arithmetic over its start date.
+  async resolveContext (context: ParsePlanContext): Promise<ParseContext> {
+    const semesterStartDate = new Date(context.semesterStartDate);
+    const [semester, dates] = await Promise.all([
+      this.dateService.getSemester({ year: context.year, semester: context.semester }),
+      Promise.all([
+        this.getDates(1, semesterStartDate),
+        this.getDates(2, semesterStartDate),
+      ]) as Promise<[EventWhereInput[], EventWhereInput[]]>,
     ]);
 
-    for (const group of groups) {
-      const [groupSchedule, { id: groupId }] = await Promise.all([
-        parser.parseGroupSchedule(group, semester),
-        this.groupService.getOrCreate({ code: group.name }),
-      ]);
+    return { semester, dates, weekNumber: context.weekNumber, semesterStartDate };
+  }
+
+  // One group: the network round trip first, then every write in a single transaction.
+  // A process killed mid-import then leaves the group exactly as it found it instead of
+  // half-written -- and a half-written group is not a cosmetic problem, because an event
+  // whose discipline type never landed is invisible to the matcher in saveWeekSchedule
+  // and grows a fresh duplicate beside itself on every later run.
+  async parseGroup (
+    group: BaseGroup,
+    parserType: ParserTypeEnum,
+    context: ParseContext,
+  ): Promise<void> {
+    const { semester, dates, weekNumber, semesterStartDate } = context;
+
+    // Outside the transaction on purpose: this is a call to campus, and holding a
+    // Postgres transaction open across a third party's latency is how pools die.
+    const groupSchedule = await this.parserTypes[parserType]
+      .parseGroupSchedule(group, semester);
+
+    await this.prisma.transaction(async () => {
+      const { id: groupId } = await this.groupService.getOrCreate({ code: group.name });
 
       await this.handleGroupSchedule(
         groupId,
@@ -215,6 +264,30 @@ export class GeneralParser {
         dates,
         semesterStartDate,
       );
+    });
+  }
+
+  async parseGroupJob ({ group, ...context }: ParseGroupJobData): Promise<void> {
+    await this.parseGroup(group, context.parserType, await this.resolveContext(context));
+  }
+
+  // Kept for the callers that still want the whole thing in one go -- the queue fans the
+  // same two halves out instead. Sequential either way: campus is a shared resource and
+  // the writes race each other on getOrCreate if they overlap.
+  async parse (
+    parserType: ParserTypeEnum,
+    groupList?: string[],
+    period?: StudyingSemester,
+    page?: number,
+  ) {
+    const plan = await this.plan(parserType, groupList, period, page);
+    if (!plan) return;
+
+    const { groups, ...context } = plan;
+    const resolved = await this.resolveContext(context);
+
+    for (const group of groups) {
+      await this.parseGroup(group, parserType, resolved);
     }
 
     console.log('\nPARSE COMPLETED\n');

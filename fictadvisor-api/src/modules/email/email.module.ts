@@ -9,23 +9,15 @@ import {
   EMAIL_JOB_ATTEMPTS,
   EMAIL_JOB_BACKOFF_MS,
   EMAIL_QUEUE,
-  EMAIL_QUEUE_PREFIX,
 } from './email.constants';
+import { QUEUES_ENABLED } from '../queue/queue.module';
 import { join } from 'path';
 
-// Redis is optional here for the same reason it is optional in MetricsStore:
-// `.development.env` and `.testing.env` carry no REDIS_URL, and the unit and
-// integration runs build this module without one. With no Redis the queue and
-// its worker are never registered, EmailQueueService sends inline, and emails
-// behave exactly as they did before the queue existed.
-const redisUrl = process.env.REDIS_URL;
-
-const queueImports: DynamicModule[] = redisUrl
+// The connection itself lives in QueueModule; without it neither the queue nor its
+// worker is registered, EmailQueueService sends inline, and emails behave exactly as
+// they did before the queue existed.
+const queueImports: DynamicModule[] = QUEUES_ENABLED
   ? [
-    BullModule.forRoot({
-      connection: { url: redisUrl },
-      prefix: EMAIL_QUEUE_PREFIX,
-    }),
     BullModule.registerQueue({
       name: EMAIL_QUEUE,
       defaultJobOptions: {
@@ -43,7 +35,7 @@ const queueImports: DynamicModule[] = redisUrl
   ]
   : [];
 
-const queueProviders: Provider[] = redisUrl ? [EmailProcessor] : [];
+const queueProviders: Provider[] = QUEUES_ENABLED ? [EmailProcessor] : [];
 
 @Module({
   imports: [
