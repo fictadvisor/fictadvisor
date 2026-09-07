@@ -1,0 +1,157 @@
+# Swarm stack for the two things a deploy must not interrupt: the API and the web app.
+#
+# Everything else -- Postgres, Redis, MinIO, the bot, the monitoring stack -- stays as
+# plain compose containers under `docker-compose.yml`. They are either stateful, where a
+# rolling update buys nothing, or invisible to a user when they blink.
+#
+# The point of moving these two is `order: start-first`: Swarm starts the new task,
+# waits for its healthcheck, and only then stops the old one. watchtower stopped and
+# started blindly, which is where every deploy's 502 window came from.
+#
+# The published ports are the ones the site already uses -- 3001, 4001, 3005 -- and that
+# is where this ends up. They are variables only because of the cutover: a Swarm service
+# cannot bind a port the compose container it replaces still holds, so for the length of
+# the migration the stack is deployed on spare ones and nginx is walked across, rather
+# than taking the old container down first and buying downtime to install the thing whose
+# whole purpose is not having any.
+#
+#   during the cutover:  API_PORT=3011 API_DEV_PORT=4011 WEB_PORT=3015 docker stack deploy ...
+#   afterwards, always:  docker stack deploy ...            (defaults: 3001 / 4001 / 3005)
+#
+# Note an override file would NOT work here: compose *appends* to `ports` rather than
+# replacing it, so `-c stack.yml -c override.yml` publishes both and the deploy collides
+# with the container it is replacing. See MIGRATION-swarm.md.
+#
+#   Deploy:   docker stack deploy -c stack.yml fa --with-registry-auth
+#   Rollback: docker service rollback fa_api
+#   Watch:    docker service ps fa_api
+#
+# `docker service update --force` deliberately does NOT re-resolve a moving tag like
+# `master`; only `stack deploy` or `service update --image ...` pulls a new digest.
+#
+# Cutover and the rest of the migration are in MIGRATION-swarm.md.
+
+version: '3.8'
+
+networks:
+  # Attachable so the standalone containers can join it: an overlay is the only thing
+  # Swarm services and plain containers can share, and the API has to reach postgres-db
+  # and redis, which stay on compose. Names resolve across it in both directions.
+  fa-swarm:
+    external: true
+
+services:
+  api:
+    image: fictadvisor/fictadvisor-api:master
+    env_file:
+      - /home/ubuntu/deployment/env/fictadvisor-api.env
+    volumes:
+      - /home/ubuntu/static/fictadvisor-api:/app/static
+      - /home/ubuntu/private:/app/private
+      - /home/ubuntu/configs/prod:/configs
+    ports:
+      - "${API_PORT:-3001}:80"
+    # watchtower scans every container on the host, and a Swarm task IS a container --
+    # it would happily recreate one out from under the orchestrator. This label is what
+    # stops it, and putting it here rather than on the old compose service means it
+    # arrives exactly when the service does: no window where nothing deploys this.
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
+    networks:
+      # The bot reaches the API by container name (`API_URL=http://fictadvisor-api:80/v2`) and a
+      # Swarm service does not answer to the container name it replaces. This alias keeps
+      # that env untouched: the service answers to `fictadvisor-api` on the overlay exactly as the
+      # compose container did.
+      fa-swarm:
+        aliases:
+          - fictadvisor-api
+    # 30s rather than the default 10: a parse job in flight finishes inside the worker's
+    # close(), and one killed half way comes back as a stalled job rather than a clean one.
+    stop_grace_period: 30s
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        # How long the new task has to stay healthy before the update counts as good.
+        monitor: 60s
+      rollback_config:
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+      # The healthcheck lives in the image (see fictadvisor-api/Dockerfile) and probes
+      # 127.0.0.1, not localhost -- localhost is ::1 there while the server listens on
+      # IPv4, so a localhost probe fails against a healthy process.
+
+  api-dev:
+    image: fictadvisor/fictadvisor-api:dev
+    env_file:
+      - /home/ubuntu/deployment/env/fictadvisor-api-dev.env
+    volumes:
+      - /home/ubuntu/static/fictadvisor-api-dev:/app/static
+      - /home/ubuntu/private:/app/private
+      - /home/ubuntu/configs/dev:/configs
+    ports:
+      - "${API_DEV_PORT:-4001}:80"
+    # watchtower scans every container on the host, and a Swarm task IS a container --
+    # it would happily recreate one out from under the orchestrator. This label is what
+    # stops it, and putting it here rather than on the old compose service means it
+    # arrives exactly when the service does: no window where nothing deploys this.
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
+    networks:
+      # The bot reaches the API by container name (`API_URL=http://fictadvisor-api-dev:80/v2`) and a
+      # Swarm service does not answer to the container name it replaces. This alias keeps
+      # that env untouched: the service answers to `fictadvisor-api-dev` on the overlay exactly as the
+      # compose container did.
+      fa-swarm:
+        aliases:
+          - fictadvisor-api-dev
+    stop_grace_period: 30s
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        monitor: 60s
+      rollback_config:
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  web:
+    image: fictadvisor/fictadvisor-web:master
+    env_file:
+      - /home/ubuntu/deployment/env/fictadvisor-web.env
+    ports:
+      - "${WEB_PORT:-3005}:80"
+    # watchtower scans every container on the host, and a Swarm task IS a container --
+    # it would happily recreate one out from under the orchestrator. This label is what
+    # stops it, and putting it here rather than on the old compose service means it
+    # arrives exactly when the service does: no window where nothing deploys this.
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"
+    networks:
+      - fa-swarm
+    # The web image carries no HEALTHCHECK of its own, so declare one here: without it
+    # Swarm calls a task healthy the moment the process exists and kills the old one
+    # before Next.js is serving, which is the downtime this whole move is about.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/ > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        monitor: 60s
+      rollback_config:
+        order: start-first
+      restart_policy:
+        condition: any
+        delay: 5s
