@@ -12,6 +12,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { validationExceptionFactory } from './common/utils/validation-exception.factory';
 import { applyStaticMiddleware } from './common/utils/apply-static-middleware';
 import { TestType, TestCoverage } from './common/utils/test-coverage';
+import { CronErrorReporter } from './common/services/cron-error-reporter';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -79,6 +80,10 @@ async function bootstrap () {
   server.keepAliveTimeout = 61 * 1000;
   server.headersTimeout = 62 * 1000;
   await app.listen(port, '0.0.0.0');
+
+  // After listen(), so the scheduler has finished its own onApplicationBootstrap and
+  // the jobs this hangs an error handler on actually exist. See CronErrorReporter.
+  app.get(CronErrorReporter).attach();
 
   console.info(
     `Started server on 0.0.0.0:${port}\n` +
