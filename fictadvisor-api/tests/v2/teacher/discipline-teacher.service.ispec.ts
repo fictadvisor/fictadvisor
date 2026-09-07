@@ -106,6 +106,7 @@ describe('DisciplineTeacherService', () => {
       data: [
         { id: 'subjectId1', name: 'Subject - N: Some useless info' },
         { id: 'subjectId2', name: 'Subject - M: Some other useless info' },
+        { id: 'subjectId3', name: 'Subject - K: Yet more useless info' },
       ],
     });
 
@@ -131,6 +132,16 @@ describe('DisciplineTeacherService', () => {
         nonSelective20221, {
           id: 'nonSelective20222Id',
           subjectId: 'subjectId1',
+          groupId: 'groupId1',
+          semester: 2,
+          year: 2022,
+        }, {
+          // Carries the removed lecturer below. It needs a discipline of its
+          // own because one teacher holds at most one discipline_teachers row
+          // per discipline, and it has to be non-selective in the same group
+          // and semester so the same students see it as nonSelective20222Id.
+          id: 'nonSelective20222Id2',
+          subjectId: 'subjectId3',
           groupId: 'groupId1',
           semester: 2,
           year: 2022,
@@ -219,7 +230,7 @@ describe('DisciplineTeacherService', () => {
       data: {
         id: 'removedId1',
         teacherId: 'teacherId1',
-        disciplineId: 'nonSelective20222Id',
+        disciplineId: 'nonSelective20222Id2',
         removedDisciplineTeachers: {
           create: {
             studentId: 'userWithRemovedId1',
