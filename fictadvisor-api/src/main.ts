@@ -11,6 +11,7 @@ import { TelegramAPI } from './modules/telegram-api/telegram-api';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { validationExceptionFactory } from './common/utils/validation-exception.factory';
 import { applyStaticMiddleware } from './common/utils/apply-static-middleware';
+import { applyBullBoard } from './modules/queue/bull-board';
 import { TestType, TestCoverage } from './common/utils/test-coverage';
 import { CronErrorReporter } from './common/services/cron-error-reporter';
 
@@ -31,6 +32,7 @@ async function bootstrap () {
   const port = configService.getOrThrow<number>('port');
 
   applyStaticMiddleware(app);
+  applyBullBoard(app);
 
   app.enableCors({
     origin: true,
