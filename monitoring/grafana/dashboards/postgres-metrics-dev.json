@@ -12,6 +12,20 @@
     "dev"
   ],
   "timezone": "browser",
+  "links": [
+    {
+      "type": "link",
+      "title": "Queues \u2014 dev",
+      "tooltip": "bull-board: the parse and email BullMQ queues",
+      "url": "https://apidev.ficeadvisor.com/queues",
+      "icon": "external link",
+      "targetBlank": true,
+      "asDropdown": false,
+      "includeVars": false,
+      "keepTime": false,
+      "tags": []
+    }
+  ],
   "schemaVersion": 39,
   "time": {
     "from": "now-30m",
