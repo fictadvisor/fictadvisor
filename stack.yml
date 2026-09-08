@@ -138,6 +138,13 @@ services:
     # The web image carries no HEALTHCHECK of its own, so declare one here: without it
     # Swarm calls a task healthy the moment the process exists and kills the old one
     # before Next.js is serving, which is the downtime this whole move is about.
+    environment:
+      # Next.js standalone binds to whatever HOSTNAME says, and Docker sets that to the
+      # container id -- which resolves to exactly one of the task's addresses. A task on
+      # two networks then answers on one of them and not the other, and the ingress load
+      # balancer picks the wrong one. Binding everything is what the Next.js container
+      # docs prescribe and what compose was accidentally getting away with.
+      HOSTNAME: "0.0.0.0"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/ > /dev/null || exit 1"]
       interval: 10s
