@@ -42,6 +42,13 @@ jobs:
           # prometheus.yml is a single-file bind mount: a SIGHUP reload keeps the
           # old inode, so the container must be recreated to pick up the new file.
           docker compose up -d --force-recreate prometheus
+          # The compose file knows nothing about the fa-swarm overlay, but prometheus
+          # scrapes the API by name and the API is a swarm service that answers only on
+          # that overlay. The attachment is a hand-made `docker network connect`, and
+          # recreating the container drops it -- which is exactly what the line above
+          # does, so both API targets went down for good on 2026-09-08 until it was
+          # reconnected. Re-attach on every deploy; it is a no-op if already attached.
+          docker network connect fa-swarm prometheus 2>/dev/null || true
           # Grafana auto-provisions dashboards from the bind mount; restart to
           # apply provisioning changes immediately.
           docker restart grafana
