@@ -12,6 +12,9 @@
   "devDependencies": {
     "turbo": "^2.10.0"
   },
+  "engines": {
+    "node": ">=24.22.1"
+  },
   "private": true,
   "workspaces": [
     "fictadvisor-api",

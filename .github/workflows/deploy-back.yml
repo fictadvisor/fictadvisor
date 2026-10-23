@@ -63,6 +63,7 @@ jobs:
           file: ./fictadvisor-api/Dockerfile
           platforms: linux/arm64
           push: true
+          pull: true
           tags: fictadvisor/fictadvisor-api:${{ github.ref_name }}-arm64
 
   build-amd64:
@@ -88,6 +89,7 @@ jobs:
           file: ./fictadvisor-api/Dockerfile
           platforms: linux/amd64
           push: true
+          pull: true
           tags: fictadvisor/fictadvisor-api:${{ github.ref_name }}-amd64
 
   merge:
