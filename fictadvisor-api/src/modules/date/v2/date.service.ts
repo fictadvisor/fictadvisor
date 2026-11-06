@@ -71,6 +71,13 @@ export class DateService {
     return semester;
   }
 
+  /** The semester a moment falls in, or null when it is outside every semester. */
+  async findSemesterOfDate (date: Date) {
+    return this.prisma.semesterDate.findFirst({
+      where: { startDate: { lte: date }, endDate: { gt: date } },
+    });
+  }
+
   async getCurrentSemester (): Promise<CurrentSemester> {
     const now = new Date();
 

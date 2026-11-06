@@ -172,22 +172,26 @@ export class ScheduleService {
     const event = await this.eventRepository.findOne({ id });
     const discipline = await this.getEventDiscipline(event.id);
 
-    const { startDate: semesterStartDate } =
-      await this.dateService.getCurrentSemester();
-
     // Times are stored in the semester-start offset (see ScheduleHelperService.addTimezone),
     // so a one-off needs the same conversion as a recurring pair, only without the week
-    // shift. Returning it raw put every winter one-off an hour early here and an hour
-    // apart from what /general showed for the same event.
+    // shift, and against its OWN semester: it must open even when no semester is current.
+    // Returning it raw put every winter one-off an hour early here and an hour apart from
+    // what /general showed for the same event.
     if (event.period === Period.NO_PERIOD) {
-      const { startTime, endTime } = this.scheduleHelperService.addEventTimezones(
-        event,
-        semesterStartDate,
-      );
-      event.startTime = startTime;
-      event.endTime = endTime;
+      const semester = await this.dateService.findSemesterOfDate(event.startTime);
+      if (semester) {
+        const { startTime, endTime } = this.scheduleHelperService.addEventTimezones(
+          event,
+          semester.startDate,
+        );
+        event.startTime = startTime;
+        event.endTime = endTime;
+      }
       return { event, discipline };
     }
+
+    const { startDate: semesterStartDate } =
+      await this.dateService.getCurrentSemester();
 
     const index = this.scheduleHelperService.getIndexOfLesson(
       week,

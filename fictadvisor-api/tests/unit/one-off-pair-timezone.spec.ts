@@ -105,6 +105,7 @@ describe('ScheduleService one-off reads', () => {
     };
     instance.dateService = {
       getCurrentSemester: jest.fn().mockResolvedValue({ startDate: AUTUMN_START }),
+      findSemesterOfDate: jest.fn().mockResolvedValue({ startDate: AUTUMN_START }),
       getDatesOfWeek: jest.fn().mockResolvedValue({
         startOfWeek: new Date('2026-11-02T00:00:00.000Z'),
         endOfWeek: new Date('2026-11-08T23:59:59.999Z'),
@@ -113,6 +114,16 @@ describe('ScheduleService one-off reads', () => {
     instance.getEventDiscipline = jest.fn().mockResolvedValue(null);
     return instance;
   };
+
+  it('leaves a one-off outside every semester as stored', async () => {
+    const instance = service(stored());
+    instance.dateService.findSemesterOfDate.mockResolvedValue(null);
+    instance.dateService.getCurrentSemester.mockRejectedValue(new Error('no current semester'));
+
+    const { event } = await instance.getEvent('one-off', 10);
+
+    expect(event.startTime.toISOString()).toBe('2026-11-02T05:30:00.000Z');
+  });
 
   it('converts a one-off for the event panel (/events/:id)', async () => {
     const { event } = await service(stored()).getEvent('one-off', 10);
