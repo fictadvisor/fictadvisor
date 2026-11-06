@@ -172,10 +172,22 @@ export class ScheduleService {
     const event = await this.eventRepository.findOne({ id });
     const discipline = await this.getEventDiscipline(event.id);
 
-    if (event.period === Period.NO_PERIOD) return { event, discipline };
-
     const { startDate: semesterStartDate } =
       await this.dateService.getCurrentSemester();
+
+    // Times are stored in the semester-start offset (see ScheduleHelperService.addTimezone),
+    // so a one-off needs the same conversion as a recurring pair, only without the week
+    // shift. Returning it raw put every winter one-off an hour early here and an hour
+    // apart from what /general showed for the same event.
+    if (event.period === Period.NO_PERIOD) {
+      const { startTime, endTime } = this.scheduleHelperService.addEventTimezones(
+        event,
+        semesterStartDate,
+      );
+      event.startTime = startTime;
+      event.endTime = endTime;
+      return { event, discipline };
+    }
 
     const index = this.scheduleHelperService.getIndexOfLesson(
       week,
@@ -423,10 +435,11 @@ export class ScheduleService {
       );
     }
 
+    // Every event, one-offs included, exactly like getGeneralGroupEvents: a group's own
+    // members and everyone else must see the same time for the same row. For a one-off
+    // getIndexOfLesson already pinned `week` to its own week, so this only converts.
     for (const event of result) {
-      if (event.period !== Period.NO_PERIOD) {
-        this.scheduleHelperService.setWeekTime(event, week, startOfSemester);
-      }
+      this.scheduleHelperService.setWeekTime(event, week, startOfSemester);
     }
 
     return result;

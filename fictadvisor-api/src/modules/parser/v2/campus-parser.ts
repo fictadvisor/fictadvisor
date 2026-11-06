@@ -192,7 +192,7 @@ export class CampusParser implements Parser<CampusParserGroup> {
 
       if (dates.length > 0) {
         for (const date of dates) {
-          const { startTime, endTime } = this.mapDate(date, time);
+          const { startTime, endTime } = this.mapDate(startDate, date, time);
 
           parsedPairs.push({
             ...pairInfo,
@@ -214,20 +214,23 @@ export class CampusParser implements Parser<CampusParserGroup> {
     return this.aggregateParsedPairTeachers(parsedPairs);
   }
 
-  private mapDate (dateString: string, time: string) {
+  /**
+   * A one-off pair on a given date. Stored the way every pair is: the Kyiv wall-clock
+   * time written with the Kyiv UTC offset of the SEMESTER START, not of the pair's own
+   * date. `ScheduleHelperService.addTimezone` undoes exactly that offset on every read,
+   * which is what keeps an 08:30 pair at 08:30 across the DST switch. Storing the true
+   * instant here (as this did until 2026-11) made every one-off after 25 October show
+   * up an hour late.
+   */
+  private mapDate (semesterStart: Date, dateString: string, time: string) {
     const [hours, minutes] = time.split(':').map((number) => +number);
-    const parsedDate = new Date(dateString);
+    const [year, month, day] = dateString.slice(0, 10).split('-').map((number) => +number);
 
+    const semesterOffset = DateTime.fromJSDate(semesterStart).setZone('Europe/Kyiv').offset;
     const startTime = DateTime.fromObject(
-      {
-        year: parsedDate.getFullYear(),
-        month: parsedDate.getMonth() + 1,
-        day: parsedDate.getDate(),
-        hour: hours,
-        minute: minutes,
-      },
-      { zone: 'Europe/Kyiv' },
-    ).toJSDate();
+      { year, month, day, hour: hours, minute: minutes },
+      { zone: 'UTC' },
+    ).minus({ minutes: semesterOffset }).toJSDate();
 
     const minutesAfterHour = 35;
     const endTime = new Date(
