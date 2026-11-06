@@ -1,0 +1,42 @@
+#!/bin/sh
+# post-backup hook for the backup-postgres container (itbm/postgresql-backup-s3).
+#
+# Copies the backup that was just uploaded to a FIXED name, postgres-latest/all.sql.gz.enc.
+# B2 never hides the current version of a file on its own (the postgres-latest/ lifecycle
+# rule has no "days till hide"), so whatever else happens -- backups stop for months,
+# postgres-prod/ ages out completely -- the newest good backup survives there. Superseded
+# versions are purged 30 days after they are replaced.
+#
+# It verifies the object first, because the upload step cannot be trusted on its own: from
+# 2026-09-11 to 2026-11-06 every upload into the full bucket stopped after 128 KiB while
+# `aws s3 cp` still exited 0. A truncated or missing object is never promoted.
+#
+# Needs HOOK_INHERIT_ENV=yes on the container: by default hooks run under `env -i` and
+# would get no AWS credentials. The script runs as the unprivileged `hook` user.
+set -eu
+
+export HOME=/tmp
+
+MIN_SIZE=$((5 * 1024 * 1024))
+LATEST_URI="s3://${S3_BUCKET}/postgres-latest/all.sql.gz.enc"
+KEY="${BACKUP_S3_URI#s3://${S3_BUCKET}/}"
+
+aws_b2() {
+  aws --endpoint-url "$S3_ENDPOINT" "$@"
+}
+
+if ! SIZE=$(aws_b2 s3api head-object --bucket "$S3_BUCKET" --key "$KEY" \
+    --query ContentLength --output text); then
+  echo "post-backup: ${KEY} is not in the bucket, the upload did not land" >&2
+  exit 1
+fi
+
+if [ "$SIZE" -lt "$MIN_SIZE" ]; then
+  echo "post-backup: ${KEY} is only ${SIZE} bytes, refusing to promote it" >&2
+  exit 1
+fi
+
+# A server-side copy: nothing is uploaded from this host again.
+aws_b2 s3 cp "$BACKUP_S3_URI" "$LATEST_URI" --only-show-errors
+
+echo "post-backup: promoted ${KEY} (${SIZE} bytes) to ${LATEST_URI}"
