@@ -113,10 +113,24 @@ jobs:
             echo "::notice::$service is not a swarm service yet, skipping the roll-out"
             exit 0
           fi
+          # Pinned by digest for the reason given in deploy-back.yml: the bare moving tag
+          # makes every second deploy a silent no-op.
+          image=${{ env.IMAGE }}:${{ github.ref_name }}
+          digest=$(docker buildx imagetools inspect "$image" --format '{{json .Manifest}}' | jq -r .digest)
+          case "$digest" in
+            sha256:*) ;;
+            *) echo "::error::could not resolve $image to a digest (got '$digest')"; exit 1 ;;
+          esac
+          echo "Deploying $image@$digest"
           docker service update \
             --with-registry-auth \
-            --image ${{ env.IMAGE }}:${{ github.ref_name }} \
+            --image "$image@$digest" \
             fa_web
+          running=$(docker service inspect fa_web --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}')
+          case "$running" in
+            *"$digest") ;;
+            *) echo "::error::fa_web spec is '$running', expected $digest"; exit 1 ;;
+          esac
 
       - name: Report what ended up running
         if: always()
