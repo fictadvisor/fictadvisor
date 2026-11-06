@@ -48,7 +48,6 @@ services:
     volumes:
       - /home/ubuntu/static/fictadvisor-api:/app/static
       - /home/ubuntu/private:/app/private
-      - /home/ubuntu/configs/prod:/configs
     ports:
       - "${API_PORT:-3001}:80"
     # watchtower scans every container on the host, and a Swarm task IS a container --
@@ -91,7 +90,6 @@ services:
     volumes:
       - /home/ubuntu/static/fictadvisor-api-dev:/app/static
       - /home/ubuntu/private:/app/private
-      - /home/ubuntu/configs/dev:/configs
     ports:
       - "${API_DEV_PORT:-4001}:80"
     # watchtower scans every container on the host, and a Swarm task IS a container --
