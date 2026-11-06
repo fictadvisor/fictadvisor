@@ -122,9 +122,12 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      # `--image` with the same moving tag is what re-resolves it to the digest just
-      # pushed; `--force` alone would redeploy the digest already running. Swarm then
-      # rolls the task under the stack's update_config: start the new one, wait for the
+      # The new image goes in pinned by digest. `--image <same moving tag>` was meant to
+      # re-resolve the tag, but from this runner it stores the bare tag instead; the spec
+      # then equals the last deploy's and Swarm treats the update as a no-op. That is how
+      # prod ran the 2026-09-08 image until 2026-11-06 through every deploy in between.
+      # A digest changes on every push, so every push is a real update. Swarm then rolls
+      # the task under the stack's update_config: start the new one, wait for the
       # healthcheck in the image, and only then stop the old one.
       - name: Roll out the new image
         run: |
@@ -139,10 +142,22 @@ jobs:
             echo "::notice::$service is not a swarm service yet, skipping the roll-out"
             exit 0
           fi
+          image=fictadvisor/fictadvisor-api:${{ github.ref_name }}
+          digest=$(docker buildx imagetools inspect "$image" --format '{{json .Manifest}}' | jq -r .digest)
+          case "$digest" in
+            sha256:*) ;;
+            *) echo "::error::could not resolve $image to a digest (got '$digest')"; exit 1 ;;
+          esac
+          echo "Deploying $image@$digest"
           docker service update \
             --with-registry-auth \
-            --image fictadvisor/fictadvisor-api:${{ github.ref_name }} \
+            --image "$image@$digest" \
             "$service"
+          running=$(docker service inspect "$service" --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}')
+          case "$running" in
+            *"$digest") ;;
+            *) echo "::error::$service spec is '$running', expected $digest"; exit 1 ;;
+          esac
 
       - name: Report what ended up running
         if: always()
