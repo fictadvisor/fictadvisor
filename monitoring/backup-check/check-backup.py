@@ -105,8 +105,9 @@ def run_checks(today):
   except CheckError as error:
     problems.append(f'{LATEST_KEY} is missing: {error}')
   else:
-    modified = dt.datetime.strptime(latest['LastModified'], '%a, %d %b %Y %H:%M:%S %Z')
-    age = dt.datetime.now(dt.timezone.utc).replace(tzinfo=None) - modified
+    # aws CLI v2 prints it as ISO 8601 with an offset, e.g. 2026-11-06T18:53:19+00:00
+    modified = dt.datetime.fromisoformat(latest['LastModified'])
+    age = dt.datetime.now(dt.timezone.utc) - modified
     if age > LATEST_MAX_AGE:
       problems.append(f'{LATEST_KEY} was last refreshed {age.days}d {age.seconds // 3600}h ago')
     elif newest and latest['ContentLength'] != newest['Size']:
