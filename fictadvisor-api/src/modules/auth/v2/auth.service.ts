@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -39,6 +40,13 @@ import { AbsenceOfCaptainException } from '../../../common/exceptions/absence-of
 
 export const ONE_MINUTE = 1000 * 60;
 export const HOUR = ONE_MINUTE * 60;
+/**
+ * How long an emailed or Telegram registration link stays usable. Enforced on every
+ * read, not only by deleting rows: the cleanup used to be an in-process `setTimeout`
+ * that every deploy killed, so tokens lived forever -- and since nothing checked their
+ * age, a password reset link from years ago still reset the password.
+ */
+export const TOKEN_TTL = HOUR;
 export const AVATARS = [
   'https://i.imgur.com/0ySPaF0.jpeg',
   'https://i.imgur.com/K58n0UQ.jpeg',
@@ -75,6 +83,7 @@ type VerifiableStudent = Omit<StoredStudent, 'firstName' | 'lastName'> & {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
 
   constructor (
     private roleRepository: RoleRepository,
@@ -282,18 +291,12 @@ export class AuthService {
       message: 'Для відновлення пароля натисни на кнопку нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/password-recovery/${token.token}`,
     });
-
-    new Promise((resolve) => {
-      setTimeout(() =>
-        resolve(
-          repo.deleteMany({ where: { token: token.token } }),
-        ), HOUR,
-      );
-    });
   }
 
   async resetPassword (token: string, { password }: ResetPasswordDTO) {
-    const resetToken = await this.prisma.resetPasswordToken.findFirst({ where: { token } });
+    const resetToken = await this.prisma.resetPasswordToken.findFirst({
+      where: { token, createdAt: { gte: this.tokenCutoff() } },
+    });
     if (!resetToken) {
       throw new InvalidResetTokenException();
     }
@@ -335,18 +338,12 @@ export class AuthService {
       message: 'Для верифікації пошти натисни на кнопку нижче. Посилання діє годину.',
       link: `${this.config.get<string>('frontBaseUrl')}/register/email-verification/${token.token}`,
     });
-
-    new Promise((resolve) => {
-      setTimeout(() =>
-        resolve(
-          repo.deleteMany({ where: { token: token.token } }),
-        ), HOUR,
-      );
-    });
   }
 
   async verifyEmail (token: string) {
-    const verifyToken = await this.prisma.verifyEmailToken.findFirst({ where: { token } });
+    const verifyToken = await this.prisma.verifyEmailToken.findFirst({
+      where: { token, createdAt: { gte: this.tokenCutoff() } },
+    });
     if (!verifyToken) {
       throw new InvalidVerificationTokenException();
     }
@@ -484,7 +481,9 @@ export class AuthService {
   }
 
   async checkResetToken (token: string) {
-    return this.prisma.resetPasswordToken.findFirst({ where: { token } });
+    return this.prisma.resetPasswordToken.findFirst({
+      where: { token, createdAt: { gte: this.tokenCutoff() } },
+    });
   }
 
   async registerTelegram (data: RegisterTelegramDTO) {
@@ -497,17 +496,38 @@ export class AuthService {
     await repo.create({
       data,
     });
-
-    new Promise((resolve) => {
-      setTimeout(() =>
-        resolve(
-          repo.deleteMany({ where: { token: data.token } }),
-        ), HOUR,
-      );
-    });
   }
 
   async checkTelegram (token: string) {
-    return this.prisma.registerTelegramToken.findFirst({ where: { token } });
+    return this.prisma.registerTelegramToken.findFirst({
+      where: { token, createdAt: { gte: this.tokenCutoff() } },
+    });
+  }
+
+  /** Tokens created before this moment are expired. */
+  private tokenCutoff () {
+    return new Date(Date.now() - TOKEN_TTL);
+  }
+
+  // Housekeeping only: every read already ignores expired tokens, so this just keeps
+  // the tables (which hold e-mails and password hashes of unfinished registrations)
+  // from growing. Missing a run, e.g. across a deploy, costs nothing.
+  @Cron(CronExpression.EVERY_HOUR, { name: 'AuthService.deleteExpiredTokens' })
+  async deleteExpiredTokens () {
+    const where = { createdAt: { lt: this.tokenCutoff() } };
+
+    const [reset, verify, telegram] = await Promise.all([
+      this.prisma.resetPasswordToken.deleteMany({ where }),
+      this.prisma.verifyEmailToken.deleteMany({ where }),
+      this.prisma.registerTelegramToken.deleteMany({ where }),
+    ]);
+
+    const total = reset.count + verify.count + telegram.count;
+    if (total) {
+      this.logger.log(
+        `Deleted ${total} expired token(s): ${reset.count} password reset, ` +
+        `${verify.count} email verification, ${telegram.count} Telegram registration`,
+      );
+    }
   }
 }
