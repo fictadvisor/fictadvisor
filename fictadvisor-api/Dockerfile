@@ -41,6 +41,10 @@ WORKDIR /app/fictadvisor-api
 ARG PORT=3000
 ENV PORT=${PORT}
 ENV NODE_ENV=production
+# Dev and master both run with NODE_ENV=production; this is what error reports
+# show as the environment. deploy-back.yml passes it per branch.
+ARG DEPLOY_ENV=production
+ENV DEPLOY_ENV=${DEPLOY_ENV}
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 EXPOSE ${PORT}
 
