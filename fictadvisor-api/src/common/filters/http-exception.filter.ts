@@ -8,9 +8,10 @@ import {
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
-import * as process from 'node:process';
 import { TelegramAPI } from '../../modules/telegram-api/telegram-api';
 import { nonEmptyObject, formattedJson } from '../utils/object.utils';
+import { clientErrorStatus } from '../utils/error-status.util';
+import { deployEnvLabel } from '../utils/deploy-env.util';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -25,6 +26,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let status, message;
     const error = exception.constructor.name;
+    const clientStatus = clientErrorStatus(exception);
 
     if (exception instanceof HttpException) {
       const errorResponse = exception.getResponse();
@@ -37,6 +39,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
 
       status = exception.getStatus() ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    } else if (clientStatus) {
+      status = clientStatus;
+      message = { message: exception.message };
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = { message: 'An error occurred on the server side' };
@@ -66,7 +71,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private async logError (exception: Error, ctx: HttpArgumentsHost) {
     const req = ctx.getRequest<Request>();
     const { method, path } = req;
-    const environment = process.env.NODE_ENV?.toUpperCase();
+    const environment = deployEnvLabel();
     const params = nonEmptyObject(req.params);
     const query = nonEmptyObject(req.query);
     const body = nonEmptyObject(req.body);

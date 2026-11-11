@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import * as process from 'node:process';
 import { TelegramAPI } from '../../modules/telegram-api/telegram-api';
+import { deployEnvLabel } from '../utils/deploy-env.util';
 
 // @nestjs/schedule gives cron no way to report a failing job: `scheduler.orchestrator`
 // builds every CronJob without an `errorHandler`, and cron@4 then swallows the
@@ -45,13 +45,13 @@ export class CronErrorReporter {
 
   private async report (name: string, error: unknown): Promise<void> {
     const details =
-      error instanceof Error ? error.stack ?? error.message : String(error);
+      error instanceof Error ? (error.stack ?? error.message) : String(error);
 
     this.logger.error(`Cron job "${name}" failed: ${details}`);
 
     let message = '';
     message += '🚨🚨🚨 FICTADVISOR CRON ERROR 🚨🚨🚨\n';
-    message += `⚙️ Environment: ${process.env.NODE_ENV?.toUpperCase()}\n`;
+    message += `⚙️ Environment: ${deployEnvLabel()}\n`;
     message += `⏰ Job: ${name}\n`;
     message += '\n📜 Stack Trace:\n';
     message += details;
