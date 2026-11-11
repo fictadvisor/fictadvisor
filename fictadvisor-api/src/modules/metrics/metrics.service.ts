@@ -96,6 +96,7 @@ export class MetricsService implements OnModuleInit, OnApplicationShutdown {
   readonly registry = new Registry();
   readonly httpRequestDuration: Histogram<string>;
   readonly httpRequestsTotal: Counter<string>;
+  readonly httpRejectedRequestsTotal: Counter<string>;
   readonly prismaQueryDuration: Histogram<string>;
   readonly prismaQueriesTotal: Counter<string>;
   readonly uniqueVisitors: Gauge<string>;
@@ -150,6 +151,18 @@ export class MetricsService implements OnModuleInit, OnApplicationShutdown {
       name: 'http_requests_total',
       help: 'Total number of HTTP requests',
       labelNames: ['method', 'route', 'status_code'],
+      registers: [this.registry],
+    });
+
+    // Requests that never reached a route: 404s for paths we don't have, and
+    // whatever Express middleware turned away first (body-parser's 413, ...).
+    // httpRequestsTotal can't see them -- it is recorded by an interceptor, and
+    // interceptors only run for matched routes. Deliberately no path label: a
+    // scanner walking a wordlist would mint a series per path.
+    this.httpRejectedRequestsTotal = new Counter({
+      name: 'http_rejected_requests_total',
+      help: 'HTTP requests answered with an error before reaching any route',
+      labelNames: ['method', 'status_code'],
       registers: [this.registry],
     });
 

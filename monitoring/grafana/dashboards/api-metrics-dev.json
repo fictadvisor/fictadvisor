@@ -4,7 +4,7 @@
   },
   "editable": true,
   "graphTooltip": 0,
-  "title": "FICT Advisor API \u2014 dev",
+  "title": "FICT Advisor API — dev",
   "uid": "fictadvisor-api-dev",
   "tags": [
     "fictadvisor",
@@ -15,7 +15,7 @@
   "links": [
     {
       "type": "link",
-      "title": "Queues \u2014 dev",
+      "title": "Queues — dev",
       "tooltip": "bull-board: the parse and email BullMQ queues",
       "url": "https://apidev.ficeadvisor.com/queues",
       "icon": "external link",
@@ -1062,6 +1062,70 @@
               "Value": 2
             }
           }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Rejected requests by status (no route matched)",
+      "description": "404s for paths the API doesn't have and requests Express turned away before routing (413 oversized body, ...). Mostly scanners. Who it was: `docker service logs` for this service, grep RejectedRequest.",
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 92
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(rate(http_rejected_requests_total{job=\"fictadvisor-api-dev\"}[$__rate_interval])) by (status_code, method)",
+          "legendFormat": "{{status_code}} {{method}}"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Rejected requests (in range)",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 92
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "sum(increase(http_rejected_requests_total{job=\"fictadvisor-api-dev\"}[$__range])) by (status_code)",
+          "legendFormat": "{{status_code}}"
         }
       ]
     }
