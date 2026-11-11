@@ -14,6 +14,8 @@ import { applyStaticMiddleware } from './common/utils/apply-static-middleware';
 import { applyBullBoard } from './modules/queue/bull-board';
 import { TestType, TestCoverage } from './common/utils/test-coverage';
 import { CronErrorReporter } from './common/services/cron-error-reporter';
+import { MetricsService } from './modules/metrics/metrics.service';
+import { rejectedRequestsMiddleware } from './modules/metrics/rejected-requests.middleware';
 
 (BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
@@ -26,6 +28,9 @@ async function bootstrap () {
   // longer parses bracket-array notation (?keys[]=a&keys[]=b) into arrays.
   // Restore the qs-based "extended" parser so array query params keep working.
   app.set('query parser', 'extended');
+  // First, so it sees requests that never reach a route (404s, body-parser's
+  // 413s). Nest adds its own parsers and 404 handler later, during listen().
+  app.use(rejectedRequestsMiddleware(app.get(MetricsService)));
   app.enableShutdownHooks();
   const configService = app.get<ConfigService>(ConfigService);
   const telegramApi = app.get<TelegramAPI>(TelegramAPI);
